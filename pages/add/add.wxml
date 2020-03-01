@@ -1,0 +1,17 @@
+<mp-navigation-bar title="发微博" color="{{color}}" background="{{background}}" />
+
+<view style="width:96%;margin:auto">
+  <wux-textarea hasCount rows="4" cursorSpacing="80" placeholder="分享新鲜事..." auto-focus/>
+</view>
+
+<view style="width:90%;margin:auto;margin-top:15rpx">
+  <wux-upload listType="picture-card" defaultFileList="{{ fileList }}" max="9" url="https://www.skyvow.cn/api/common/file" bind:change="onChange" bind:success="onSuccess" bind:fail="onFail" bind:complete="onComplete" bind:preview="onPreview">
+    <text>上传</text>
+  </wux-upload>
+</view>
+
+<view class="operate-all">
+  <view style="width:50%;margin:auto">
+    <wux-button block type="balanced">发送</wux-button>
+  </view>
+</view>

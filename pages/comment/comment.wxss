@@ -1,0 +1,56 @@
+@import '/lib/styles/index.wxss';
+
+.small-name {
+  font-size: 30rpx;
+}
+.content {
+  font-size: 30rpx;
+  font-weight: 500;
+  margin-top: 8rpx;
+  margin-bottom: 15rpx;
+}
+.comment-date {
+  font-size: 26rpx;
+  font-weight: 300;
+  color: gray;
+}
+.like {
+  display: flex;
+  float: right;
+}
+.like-number {
+  margin-left: 10rpx;
+  color: gray;
+}
+.sort {
+  display: flex;
+  justify-content: center;
+}
+.sort-text {
+  color: #5C7FA7;
+  font-size: 28rpx;
+  margin-left: 7rpx;
+}
+.comment-button {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  left: 0;
+  right: 0;
+  border-top-style: solid;
+  border-top-width: 1rpx;
+  border-top-color: #e8e8e8;
+  background-color: #ffffff;
+}
+.comment-input {
+  border-style: solid;
+  border-width: 1rpx;
+  border-color: #e8e8e8;
+  width: 95%;
+  margin: auto;
+  margin-top: 20rpx;
+  margin-bottom: 20rpx;
+}
+.likeStyle {
+  color: #FD7E01;
+}

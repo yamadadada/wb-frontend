@@ -1,0 +1,19 @@
+{
+  "usingComponents": {
+    "mp-navigation-bar": "/components/navigation-bar/navigation-bar",
+    "wux-refresher": "/lib/refresher/index",
+    "mp-tabbar": "/components/tabbar/tabbar",
+    "wux-gallery": "/lib/gallery/index",
+    "van-image": "/vant/image/index",
+    "van-grid": "/vant/grid/index",
+    "van-row": "/vant/row/index",
+    "van-col": "/vant/col/index",
+    "van-icon": "/vant/icon/index",
+    "van-dialog": "/vant/dialog/index",
+    "wux-timeago": "/lib/timeago/index",
+    "van-action-sheet": "/vant/action-sheet/index",
+    "van-divider": "/vant/divider/index"
+  },
+  "navigationStyle": "custom",
+  "enablePullDownRefresh": true
+}

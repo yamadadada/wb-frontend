@@ -1,0 +1,77 @@
+@import '/lib/styles/index.wxss';
+@import "/vant/common/index.wxss";
+
+.name {
+  font-size: 36rpx;
+  color: #FD7E01;
+  font-weight: bold;
+}
+.date {
+  font-size: 26rpx;
+  color: gray;
+}
+.sort {
+  display: flex;
+  justify-content: center;
+}
+.sort-text {
+  color: #5B7CA5;
+  font-size: 28rpx;
+  margin-left: 7rpx;
+}
+.small-name {
+  font-size: 29rpx;
+}
+.content {
+  font-size: 30rpx;
+  font-weight: 500;
+  margin-top: 8rpx;
+  margin-bottom: 15rpx;
+}
+.comment-comment {
+  font-size: 28rpx;
+  padding-top: 10rpx;
+  margin-bottom: 10rpx;
+}
+.blue_name {
+  color: #5B7CA5;
+}
+.comment-comment-more {
+  font-size: 26rpx;
+  color: #5B7CA5;
+  padding-bottom: 10rpx;
+}
+.comment-date {
+  font-size: 26rpx;
+  font-weight: 300;
+  color: gray;
+  float: left;
+  padding-top: 10rpx;
+}
+.comment-icon {
+  margin-right: 30rpx;
+}
+.operate-all {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  left: 0;
+  right: 0;
+  color: gray;
+  border-top-style: solid;
+  border-top-width: 1rpx;
+  border-top-color: #e8e8e8;
+  background-color: #f8f8f8;
+}
+.operate {
+  display: flex;
+  justify-content: center;
+  margin-top: 20rpx;
+  margin-bottom: 15rpx;
+}
+.operate-number {
+  margin-left: 10rpx;
+}
+.likeStyle {
+  color: #FD7E01;
+}

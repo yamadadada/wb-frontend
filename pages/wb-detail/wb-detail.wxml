@@ -1,0 +1,176 @@
+<van-action-sheet
+  show="{{ sheetVisible }}"
+  actions="{{ actions }}"
+  cancel-text="取消" 
+  bind:close="sheetClose"
+  bind:select="sheetSelect"
+/>
+
+<wux-gallery id="wux-gallery" />
+
+<mp-navigation-bar title="微博正文" color="{{ color }}" background="{{ background }}" />
+
+<view class="wux-light--bg" >
+  <view style="width: 95%;margin: auto">
+    <view style="width: 99%;margin: auto;padding-top: 15rpx;">
+      <van-row>
+        <van-col span="3">
+          <van-image style="padding: 15rpx;" lazy-load width="{{imageWidth * 0.33}}px" height="{{imageWidth * 0.33}}px" fit="fill" src="{{ weibo.avatar }}"/>
+        </van-col>
+        <van-col span="20" offset="1">
+          <van-row>
+            <van-col span="22">
+              <view class="name">{{weibo.name}}</view>
+            </van-col>
+            <van-col span="2">
+              <van-icon name="ellipsis" bindtap="showSheet" data-wid="{{weibo.wid}}"/>
+            </van-col>
+          </van-row>
+          <van-row>
+            <view class="date">{{weibo.createTime}}</view>
+          </van-row>
+        </van-col>
+      </van-row>
+      <view style="margin-top:15rpx;margin-bottom:20rpx">{{weibo.content}}</view>
+    </view>
+
+    <van-image wx:if="{{ weibo.imageList.length == 1 }}"
+      width="{{imageWidth * 3}}px" height="{{imageWidth * 3}}px" fit="fill" src="{{weibo.imageList[0].image}}" 
+      bindtap="showGallery" data-current="{{weibo.imageList[0].image}}" data-urls="{{weibo.imageList}}" />
+
+    <van-grid wx:else column-num="3" gutter="{{boardWidth}}px">
+      <van-image 
+      wx:for="{{weibo.imageList}}" wx:for-item="image" wx:for-index="index" wx:key="key"
+      width="{{imageWidth}}px" height="{{imageWidth}}px" fit="fill" src="{{image}}" 
+      bindtap="showGallery" data-current="{{image}}" data-urls="{{weibo.imageList}}" />
+    </van-grid>
+  </view>
+</view>
+
+<view class="wux-light--bg" style="margin-top:20rpx">
+
+  <van-tabs active="1" bind:change="changeTab" sticky animated>
+    <van-tab name="0" title="转发 {{ forwardCount }}">
+      <view style="width: 94%;margin: auto">
+        <van-row wx:if="{{ forwardList.length > 0 }}" wx:for="{{ forwardList }}" wx:key="fid" wx:for-item="forward"> 
+          <van-col span="4">
+            <van-image style="padding: 15rpx;" lazy-load width="{{imageWidth * 0.33}}px" height="{{imageWidth * 0.33}}px" fit="fill" src="{{forward.avatar}}"/>
+          </van-col>
+          <van-col span="20">
+            <view class="small-name">{{ forward.name }}</view>
+            <view class="content">{{ forward.content }}</view>
+            <van-row>
+              <van-col span="6">
+                <view class="comment-date">{{ forward.createTime }}</view>
+              </van-col>
+            </van-row>
+            <van-divider />
+          </van-col>
+        </van-row>
+      </view>
+    </van-tab>
+    <van-tab name="1" title="评论 {{ commentCount }}" color="#FD7E01">
+      <view style="width: 94%;margin: auto">
+        <van-row>
+          <van-col span="5" offset="19">
+            <view class="sort" bindtap="changeSort">
+              <van-icon name="exchange" color="#5B7CA5"/>
+              <view class="sort-text">{{ sortName }}</view>
+            </view>
+          </van-col>
+        </van-row>
+        <van-row wx:if="{{ commentVOList.length > 0 }}" wx:for="{{ commentVOList }}" wx:key="cid" wx:for-index="index" wx:for-item="comment" mut-bind:tap="toCommentDetail" data-cid="{{ comment.cid }}"> 
+          <van-col span="4">
+            <van-image style="padding: 15rpx;" lazy-load width="{{imageWidth * 0.33}}px" height="{{imageWidth * 0.33}}px" fit="fill" src="{{comment.avatar}}"/>
+          </van-col>
+          <van-col span="20">
+            <view class="small-name">{{ comment.name }}</view>
+            <view class="content">{{ comment.content }}</view>
+            <view style="background-color: #f8f8f8" wx:if="{{ comment.commentVOList != null }}">
+              <view style="width:95%;margin:auto">
+                <view class="comment-comment" wx:if="{{ comment.commentVOList.length >= 1 }}">
+                  <span class="blue_name">{{ comment.commentVOList[0].name }}</span>
+                  <span wx:if="{{ comment.commentVOList[0].commentName != null }}">回复</span>
+                  <span class="blue_name" wx:if="{{ comment.commentVOList[0].commentName != null }}">{{ comment.commentVOList[0].commentName }}</span>
+                  <span>：</span>
+                  <span>{{ comment.commentVOList[0].content }}</span>
+                </view>
+                <view class="comment-comment" wx:if="{{ comment.commentVOList.length >= 2 }}">
+                  <span class="blue_name">{{ comment.commentVOList[1].name }}</span>
+                  <span wx:if="{{ comment.commentVOList[1].commentName != null }}">回复</span>
+                  <span class="blue_name" wx:if="{{ comment.commentVOList[1].commentName != null }}">{{ comment.commentVOList[1].commentName }}</span>
+                  <span>：</span>
+                  <span>{{ comment.commentVOList[1].content }}</span>
+                </view>
+                <view class="comment-comment-more" wx:if="{{ comment.commentVOList.length >= 3 }}">共 {{ comment.commentVOList.length }} 条回复 ></view>
+              </view>
+            </view>
+            <van-row>
+              <van-col span="8">
+                <view class="comment-date">{{ comment.createTime }}</view>
+              </van-col>
+              <van-col offset="8" span="8">
+                <van-row>
+                  <view style="padding-top: 15rpx;">
+                    <van-col span="7">
+                      <van-icon name="/icon/forward.png" />
+                    </van-col>
+                    <van-col span="7">
+                      <van-icon name="comment-o" />
+                    </van-col>
+                    <van-col span="10">
+                      <view style="display: flex;" class="{{ comment.isLike ? 'likeStyle' : '' }}" 
+                      mut-bind:tap="commentLikeChange" 
+                      data-cid="{{ comment.cid }}" data-is_like="{{ comment.isLike }}" data-index="{{ index }}">
+                        <van-icon name="good-job-o" />
+                        <view class="operate-number">{{ comment.likeCount }}</view>
+                      </view>
+                    </van-col>
+                  </view>
+                </van-row>
+              </van-col>
+            </van-row>
+            <van-divider />
+          </van-col>
+        </van-row>
+      </view>
+    </van-tab>
+    <van-tab name="2" title="赞 {{ likeCount }}">
+      <view style="width: 94%;margin: auto">
+        <van-row wx:if="{{ likeList.length > 0 }}" wx:for="{{ likeList }}" wx:key="key" wx:for-item="like"> 
+          <van-col span="4">
+            <van-image style="padding: 15rpx;" lazy-load width="{{imageWidth * 0.33}}px" height="{{imageWidth * 0.33}}px" fit="fill" src="{{like.avatar}}"/>
+          </van-col>
+          <van-col span="20">
+            <view class="small-name">{{ like.name }}</view>
+            <view class="content">{{ like.introduction == null ? '' : like.introduction }}</view>
+            <van-divider />
+          </van-col>
+        </van-row>
+      </view>
+    </van-tab>
+  </van-tabs>
+</view>
+
+<view style="height:100rpx;"></view>
+
+<van-row gutter="20" class="van-hairline--top operate-all">
+  <van-col span="8">
+    <view class="operate">
+      <van-icon name="/icon/forward.png" />
+      <view class="operate-number">转发</view>
+    </view>
+  </van-col>
+  <van-col span="8">
+    <view class="operate">
+      <van-icon name="comment-o" />
+      <view class="operate-number">评论</view>
+    </view>
+  </van-col>
+  <van-col span="8">
+    <view class="operate {{ isLike ? 'likeStyle' : '' }}" mut-bind:tap="likeChange">
+      <van-icon name="good-job-o" />
+      <view class="operate-number">点赞</view>
+    </view>
+  </van-col>
+</van-row>

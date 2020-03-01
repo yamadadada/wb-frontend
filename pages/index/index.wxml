@@ -1,0 +1,99 @@
+<van-dialog id="van-dialog" />
+
+<van-dialog
+  use-slot
+  title="提示"
+  show="{{ dialogVisible }}"
+  show-cancel-button
+  confirm-button-open-type="getUserInfo" lang="zh_CN"
+  bind:close="dialogClose"
+  bind:getuserinfo="getUserInfo"
+>
+  <view style="text-align:center;">需要授权以完善你的个人信息</view>
+</van-dialog>
+
+<van-action-sheet
+  show="{{ sheetVisible }}"
+  actions="{{ actions }}"
+  cancel-text="取消" 
+  bind:close="sheetClose"
+  bind:select="sheetSelect"
+/>
+
+<wux-gallery id="wux-gallery" />
+
+<mp-navigation-bar title="关注" color="{{color}}" background="{{background}}" back="{{false}}">
+  <van-icon slot="left" name="add-o" bindtap="toAddWeibo" size="25px"/>
+</mp-navigation-bar>
+
+<wux-refresher id="wux-refresher" pullingText="释放刷新" refreshingText="刷新中" bind:refresh="getWeiboInfo">
+
+<view wx:for="{{weiboList}}" wx:key="wid" wx:for-item="weibo" wx:for-index="index" 
+class="wux-light--bg" style="margin-top:15rpx" 
+mut-bind:tap="toWeiboDetail" data-wid="{{weibo.wid}}" data-forward_count="{{weibo.forwardCount}}" data-like_count="{{weibo.likeCount}}" data-is_like="{{ weibo.isLike }}">
+  <view style="width: 95%;margin: auto">
+    <view style="width: 99%;margin: auto;padding-top: 15rpx;">
+      <van-row>
+        <van-col span="3">
+          <van-image style="padding: 15rpx;" lazy-load width="{{imageWidth * 0.33}}px" height="{{imageWidth * 0.33}}px" fit="fill" src="{{weibo.avatar}}"/>
+        </van-col>
+        <van-col span="20" offset="1">
+          <van-row>
+            <van-col span="22">
+              <view class="name">{{weibo.name}}</view>
+            </van-col>
+            <van-col span="2">
+              <van-icon name="ellipsis" mut-bind:tap="showSheet" data-wid="{{weibo.wid}}"/>
+            </van-col>
+          </van-row>
+          <van-row>
+            <wux-timeago to="{{ weibo.fullTime }}" refreshable />
+          </van-row>
+        </van-col>
+      </van-row>
+      <view class="van-multi-ellipsis--l3" style="margin-top:15rpx;margin-bottom:20rpx">{{weibo.content}}</view>
+    </view>
+
+    <view wx:if="{{ weibo.imageList.length == 1 }}">
+      <van-image 
+      width="{{imageWidth * 2}}px" height="{{imageWidth * 2}}px" fit="fill" src="{{weibo.imageList[0].image}}" 
+      mut-bind:tap="showGallery" data-current="{{weibo.imageList[0].image}}" data-urls="{{weibo.imageList}}" />
+    </view>
+
+    <van-grid wx:else column-num="3" gutter="{{boardWidth}}px">
+      <van-image 
+      wx:for="{{weibo.imageList}}" wx:for-item="image" wx:for-index="index" wx:key="key"
+      width="{{imageWidth}}px" height="{{imageWidth}}px" fit="fill" src="{{image}}" 
+      mut-bind:tap="showGallery" data-current="{{image}}" data-urls="{{weibo.imageList}}" />
+    </van-grid>
+
+    <van-row gutter="20">
+      <view style="color: #A7A7A7;">
+        <van-col span="8">
+          <view class="operate" >
+            <van-icon name="/icon/forward.png" />
+            <view class="operate-number">{{weibo.forwardCount}}</view>
+          </view>
+        </van-col>
+        <van-col span="8">
+          <view class="operate">
+            <van-icon name="comment-o" />
+            <view class="operate-number">{{weibo.commentCount}}</view>
+          </view>
+        </van-col>
+        <van-col span="8">
+          <view class="operate {{ weibo.isLike ? 'likeStyle' : '' }}" mut-bind:tap="likeChange" data-wid="{{ weibo.wid }}" data-islike="{{ weibo.isLike }}" data-index="{{ index }}">
+            <van-icon name="good-job-o" />
+            <view class="operate-number">{{weibo.likeCount}}</view>
+          </view>
+        </van-col>
+      </view>
+    </van-row>
+  </view>
+</view>
+
+</wux-refresher>
+
+<view style="height:170rpx;"></view>
+
+<mp-tabbar style="position:fixed;bottom:0;width:100%;left:0;right:0;" list="{{list}}" bindchange="tabChange"></mp-tabbar>

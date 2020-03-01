@@ -1,0 +1,9 @@
+{
+  "component": true,
+  "usingComponents": {
+    "wux-media": "/lib/media/index",
+    "wux-avatar": "/lib/avatar/index",
+    "wux-row": "/lib/row/index",
+    "wux-col": "/lib/col/index"
+  }
+}

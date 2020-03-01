@@ -1,0 +1,17 @@
+{
+  "usingComponents": {
+    "mp-navigation-bar": "/components/navigation-bar/navigation-bar",
+    "van-action-sheet": "/vant/action-sheet/index",
+    "wux-gallery": "/lib/gallery/index",
+    "van-image": "/vant/image/index",
+    "van-row": "/vant/row/index",
+    "van-col": "/vant/col/index",
+    "wux-timeago": "/lib/timeago/index",
+    "van-icon": "/vant/icon/index",
+    "van-grid": "/vant/grid/index",
+    "van-tab": "/vant/tab/index",
+    "van-tabs": "/vant/tabs/index",
+    "van-divider": "/vant/divider/index"
+  },
+  "navigationStyle": "custom"
+}

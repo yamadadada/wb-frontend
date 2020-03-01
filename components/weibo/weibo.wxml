@@ -1,0 +1,19 @@
+<view class="page">
+  <view class="page__bd">
+    <wux-row>
+      <wux-col span="2">
+        <wux-avatar size="large" src="https://cdn.skyvow.cn/logo.png" />
+      </wux-col>
+      <wux-col span="10">
+        <view>游民星空</view>
+        <view>17分钟前</view>
+      </wux-col>
+    </wux-row>
+    <wux-row>
+      
+    </wux-row>
+  </view>
+</view>
+
+<view>11233</view>
+<wux-media thumb="https://cdn.skyvow.cn/logo.png" title="标题一" label="由各种物质组成的巨型球状天体"></wux-media>

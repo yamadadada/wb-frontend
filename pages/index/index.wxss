@@ -1,0 +1,20 @@
+@import '/lib/styles/index.wxss';
+@import "/vant/common/index.wxss";
+
+.name {
+  font-size: 36rpx;
+  color: #FD7E01;
+  font-weight: bold;
+}
+.operate {
+  display: flex;
+  justify-content: center;
+  margin-top: 7rpx;
+  margin-bottom: 7rpx;
+}
+.operate-number {
+  margin-left: 10rpx;
+}
+.likeStyle {
+  color: #FD7E01;
+}

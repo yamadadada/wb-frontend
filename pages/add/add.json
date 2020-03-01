@@ -1,0 +1,9 @@
+{
+  "usingComponents": {
+    "mp-navigation-bar": "/components/navigation-bar/navigation-bar",
+    "wux-textarea": "/lib/textarea/index",
+    "wux-button": "/lib/button/index",
+    "wux-upload": "/lib/upload/index"
+  },
+  "navigationStyle": "custom"
+}
