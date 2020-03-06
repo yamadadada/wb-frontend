@@ -9,7 +9,9 @@
     "van-popup": "/vant/popup/index",
     "van-field": "/vant/field/index",
     "van-checkbox": "/vant/checkbox/index",
-    "van-icon": "/vant/icon/index"
+    "van-icon": "/vant/icon/index",
+    "van-toast": "/vant/toast/index",
+    "van-dialog": "/vant/dialog/index"
   },
   "navigationStyle": "custom"
 }

@@ -3,7 +3,8 @@
     "pages/index/index",
     "pages/comment/comment",
     "pages/wb-detail/wb-detail",
-    "pages/add/add"
+    "pages/add/add",
+    "pages/forward/forward"
   ],
   "window": {
     "backgroundTextStyle": "light",

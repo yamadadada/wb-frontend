@@ -1,4 +1,6 @@
 import { verifyToken } from '../../utils/util'
+import Toast from '../../vant/toast/toast';
+import Dialog from '../../vant/dialog/dialog';
 
 const app = getApp()
 
@@ -12,15 +14,9 @@ Page({
     background: '#ffffff',
     imageWidth: 0,
     boardWidth: 0,
-    actions: [
-      {
-        name: '收藏'
-      },
-      {
-        name: '投诉'
-      }
-    ],
-    sheetVisible: false,
+    uid: null,
+    actions1: [],
+    sheetVisible1: false,
     weibo: null,
     isLike: false,
     forwardList: [],
@@ -30,20 +26,27 @@ Page({
     likeList: [],
     forwardCount: 0,
     commentCount: 0,
-    likeCount: 0
+    likeCount: 0,
+    popupShow: false,
+    checked: false,
+    placeholder: '写评论',
+    commentValue: '',
+    actions2: [],
+    sheetVisible2: false,
+    description: '',
+    selectCid: '',
+    selectName: ''
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    this.setData({
+      uid: app.globalData.uid
+    })
     this.calWidth();
     const wid = options.wid;
-    this.setData({
-      forwardCount: options.forwardCount,
-      likeCount: options.likeCount,
-      isLike: options.isLike
-    })
     const that = this;
     wx.request({
       url: app.globalData.host + '/weibo/' + wid,
@@ -56,7 +59,10 @@ Page({
           that.setData({
             weibo: res.data.data,
             commentVOList: res.data.data.commentVOList,
-            commentCount: res.data.data.commentCount
+            forwardCount: res.data.data.forwardCount,
+            commentCount: res.data.data.commentCount,
+            likeCount: res.data.data.likeCount,
+            isLike: res.data.data.isLike
           })
         }
       }
@@ -122,21 +128,134 @@ Page({
     })
   },
 
-  showSheet: function (e) {
-    const wid = e.currentTarget.dataset.wid;
+  showSheet1: function (e) {
+    var action = [{name: '收藏'}, {name: '投诉'}]
+    if (e.currentTarget.dataset.uid == app.globalData.uid) {
+      action = [{name: '收藏'}, {name: '删除'}];
+    }
     this.setData({
-      sheetVisible: true
+      actions1: action,
+      sheetVisible1: true
     })
   },
 
-  sheetClose: function (e) {
+  sheetClose1: function (e) {
     this.setData({
-      sheetVisible: false
+      sheetVisible1: false
     })
   },
 
-  sheetSelect: function (event) {
-    console.log(event.detail);
+  sheetSelect1: function (event) {
+    if (event.detail.name === '删除') {
+      const wid = this.data.weibo.wid;
+      const that = this;
+      Dialog.confirm({
+        title: '提示',
+        message: '确认删除该条微博?'
+      }).then(() => {
+        wx.request({
+          url: app.globalData.host + '/weibo/' + wid,
+          header: {
+            'token': app.globalData.token
+          },
+          method: 'DELETE',
+          success(res) {
+            verifyToken(res);
+            if (res.statusCode == 200) {
+              Toast.success('删除成功');
+              wx.navigateBack({})
+            } else {
+              Toast.fail(res.data.msg);
+            }
+          }
+        })
+      })
+    }
+  },
+
+  sheetClose2: function (e) {
+    this.setData({
+      sheetVisible2: false
+    })
+  },
+
+  sheetSelect2: function (event) {
+    if (event.detail.name === '回复') {
+      this.setData({
+        popupShow: true,
+        commentValue: '',
+        placeholder: '回复 @' + this.selectName
+      })
+    } else if (event.detail.name === '删除') {
+      const cid = this.data.selectCid;
+      const that = this;
+      Dialog.confirm({
+        title: '提示',
+        message: '确认删除该条评论?'
+      }).then(() => {
+        wx.request({
+          url: app.globalData.host + '/comment/' + cid,
+          header: {
+            'token': app.globalData.token
+          },
+          method: 'DELETE',
+          success(res) {
+            verifyToken(res);
+            if (res.statusCode == 200) {
+              Toast.success('删除成功');
+              that.setData({
+                commentVOList: []
+              })
+              that.getCommentVOList();
+            } else {
+              Toast.fail(res.data.msg);
+            }
+          }
+        })
+      })
+    } else if (event.detail.name === '转发') {
+      var image = '';
+      if (this.data.weibo.imageList.length > 0) {
+        image = this.data.weibo.imageList[0];
+      } else {
+        image = this.data.weibo.avatar;
+      }
+      const forwardContent = '//@' + this.data.description
+      wx.navigateTo({
+        url: '/pages/forward/forward?wid=' + this.data.weibo.wid + "&name=" + this.data.weibo.name + "&image=" + image + "&content=" + this.data.weibo.content + "&forward_content=" + forwardContent
+      })
+    }
+  },
+
+  showSheet2: function (e) {
+    const cid = e.currentTarget.dataset.cid;
+    const haveDelete = e.currentTarget.dataset.have_delete;
+    const name = e.currentTarget.dataset.name;
+    const content = e.currentTarget.dataset.content;
+    if (haveDelete) {
+      this.setData({
+        actions2: [
+          {name: '回复'},
+          {name: '转发'},
+          {name: '投诉'},
+          {name: '删除'}
+        ]
+      })
+    } else {
+      this.setData({
+        actions2: [
+          { name: '回复' },
+          { name: '转发' },
+          { name: '投诉' }
+        ]
+      })
+    }
+    this.setData({
+      sheetVisible2: true,
+      description: name + ': ' + content,
+      selectCid: cid,
+      selectName: name
+    })
   },
 
   showGallery: function (e) {
@@ -186,8 +305,14 @@ Page({
   },
   
   toCommentDetail: function (e) {
+    var image = '';
+    if (this.data.weibo.imageList.length > 0) {
+      image = this.data.weibo.imageList[0];
+    } else {
+      image = this.data.weibo.avatar;
+    }
     wx.navigateTo({
-      url: '/pages/comment/comment?cid=' + e.currentTarget.dataset.cid
+      url: '/pages/comment/comment?cid=' + e.currentTarget.dataset.cid + '&name=' + this.data.weibo.name + '&image=' + image + '&content=' + this.data.weibo.content
     })
   },
 
@@ -300,5 +425,124 @@ Page({
         }
       })
     }
+  },
+
+  popupOpen: function (e) {
+    this.setData({
+      popupShow: true,
+      commentValue: '',
+      placeholder: '写评论',
+      selectCid: '',
+      selectName: ''
+    })
+  },
+
+  popupClose: function () {
+    this.setData({
+      popupShow: false
+    })
+  },
+
+  checkedChange: function () {
+    this.setData({
+      checked: !this.data.checked
+    })
+  },
+
+  addComment: function () {
+    const comment = this.data.commentValue;
+    if (comment.length == 0) {
+      Toast.fail('评论内容不能为空');
+      return;
+    }
+    this.popupClose();
+    Toast.loading({
+      mask: true,
+      message: '提交中...'
+    });
+    const that = this;
+    wx.request({
+      url: app.globalData.host + '/comment',
+      header: {
+        'token': app.globalData.token
+      },
+      data: {
+        wid: this.data.weibo.wid,
+        content: comment,
+        commentCid: this.data.selectCid
+      },
+      method: 'POST',
+      success(res) {
+        verifyToken(res);
+        if (res.statusCode == 200) {
+          Toast.success('发送成功');
+          that.setData({
+            sort: 'create_time',
+            sortName: '按时间',
+            commentVOList: []
+          })
+          that.getCommentVOList();
+        } else {
+          Toast.fail(res.data.msg);
+        }
+      }
+    })
+    if (this.data.checked) {
+      // 转发
+      if (comment === '') {
+        comment = '转发微博'
+      }
+      wx.request({
+        url: app.globalData.host + '/forward',
+        header: {
+          'token': app.globalData.token
+        },
+        method: 'POST',
+        data: {
+          content: comment,
+          wid: this.data.weibo.wid
+        },
+        success(res) {
+          verifyToken(res);
+        }
+      })
+    }
+  },
+
+  fieldChange: function (e) {
+    this.setData({
+      commentValue: e.detail
+    })
+  },
+
+  toAddForward: function () {
+    var image = '';
+    if (this.data.weibo.status == 0) {
+      if (this.data.weibo.imageList.length > 0) {
+        image = this.data.weibo.imageList[0];
+      } else {
+        image = this.data.weibo.avatar;
+      }
+      const forwardContent = ''
+      wx.navigateTo({
+        url: '/pages/forward/forward?wid=' + this.data.weibo.wid + "&name=" + this.data.weibo.name + "&image=" + image + "&content=" + this.data.weibo.content + "&forward_content=" + forwardContent
+      })
+    } else {
+      if (this.data.weibo.forwardImageList.length > 0) {
+        image = this.data.weibo.forwardImageList[0];
+      } else {
+        image = this.data.weibo.forwardAvatar;
+      }
+      const forwardContent = '//@' + this.data.weibo.name + ":" + this.data.weibo.content;
+      wx.navigateTo({
+        url: '/pages/forward/forward?wid=' + this.data.weibo.wid + "&name=" + this.data.weibo.forwardUsername + "&image=" + image + "&content=" + this.data.weibo.forwardContent + "&forward_content=" + forwardContent
+      })
+    }
+  },
+
+  toWeiboDetail: function (e) {
+    wx.navigateTo({
+      url: '/pages/wb-detail/wb-detail?wid=' + e.currentTarget.dataset.wid
+    })
   }
 })

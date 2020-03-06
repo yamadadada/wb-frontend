@@ -54,3 +54,6 @@
 .likeStyle {
   color: #FD7E01;
 }
+.blue_name {
+  color: #5B7CA5;
+}

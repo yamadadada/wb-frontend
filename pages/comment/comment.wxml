@@ -1,3 +1,6 @@
+<van-toast id="van-toast" />
+<van-dialog id="van-dialog" />
+
 <van-action-sheet
   show="{{ sheetShow }}"
   actions="{{ sheetActions }}"
@@ -16,13 +19,13 @@
   bind:close="popupClose"
 >
   <view style="width: 95%; margin: auto;">
-    <van-field value="{{ commentValue }}" autosize type="textarea" placeholder="{{ placeholder }}" border="{{ true }}" fixed="{{ true }}" custom-style="height: 240rpx; background: #f8f8f8; margin-top: 15rpx;margin-bottom: 15rpx" />
+    <van-field value="{{ commentValue }}" autosize type="textarea" placeholder="{{ placeholder }}" border="{{ true }}" fixed="{{ true }}" custom-style="height: 240rpx; background: #f8f8f8; margin-top: 15rpx;margin-bottom: 15rpx" bind:change="fieldChange"/>
     <van-row>
       <van-col span="10">
         <van-checkbox value="{{ checked }}" shape="square" bind:change="checkedChange">同时转发</van-checkbox>
       </van-col>
       <van-col span="3" offset="11">
-        <view>发送</view>
+        <view style="color: #FD7E01" bindtap="addComment">发送</view>
       </van-col>
     </van-row>
   </view>
@@ -31,7 +34,7 @@
 <mp-navigation-bar title="{{ count }} 条回复" color="{{color}}" background="{{background}}" />
 
 <view style="background-color:#ffffff;padding: 15rpx">
-  <van-row mut-bind:tap="sheetOpen" data-name="{{ commentVO.name }}" data-content="{{ commentVO.content }}">
+  <van-row mut-bind:tap="sheetOpen" data-have_delete="{{ false }}" data-name="{{ commentVO.name }}" data-content="{{ commentVO.content }}">
     <van-col span="4">
       <van-image style="padding: 15rpx;" lazy-load width="{{ avatarWidth }}px" height="{{ avatarWidth }}px" fit="fill" src="{{ commentVO.avatar }}"/>
     </van-col>
@@ -43,7 +46,7 @@
       </view>
       <view class="small-name">{{ commentVO.name }}</view>
       <view class="comment-date">{{ commentVO.createTime }}</view>
-      <view class="content" bindtap="showActionSheet">{{ commentVO.content }}</view>
+      <view class="content" >{{ commentVO.content }}</view>
     </van-col>
   </van-row>
 </view>
@@ -60,7 +63,7 @@
   <van-divider />
 
   <view wx:for="{{ commentVOList }}" wx:key="cid" wx:for-item="item" wx:for-index="index">
-    <van-row mut-bind:tap="sheetOpen" data-name="{{ item.name }}" data-content="{{ item.content }}">
+    <van-row mut-bind:tap="sheetOpen" data-cid="{{ item.cid }}" data-have_delete="{{ item.uid === uid }}" data-name="{{ item.name }}" data-content="{{ item.content }} " data-comment_name="{{ item.commentName }}">
       <van-col span="4">
         <van-image style="padding: 15rpx;" lazy-load width="{{ avatarWidth }}px" height="{{ avatarWidth }}px" fit="fill" src="{{ item.avatar }}"/>
       </van-col>
@@ -73,9 +76,9 @@
         <view class="small-name">{{ item.name }}</view>
         <view class="comment-date">{{ item.createTime }}</view>
         <view class="content">
-          <span wx:if="{{ item.commentName != null }}">回复</span>
-          <span class="blue_name" wx:if="{{ item.commentName != null }}">{{ item.commentName }}</span>
-          <span wx:if="{{ item.commentName != null }}">：</span>
+          <span wx:if="{{ item.commentName != null }}">回复 </span>
+          <span class="blue_name" wx:if="{{ item.commentName != null }}">{{ '@' + item.commentName }}</span>
+          <span wx:if="{{ item.commentName != null }}">: </span>
           {{ item.content }}
         </view>
         <van-divider />

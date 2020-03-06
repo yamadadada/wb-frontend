@@ -1,4 +1,6 @@
 import { verifyToken } from '../../utils/util'
+import Toast from '../../vant/toast/toast';
+import Dialog from '../../vant/dialog/dialog';
 
 const app = getApp()
 
@@ -11,12 +13,12 @@ Page({
     color: '#000',
     background: '#ffffff',
     avatarWidth: app.globalData.avatarWidth,
+    uid: null,
+    name: '',
+    image: '',
+    content: '',
     sheetShow: false,
-    sheetActions: [
-      { name: '回复' },
-      { name: '转发' },
-      { name: '投诉' }
-    ],
+    sheetActions: [],
     description: '',
     commentVO: null,
     commentVOList: [],
@@ -26,13 +28,21 @@ Page({
     popupShow: false,
     commentValue: '',
     placeholder: '写评论',
-    checked: false
+    checked: false,
+    selectCid: null,
+    selectName: ''
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    this.setData({
+      uid: app.globalData.uid,
+      name: options.name,
+      image: options.image,
+      content: options.content
+    })
     this.calWidth();
     const cid = options.cid;
     const that = this;
@@ -47,7 +57,8 @@ Page({
           that.setData({
             commentVO: res.data.data.commentVO,
             commentVOList: res.data.data.commentVO.commentVOList,
-            count: res.data.data.count
+            count: res.data.data.count,
+            placeholder: '回复 @' + res.data.data.commentVO.name
           })
         }
       }
@@ -118,17 +129,48 @@ Page({
   },
 
   sheetOpen: function (e) {
+    const cid = e.currentTarget.dataset.cid;
+    const haveDelete = e.currentTarget.dataset.have_delete;
     const name = e.currentTarget.dataset.name;
     const content = e.currentTarget.dataset.content;
+    if (haveDelete) {
+      this.setData({
+        sheetActions: [
+          { name: '回复' },
+          { name: '转发' },
+          { name: '投诉' },
+          { name: '删除' }
+        ]
+      })
+    } else {
+      this.setData({
+        sheetActions: [
+          { name: '回复' },
+          { name: '转发' },
+          { name: '投诉' }
+        ]
+      })
+    }
+    var description = '';
+    if (e.currentTarget.dataset.comment_name == null) {
+      description = name + ':' + content;
+    } else {
+      description = name + ':' + '回复 @' + e.currentTarget.dataset.comment_name + ':' + content;
+    }
     this.setData({
+      selectCid: cid,
       sheetShow: true,
-      description: name + ": " + content
+      description: description,
+      selectName: name
     })
   },
 
   popupOpen: function (e) {
     this.setData({
-      popupShow: true
+      popupShow: true,
+      commentValue: '',
+      placeholder: '回复 @' + this.data.commentVO.name,
+      selectName: ''
     })
   },
 
@@ -140,7 +182,7 @@ Page({
 
   checkedChange: function () {
     this.setData({
-      checked: !checked
+      checked: !this.data.checked
     })
   },
 
@@ -255,5 +297,123 @@ Page({
         }
       })
     }
+  },
+
+  sheetSelect: function (event) {
+    if (event.detail.name === '回复') {
+      this.setData({
+        popupShow: true,
+        commentValue: '',
+        placeholder: '回复 @' + this.data.selectName
+      })
+    } else if (event.detail.name === '删除') {
+      const cid = this.data.selectCid;
+      const that = this;
+      Dialog.confirm({
+        title: '提示',
+        message: '确认删除该条评论?'
+      }).then(() => {
+        wx.request({
+          url: app.globalData.host + '/comment/' + cid,
+          header: {
+            'token': app.globalData.token
+          },
+          method: 'DELETE',
+          success(res) {
+            verifyToken(res);
+            if (res.statusCode == 200) {
+              Toast.success('删除成功');
+              that.setData({
+                commentVOList: []
+              })
+              that.getCommentVOList();
+            } else {
+              Toast.fail(res.data.msg);
+            }
+          }
+        })
+      })
+    } else if (event.detail.name === '转发') {
+      var forwardContent = '';
+      if (this.data.selectCid === this.data.commentVO.cid) {
+        forwardContent = '//@' + this.data.description
+      } else {
+        forwardContent = '//@' + this.data.description + '//@' + this.data.name + ':' + this.data.content
+      }
+      wx.navigateTo({
+        url: '/pages/forward/forward?wid=' + this.data.commentVO.wid + "&name=" + this.data.name + "&image=" + this.data.image + "&content=" + this.data.content + "&forward_content=" + forwardContent
+      })
+    }
+  },
+
+  addComment: function () {
+    const comment = this.data.commentValue;
+    if (comment.length == 0) {
+      Toast.fail('评论内容不能为空');
+      return;
+    }
+    this.popupClose();
+    Toast.loading({
+      mask: true,
+      message: '提交中...'
+    });
+    var commentName = this.data.selectName;
+    if (commentName === this.data.commentVO.name) {
+      commentName = '';
+    }
+    const that = this;
+    wx.request({
+      url: app.globalData.host + '/comment',
+      header: {
+        'token': app.globalData.token
+      },
+      data: {
+        wid: this.data.commentVO.wid,
+        content: comment,
+        commentCid: this.data.commentVO.cid,
+        commentName: commentName
+      },
+      method: 'POST',
+      success(res) {
+        verifyToken(res);
+        if (res.statusCode == 200) {
+          Toast.success('发送成功');
+          that.setData({
+            sort: 'create_time',
+            sortName: '按时间',
+            commentVOList: []
+          })
+          that.getCommentVOList();
+        } else {
+          Toast.fail(res.data.msg);
+        }
+      }
+    })
+    if (this.data.checked) {
+      // 转发
+      if (comment === '') {
+        comment = '转发微博'
+      }
+      wx.request({
+        url: app.globalData.host + '/forward',
+        header: {
+          'token': app.globalData.token
+        },
+        method: 'POST',
+        data: {
+          content: comment,
+          wid: this.data.commentVO.wid
+        },
+        success(res) {
+          verifyToken(res);
+        }
+      })
+    }
+  },
+
+  fieldChange: function (e) {
+    this.setData({
+      commentValue: e.detail
+    })
   }
 })

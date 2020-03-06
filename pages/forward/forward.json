@@ -1,0 +1,12 @@
+{
+  "usingComponents": {
+    "mp-navigation-bar": "/components/navigation-bar/navigation-bar",
+    "wux-textarea": "/lib/textarea/index",
+    "van-row": "/vant/row/index",
+    "van-col": "/vant/col/index",
+    "van-image": "/vant/image/index",
+    "van-button": "/vant/button/index",
+    "van-toast": "/vant/toast/index"
+  },
+  "navigationStyle": "custom"
+}

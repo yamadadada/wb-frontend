@@ -166,7 +166,7 @@ Page({
 
   toWeiboDetail: function (e) {
     wx.navigateTo({
-      url: '/pages/wb-detail/wb-detail?wid=' + e.currentTarget.dataset.wid + '&forwardCount=' + e.currentTarget.dataset.forward_count + '&likeCount=' + e.currentTarget.dataset.like_count + '&isLike=' + e.currentTarget.dataset.is_like
+      url: '/pages/wb-detail/wb-detail?wid=' + e.currentTarget.dataset.wid
     })
   },
 
@@ -230,5 +230,12 @@ Page({
         }
       })
     }
+  },
+
+  toAddForward: function (e) {
+    const forwardContent = ''
+    wx.navigateTo({
+      url: '/pages/forward/forward?wid=' + e.currentTarget.dataset.wid + "&name=" + e.currentTarget.dataset.name + "&image=" + e.currentTarget.dataset.image + "&content=" + e.currentTarget.dataset.content + "&forward_content=" + forwardContent
+    })
   }
 })

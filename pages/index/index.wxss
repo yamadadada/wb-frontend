@@ -18,3 +18,18 @@
 .likeStyle {
   color: #FD7E01;
 }
+.blue_name {
+  color: #5B7CA5;
+}
+.small_content {
+  color: #696969;
+  font-size: 15px;
+}
+.delete_weibo {
+  color: #696969;
+  font-size: 15px;
+  width: 100%;
+  padding-top: 30rpx;
+  padding-bottom: 30rpx;
+  text-align: center;
+}
