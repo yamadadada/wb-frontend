@@ -1,0 +1,12 @@
+{
+  "usingComponents": {
+    "mp-navigation-bar": "/components/navigation-bar/navigation-bar",
+    "van-row": "/vant/row/index",
+    "van-col": "/vant/col/index",
+    "van-image": "/vant/image/index",
+    "van-divider": "/vant/divider/index",
+    "van-tab": "/vant/tab/index",
+    "van-tabs": "/vant/tabs/index"
+  },
+  "navigationStyle": "custom"
+}

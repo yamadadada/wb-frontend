@@ -1,0 +1,14 @@
+{
+  "usingComponents": {
+    "van-tabbar": "/vant/tabbar/index",
+    "van-tabbar-item": "/vant/tabbar-item/index",
+    "mp-navigation-bar": "/components/navigation-bar/navigation-bar",
+    "van-row": "/vant/row/index",
+    "van-col": "/vant/col/index",
+    "van-image": "/vant/image/index",
+    "van-divider": "/vant/divider/index",
+    "van-grid": "/vant/grid/index",
+    "van-grid-item": "/vant/grid-item/index"
+  },
+  "navigationStyle": "custom"
+}

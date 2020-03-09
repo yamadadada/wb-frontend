@@ -1,0 +1,55 @@
+<mp-navigation-bar title="我" color="{{color}}" background="{{background}}" back="{{false}}" />
+
+<view style="background: #FFFFFF; margin-top: 30rpx; padding-top: 30rpx; padding-bottom: 25rpx">
+  <view style="width: 95%; margin: auto">
+    <van-row>
+      <van-col span="4">
+        <van-image style="padding: 10rpx;" lazy-load width="{{ imageWidth }}px" height="{{ imageWidth }}px" fit="fill" src="{{ user.avatar }}"/>
+      </van-col>
+      <van-col span="20">
+        <view class="name">{{ user.name }}</view>
+        <view class="introduction">{{ user.introduction == null ? '该用户没有填写个人简介' : user.introduction }}</view>
+      </van-col>
+    </van-row>
+    <van-divider />
+    <van-row gutter="20">
+      <van-col span="8">
+        <view style="margin:auto;">
+          <view class="number">{{ user.weiboCount }}</view>
+          <view class="bottom-font">微博</view>
+        </view>
+      </van-col>
+      <van-col span="8">
+        <view style="margin:auto;">
+          <view class="number">{{ user.followCount }}</view>
+          <view class="bottom-font">关注</view>
+        </view>
+      </van-col>
+      <van-col span="8">
+        <view style="margin:auto;">
+          <view class="number">{{ user.fanCount }}</view>
+          <view class="bottom-font">粉丝</view>
+        </view>
+      </van-col>
+    </van-row>
+  </view>
+</view>
+
+<view style="background: #FFFFFF; margin-top: 30rpx;">
+  <van-grid column-num="3">
+    <van-grid-item icon="user-circle-o" text="个人主页" 
+      link-type="navigateTo" url="/pages/user/user"/>
+    <van-grid-item icon="edit" text="修改资料" />
+    <van-grid-item icon="contact" text="我的关注" />
+    <van-grid-item icon="friends-o" text="我的粉丝" />
+    <van-grid-item icon="good-job-o" text="我的赞" />
+    <van-grid-item icon="star-o" text="我的收藏" />
+  </van-grid>
+</view>
+
+<van-tabbar active="{{ 3 }}" bind:change="tabChange">
+  <van-tabbar-item icon="wap-home-o">微博</van-tabbar-item>
+  <van-tabbar-item icon="search">发现</van-tabbar-item>
+  <van-tabbar-item icon="envelop-o">消息</van-tabbar-item>
+  <van-tabbar-item icon="contact">我</van-tabbar-item>
+</van-tabbar>

@@ -65,7 +65,7 @@
           </van-row>
         </van-col>
       </van-row>
-      <view style="margin-top:15rpx;margin-bottom:20rpx">{{weibo.content}}</view>
+      <view style="margin-top:15rpx;margin-bottom:20rpx;white-space: pre-line;">{{weibo.content}}</view>
     </view>
 
     <view wx:if="{{ weibo.status == 0 }}">
@@ -83,23 +83,23 @@
     <view wx:if="{{ weibo.status == 1 }}" style="background: #f8f8f8" >
       <view wx:if="{{ weibo.forwardUsername == null }}" class="delete_weibo">该微博已被删除</view>
       <view wx:else mut-bind:tap="toWeiboDetail" data-wid="{{ weibo.baseForwardWid }}">
-        <view style="width: 99%;margin: auto;padding-top: 15rpx;">
+        <view style="width: 99%;margin: auto;padding: 10rpx;">
           <view class="blue_name">{{ '@' + weibo.forwardUsername }}</view>
-          <view class="van-multi-ellipsis--l3 small_content" style="margin-top: 15rpx;margin-bottom: 20rpx">
+          <view class="van-multi-ellipsis--l3 small_content" style="margin-top: 10rpx;margin-bottom: 20rpx">
             {{ weibo.forwardContent}}
           </view>
+          <view wx:if="{{ weibo.forwardImageList.length == 1 }}">
+            <van-image 
+            width="{{imageWidth * 3}}px" height="{{imageWidth * 3}}px" fit="fill" src="{{weibo.forwardImageList[0]}}" 
+            mut-bind:tap="showGallery" data-current="{{weibo.forwardImageList[0]}}" data-urls="{{weibo.forwardImageList}}" />
+          </view>
+          <van-grid wx:else column-num="3" gutter="{{boardWidth}}px">
+            <van-image 
+            wx:for="{{weibo.forwardImageList}}" wx:for-item="image" wx:for-index="index" wx:key="key"
+            width="{{imageWidth}}px" height="{{imageWidth}}px" fit="fill" src="{{image}}" 
+            mut-bind:tap="showGallery" data-current="{{image}}" data-urls="{{weibo.forwardImageList}}" />
+          </van-grid>
         </view>
-        <view wx:if="{{ weibo.forwardImageList.length == 1 }}">
-          <van-image 
-          width="{{imageWidth * 3}}px" height="{{imageWidth * 3}}px" fit="fill" src="{{weibo.forwardImageList[0]}}" 
-          mut-bind:tap="showGallery" data-current="{{weibo.forwardImageList[0]}}" data-urls="{{weibo.forwardImageList}}" />
-        </view>
-        <van-grid wx:else column-num="3" gutter="{{boardWidth}}px">
-          <van-image 
-          wx:for="{{weibo.forwardImageList}}" wx:for-item="image" wx:for-index="index" wx:key="key"
-          width="{{imageWidth}}px" height="{{imageWidth}}px" fit="fill" src="{{image}}" 
-          mut-bind:tap="showGallery" data-current="{{image}}" data-urls="{{weibo.forwardImageList}}" />
-        </van-grid>
       </view>
     </view>
   </view>

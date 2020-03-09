@@ -33,3 +33,13 @@
   padding-bottom: 30rpx;
   text-align: center;
 }
+.content {
+  margin-top:15rpx;
+  margin-bottom:20rpx;
+  white-space: pre-line;
+  overflow : hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 7;
+  -webkit-box-orient: vertical;
+}

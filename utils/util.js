@@ -1,5 +1,6 @@
 import { $wuxDialog } from '../lib/index';
 import Dialog from '../vant/dialog/dialog';
+import Toast from '../vant/toast/toast';
 
 const app = getApp()
 
@@ -57,6 +58,7 @@ const verifyToken = function verifyToken(res) {
   if (res.data.code == -3) {
     app.globalData.token = null;
     login();
+    Toast.fail('登录已过期，请重新操作!');
   }
 }
 

@@ -1,0 +1,25 @@
+page {
+  background-color: #EEEEEE;
+}
+.name {
+  color: #2B2B2B;
+  margin-top: 15rpx;
+  margin-bottom: 10rpx;
+  margin-left: 30rpx;
+  font-size: 35rpx;
+}
+.introduction {
+  color: #969696;
+  font-size: 25rpx;
+  margin-left: 30rpx;
+}
+.number {
+  color: #343434;
+  font-size: 30rpx;
+  text-align: center;
+}
+.bottom-font {
+  color: #969696;
+  font-size: 30rpx;
+  text-align: center;
+}

@@ -2,8 +2,9 @@
   "usingComponents": {
     "mp-navigation-bar": "/components/navigation-bar/navigation-bar",
     "wux-textarea": "/lib/textarea/index",
-    "wux-button": "/lib/button/index",
-    "wux-upload": "/lib/upload/index"
+    "van-button": "/vant/button/index",
+    "van-uploader": "/vant/uploader/index",
+    "van-toast": "/vant/toast/index"
   },
   "navigationStyle": "custom"
 }

@@ -1,11 +1,14 @@
 page {
   background-color: #ffffff;
 }
-.operate-all {
+.bottom {
   position: fixed;
   bottom: 0;
-  width: 100%;
+  width: 50%;
   left: 0;
   right: 0;
+  margin-left: auto;
+	margin-right: auto;
   background-color: #ffffff;
+  text-align: center;
 }

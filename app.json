@@ -4,7 +4,9 @@
     "pages/comment/comment",
     "pages/wb-detail/wb-detail",
     "pages/add/add",
-    "pages/forward/forward"
+    "pages/forward/forward",
+    "pages/wo/wo",
+    "pages/user/user"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -12,5 +14,18 @@
     "navigationBarTitleText": "WeChat",
     "navigationBarTextStyle": "black"
   },
-  "sitemapLocation": "sitemap.json"
+  "sitemapLocation": "sitemap.json",
+  "tabBar": {
+    "custom": true,
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "微博"
+      },
+      {
+        "pagePath": "pages/wo/wo",
+        "text": "我"
+      }
+    ]
+  }
 }

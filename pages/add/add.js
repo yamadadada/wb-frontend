@@ -1,4 +1,8 @@
-// pages/add/add.js
+import Toast from '../../vant/toast/toast';
+import { verifyToken } from '../../utils/util'
+
+const app = getApp()
+
 Page({
 
   /**
@@ -6,7 +10,9 @@ Page({
    */
   data: {
     color: '#000',
-    background: '#f8f8f8'
+    background: '#f8f8f8',
+    content: '',
+    fileList: []
   },
 
   /**
@@ -63,5 +69,75 @@ Page({
    */
   onShareAppMessage: function () {
 
+  },
+
+  afterRead: function(event) {
+    const { file } = event.detail;
+    var fileList = this.data.fileList;
+    fileList.push({url: file.path, name: '1'});
+    this.setData({ fileList });
+  },
+
+  deleteImage: function(event) {
+    const index = event.detail.index;
+    var fileList = this.data.fileList;
+    fileList.splice(index, 1);
+    this.setData({ fileList });
+  },
+
+  textareaChange: function (e) {
+    this.setData({
+      content: e.detail.value
+    })
+  },
+
+  addWeibo: function (e) {
+    if (this.data.content == '') {
+      Toast.fail('微博内容不能为空');
+      return;
+    }
+    const that = this;
+    wx.request({
+      url: app.globalData.host + '/weibo',
+      header: {
+        'token': app.globalData.token
+      },
+      method: 'POST',
+      data: {
+        content: this.data.content
+      },
+      success(res) {
+        verifyToken(res);
+        if (res.statusCode == 200) {
+          Toast.success('发布成功');
+          that.sendImage(res.data.data, 0);
+          setTimeout(function(){
+            wx.navigateBack({});
+          }, 2000);
+        } else {
+          Toast.fail(res.data.msg);
+        }
+      }
+    })
+  },
+
+  sendImage: function(wid, index) {
+    const fileList = this.data.fileList;
+    const count = fileList.length;
+    if (index >= count) {
+      return;
+    }
+    const that = this;
+    wx.uploadFile({
+      url: app.globalData.host + '/weibo/upload/' + wid,
+      header: {
+        'token': app.globalData.token
+      },
+      filePath: fileList[index].url,
+      name: 'file',
+      success(res) {
+        that.sendImage(wid, index + 1);
+      }
+    });
   }
 })

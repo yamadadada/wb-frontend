@@ -7,15 +7,18 @@
 </view>
 
 <view class="base-forward">
-  <view class="blue_name">{{ '@' + name }}</view>
-  <van-row gutter="10">
-    <van-col span="5">
-      <van-image style="padding: 10rpx;" lazy-load width="{{ imageWidth }}px" height="{{ imageWidth }}px" fit="fill" src="{{ image }}"/>
-    </van-col>
-    <van-col span="19">
-      <view class="content van-multi-ellipsis--l3">{{ content }}</view>
-    </van-col>
-  </van-row>
+  <view wx:if="{{ name == 'null' }}" class="delete_weibo">该微博已被删除</view>
+  <view wx:else>
+    <view class="blue_name">{{ '@' + name }}</view>
+    <van-row gutter="10">
+      <van-col span="5">
+        <van-image style="padding: 10rpx;" lazy-load width="{{ imageWidth }}px" height="{{ imageWidth }}px" fit="fill" src="{{ image }}"/>
+      </van-col>
+      <van-col span="19">
+        <view class="content van-multi-ellipsis--l3">{{ content }}</view>
+      </van-col>
+    </van-row>
+  </view>
 </view>
 
 <view class="bottom" bindtap="addForward">

@@ -1,0 +1,14 @@
+<mp-navigation-bar title="{{ user.name }}" color="{{ color }}" background="{{ background }}" />
+
+<view style="margin: auto;text-align: center; margin-top: 15rpx;">
+  <van-image lazy-load width="{{ imageWidth }}px" height="{{ imageWidth }}px" fit="fill" src="{{ user.avatar }}"/>
+  <view class="name">{{ user.name }}</view>
+  <view></view>
+</view>
+
+<van-tabs active="1" bind:change="changeTab" sticky animated>
+  <van-tab name="0" title="主页">
+  </van-tab>
+  <van-tab name="1" title="微博" color="#FD7E01">
+  </van-tab>
+</van-tabs>

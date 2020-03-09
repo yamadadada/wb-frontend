@@ -4,6 +4,10 @@ import { $stopWuxRefresher } from '../../lib/index'
 const app = getApp()
 
 Page({
+
+  /**
+   * 页面的初始数据
+   */
   data: {
     color: '#000',
     background: '#ffffff',
@@ -21,34 +25,28 @@ Page({
       {
         name: '投诉'
       }
-    ],
-    list: [{
-      "text": "微博",
-      "iconPath": "/icon/home.png",
-      "selectedIconPath": "/icon/home-fill.png",
-      dot: true
-    },
-    {
-      "text": "发现",
-      "iconPath": "/icon/fangdajing.png",
-      "selectedIconPath": "/icon/sousuofangdajing.png",
-      badge: 'New'
-    },
-    {
-      "text": "消息",
-      "iconPath": "/icon/email.png",
-      "selectedIconPath": "/icon/email-fill.png"
-    },
-    {
-      "text": "我",
-      "iconPath": "/icon/people.png",
-      "selectedIconPath": "/icon/people-fill.png"
-    }]
+    ]
   },
+
   tabChange: function (e) {
-    console.log('tab change', e)
+    if (e.detail == 3) {
+      wx.switchTab({
+        url: '/pages/wo/wo'
+      })
+    }
   },
+
+  /**
+   * 生命周期函数--监听页面加载
+   */
   onLoad: function () {
+    
+  },
+
+  /**
+   * 生命周期函数--监听页面初次渲染完成
+   */
+  onReady: function () {
     this.calWidth();
     const that = this;
     // 无登录，进行登录操作
@@ -69,7 +67,7 @@ Page({
               fail() {
                 openDialog('错误', '登录失败，请稍后再试！');
               },
-              complete() {  
+              complete() {
                 that.getWeiboInfo();
               }
             })
@@ -81,7 +79,7 @@ Page({
     }
     // 检查用户是否授权
     wx.getSetting({
-      success (res) {
+      success(res) {
         if (res.authSetting['scope.userInfo']) {
           // 已经授权，不会弹框
         } else {
@@ -93,11 +91,22 @@ Page({
       }
     })
   },
+
+  /**
+   * 生命周期函数--监听页面显示
+   */
+  onShow: function () {
+    if (app.globalData.token != null) {
+      this.getWeiboInfo();
+    }
+  },
+
   dialogClose: function () {
     this.setData({
       dialogVisible: false
     })
   },
+
   getUserInfo: function (e) {
     this.setData({
       dialogVisible: false
@@ -126,6 +135,7 @@ Page({
       }
     })
   },
+  
   getWeiboInfo: function () {
     const that = this;
     wx.request({

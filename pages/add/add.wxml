@@ -1,17 +1,15 @@
+<van-toast id="van-toast" />
+
 <mp-navigation-bar title="发微博" color="{{color}}" background="{{background}}" />
 
 <view style="width:96%;margin:auto">
-  <wux-textarea hasCount rows="4" cursorSpacing="80" placeholder="分享新鲜事..." auto-focus/>
+  <wux-textarea controlled hasCount value="{{ content }}" rows="4" cursorSpacing="80" placeholder="分享新鲜事..." auto-focus bind:change="textareaChange"/>
 </view>
 
-<view style="width:90%;margin:auto;margin-top:15rpx">
-  <wux-upload listType="picture-card" defaultFileList="{{ fileList }}" max="9" url="https://www.skyvow.cn/api/common/file" bind:change="onChange" bind:success="onSuccess" bind:fail="onFail" bind:complete="onComplete" bind:preview="onPreview">
-    <text>上传</text>
-  </wux-upload>
+<view style="width:90%;margin:auto;margin-top:30rpx">
+  <van-uploader file-list="{{ fileList }}" max-count="9" bind:after-read="afterRead" bind:delete="deleteImage" />
 </view>
 
-<view class="operate-all">
-  <view style="width:50%;margin:auto">
-    <wux-button block type="balanced">发送</wux-button>
-  </view>
+<view class="bottom" bindtap="addWeibo">
+  <van-button type="primary" block>发送</van-button>
 </view>

@@ -347,7 +347,7 @@ Page({
   },
 
   addComment: function () {
-    const comment = this.data.commentValue;
+    var comment = this.data.commentValue;
     if (comment.length == 0) {
       Toast.fail('评论内容不能为空');
       return;

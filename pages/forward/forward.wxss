@@ -30,3 +30,11 @@ page {
   background: #F5F5F4;
   margin-top: 20rpx;
 }
+.delete_weibo {
+  color: #696969;
+  font-size: 15px;
+  width: 100%;
+  padding-top: 30rpx;
+  padding-bottom: 30rpx;
+  text-align: center;
+}

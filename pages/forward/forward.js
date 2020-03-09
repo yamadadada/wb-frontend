@@ -97,6 +97,10 @@ Page({
   },
 
   addForward: function (e) {
+    if (this.data.name == 'null') {
+      Toast.fail("原微博已被删除，无法转发！");
+      return;
+    }
     var content = this.data.forwardContent;
     if (content === '') {
       content = '转发微博'

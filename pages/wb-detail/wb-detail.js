@@ -15,6 +15,7 @@ Page({
     imageWidth: 0,
     boardWidth: 0,
     uid: null,
+    wid: null,
     actions1: [],
     sheetVisible1: false,
     weibo: null,
@@ -43,13 +44,19 @@ Page({
    */
   onLoad: function (options) {
     this.setData({
-      uid: app.globalData.uid
+      uid: app.globalData.uid,
+      wid: options.wid
     })
+  },
+
+  /**
+   * 生命周期函数--监听页面初次渲染完成
+   */
+  onReady: function () {
     this.calWidth();
-    const wid = options.wid;
     const that = this;
     wx.request({
-      url: app.globalData.host + '/weibo/' + wid,
+      url: app.globalData.host + '/weibo/' + this.data.wid,
       header: {
         'token': app.globalData.token
       },
@@ -67,13 +74,6 @@ Page({
         }
       }
     })
-  },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-
   },
 
   /**
@@ -450,7 +450,7 @@ Page({
   },
 
   addComment: function () {
-    const comment = this.data.commentValue;
+    var comment = this.data.commentValue;
     if (comment.length == 0) {
       Toast.fail('评论内容不能为空');
       return;
@@ -528,7 +528,7 @@ Page({
         url: '/pages/forward/forward?wid=' + this.data.weibo.wid + "&name=" + this.data.weibo.name + "&image=" + image + "&content=" + this.data.weibo.content + "&forward_content=" + forwardContent
       })
     } else {
-      if (this.data.weibo.forwardImageList.length > 0) {
+      if (this.data.weibo.forwardImageList != null && this.data.weibo.forwardImageList.length > 0) {
         image = this.data.weibo.forwardImageList[0];
       } else {
         image = this.data.weibo.forwardAvatar;
