@@ -39,11 +39,11 @@
   <van-grid column-num="3">
     <van-grid-item icon="user-circle-o" text="个人主页" 
       link-type="navigateTo" url="/pages/user/user"/>
-    <van-grid-item icon="edit" text="修改资料" />
-    <van-grid-item icon="contact" text="我的关注" />
-    <van-grid-item icon="friends-o" text="我的粉丝" />
-    <van-grid-item icon="good-job-o" text="我的赞" />
-    <van-grid-item icon="star-o" text="我的收藏" />
+    <van-grid-item icon="edit" text="修改资料" url="/pages/edit-user/edit-user"/>
+    <van-grid-item icon="contact" text="我的关注" link-type="navigateTo" url="/pages/favorite/favorite?active=0" />
+    <van-grid-item icon="friends-o" text="我的粉丝" link-type="navigateTo" url="/pages/favorite/favorite?active=1"/>
+    <van-grid-item icon="good-job-o" text="我的赞" link-type="navigateTo" url="/pages/favorite/favorite?active=2"/>
+    <van-grid-item icon="star-o" text="我的收藏" link-type="navigateTo" url="/pages/favorite/favorite?active=3"/>
   </van-grid>
 </view>
 

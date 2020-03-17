@@ -12,24 +12,18 @@ Page({
     color: '#000',
     background: '#ffffff',
     dialogVisible: false,
-    sheetVisible: false,
     canIUse: wx.canIUse('button.open-type.getUserInfo'),
     weiboList: [],
-    likeColor: '#A7A7A7',
-    imageWidth: 0,
-    boardWidth: 0,
-    actions: [
-      {
-        name: '收藏'
-      },
-      {
-        name: '投诉'
-      }
-    ]
   },
 
   tabChange: function (e) {
-    if (e.detail == 3) {
+    if (e.detail == 1) {
+      wx.switchTab({
+        url: '/pages/find/find'
+      })
+    } else if (e.detail == 2) {
+
+    } else if (e.detail == 3) {
       wx.switchTab({
         url: '/pages/wo/wo'
       })
@@ -47,7 +41,6 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-    this.calWidth();
     const that = this;
     // 无登录，进行登录操作
     if (!app.globalData.uid) {
@@ -157,95 +150,9 @@ Page({
     })
   },
 
-  calWidth: function () {
-    const windowWidth = wx.getSystemInfoSync().windowWidth;
-    const boardWidth = windowWidth * 0.0125;
-    const imageWidth = windowWidth * 0.3;
-    this.setData({
-      imageWidth: imageWidth,
-      boardWidth: boardWidth
-    })
-  },
-
-  showGallery: function (e) {
-    wx.previewImage({
-      current: e.currentTarget.dataset.current,
-      urls: e.currentTarget.dataset.urls,
-    })
-  },
-
-  toWeiboDetail: function (e) {
-    wx.navigateTo({
-      url: '/pages/wb-detail/wb-detail?wid=' + e.currentTarget.dataset.wid
-    })
-  },
-
-  showSheet: function (e) {
-    const wid = e.currentTarget.dataset.wid;
-    this.setData({
-      sheetVisible: true
-    })
-  },
-
-  sheetClose: function (e) {
-    this.setData({
-      sheetVisible: false
-    })
-  },
-  
-  sheetSelect: function (event) {
-    console.log(event.detail);
-  },
-
   toAddWeibo: function () {
     wx.navigateTo({
       url: '/pages/add/add'
-    })
-  },
-
-  likeChange: function (e) {
-    const wid = e.currentTarget.dataset.wid;
-    const islike = e.currentTarget.dataset.islike;
-    const index = e.currentTarget.dataset.index;
-    const islikeIndex = "weiboList[" + index + "].isLike";
-    const likeCountIndex = "weiboList[" + index + "].likeCount";
-    if (islike) {
-      this.setData ({
-        [islikeIndex]: false,
-        [likeCountIndex]: this.data.weiboList[index].likeCount - 1
-      })
-      wx.request({
-        url: app.globalData.host + '/weiboLike/' + wid,
-        header: {
-          'token': app.globalData.token
-        },
-        method: 'delete',
-        success(res) {
-          verifyToken(res);
-        }
-      })
-    } else {
-      this.setData({
-        [islikeIndex]: true,
-        [likeCountIndex]: this.data.weiboList[index].likeCount + 1
-      })
-      wx.request({
-        url: app.globalData.host + '/weiboLike/' + wid,
-        header: {
-          'token': app.globalData.token
-        },
-        method: 'put',
-        success(res) {
-          verifyToken(res);
-        }
-      })
-    }
-  },
-
-  toAddForward: function (e) {
-    const forwardContent = ''
-    wx.navigateTo({
-      url: '/pages/forward/forward?wid=' + e.currentTarget.dataset.wid + "&name=" + e.currentTarget.dataset.name + "&image=" + e.currentTarget.dataset.image + "&content=" + e.currentTarget.dataset.content + "&forward_content=" + forwardContent
     })
   }
 })

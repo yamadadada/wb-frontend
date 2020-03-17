@@ -119,6 +119,9 @@ Page({
         verifyToken(res);
         if (res.statusCode == 200) {
           Toast.success('转发成功');
+          setTimeout(function(){
+            wx.navigateBack({});
+          }, 2000);
           wx.navigateBack({});
         } else {
           Toast.fail(res.data.msg);

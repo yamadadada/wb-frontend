@@ -4,9 +4,15 @@
     "van-row": "/vant/row/index",
     "van-col": "/vant/col/index",
     "van-image": "/vant/image/index",
-    "van-divider": "/vant/divider/index",
     "van-tab": "/vant/tab/index",
-    "van-tabs": "/vant/tabs/index"
+    "van-tabs": "/vant/tabs/index",
+    "wux-icon": "/lib/icon/index",
+    "van-field": "/vant/field/index",
+    "van-icon": "/vant/icon/index",
+    "van-dialog": "/vant/dialog/index",
+    "van-toast": "/vant/toast/index",
+    "van-cell-group": "/vant/cell-group/index",
+    "weibo": "/components/weibo/weibo"
   },
   "navigationStyle": "custom"
 }

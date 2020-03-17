@@ -1,1 +1,72 @@
-/* pages/user/user.wxss */
+@import "/vant/common/index.wxss";
+
+.weibo-top {
+  width: 95%;
+  margin: auto;
+  margin-top: 10rpx;
+  margin-bottom: 10rpx;
+  font-size: #878787;
+}
+.operate-all {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  left: 0;
+  right: 0;
+  color: gray;
+  border-top-style: solid;
+  border-top-width: 1rpx;
+  border-top-color: #e8e8e8;
+  background-color: #f8f8f8;
+}
+.operate {
+  display: flex;
+  justify-content: center;
+  margin-top: 20rpx;
+  margin-bottom: 15rpx;
+}
+.operate-number {
+  margin-left: 10rpx;
+}
+.name {
+  font-size: 36rpx;
+  font-weight: bold;
+}
+.date {
+  font-size: 26rpx;
+  color: gray;
+}
+.content {
+  margin-top:15rpx;
+  margin-bottom:20rpx;
+  white-space: pre-line;
+  overflow : hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 7;
+  -webkit-box-orient: vertical;
+}
+.delete_weibo {
+  color: #696969;
+  font-size: 15px;
+  width: 100%;
+  padding-top: 30rpx;
+  padding-bottom: 30rpx;
+  text-align: center;
+}
+.blue_name {
+  color: #5B7CA5;
+}
+.small_content {
+  color: #696969;
+  font-size: 15px;
+}
+.weibo-operate {
+  display: flex;
+  justify-content: center;
+  margin-top: 7rpx;
+  margin-bottom: 7rpx;
+}
+.likeStyle {
+  color: #FD7E01;
+}

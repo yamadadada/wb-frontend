@@ -49,12 +49,12 @@
     <view style="width: 99%;margin: auto;padding-top: 15rpx;">
       <van-row>
         <van-col span="3">
-          <van-image style="padding: 15rpx;" lazy-load width="{{imageWidth * 0.33}}px" height="{{imageWidth * 0.33}}px" fit="fill" src="{{ weibo.avatar }}"/>
+          <van-image style="padding: 15rpx;" lazy-load width="{{imageWidth * 0.33}}px" height="{{imageWidth * 0.33}}px" fit="fill" src="{{ weibo.avatar }}" mut-bind:tap="toUser" data-uid="{{ weibo.uid }}"/>
         </van-col>
         <van-col span="20" offset="1">
           <van-row>
             <van-col span="22">
-              <view class="name">{{weibo.name}}</view>
+              <view class="name" mut-bind:tap="toUser" data-uid="{{ weibo.uid }}">{{weibo.name}}</view>
             </van-col>
             <van-col span="2">
               <van-icon name="ellipsis" bindtap="showSheet1" data-wid="{{ weibo.wid }}" data-uid="{{ weibo.uid }}"/>
@@ -107,15 +107,15 @@
 
 <view class="wux-light--bg" style="margin-top:20rpx">
 
-  <van-tabs active="1" bind:change="changeTab" sticky animated>
+  <van-tabs active="1" bind:change="changeTab" sticky animated swipeable>
     <van-tab name="0" title="转发 {{ forwardCount }}">
       <view style="width: 94%;margin: auto; margin-top: 15rpx;">
         <van-row wx:for="{{ forwardList }}" wx:key="fid" wx:for-item="forward"> 
           <van-col span="4">
-            <van-image style="padding: 15rpx;" lazy-load width="{{imageWidth * 0.33}}px" height="{{imageWidth * 0.33}}px" fit="fill" src="{{forward.avatar}}"/>
+            <van-image style="padding: 15rpx;" lazy-load width="{{imageWidth * 0.33}}px" height="{{imageWidth * 0.33}}px" fit="fill" src="{{ forward.avatar }}" mut-bind:tap="toUser" data-uid="{{ forward.uid }}"/>
           </van-col>
           <van-col span="20">
-            <view class="small-name">{{ forward.name }}</view>
+            <view class="small-name" mut-bind:tap="toUser" data-uid="{{ forward.uid }}">{{ forward.name }}</view>
             <view class="content">{{ forward.content }}</view>
             <van-row>
               <van-col span="6">
@@ -140,10 +140,10 @@
         <van-row wx:if="{{ commentVOList.length > 0 }}" wx:for="{{ commentVOList }}" wx:key="cid" wx:for-index="index" wx:for-item="comment" 
         mut-bind:tap="showSheet2" data-cid="{{ comment.cid }}" data-have_delete="{{ comment.uid === uid }}" data-name="{{ comment.name }}" data-content="{{ comment.content }}"> 
           <van-col span="4">
-            <van-image style="padding: 15rpx;" lazy-load width="{{imageWidth * 0.33}}px" height="{{imageWidth * 0.33}}px" fit="fill" src="{{comment.avatar}}"/>
+            <van-image style="padding: 15rpx;" lazy-load width="{{imageWidth * 0.33}}px" height="{{imageWidth * 0.33}}px" fit="fill" src="{{comment.avatar}}" mut-bind:tap="toUser" data-uid="{{ comment.uid }}"/>
           </van-col>
           <van-col span="20">
-            <view class="small-name">{{ comment.name }}</view>
+            <view class="small-name" mut-bind:tap="toUser" data-uid="{{ comment.uid }}">{{ comment.name }}</view>
             <view class="content">{{ comment.content }}</view>
             <view style="background-color: #f8f8f8" wx:if="{{ comment.commentVOList != null }}" mut-bind:tap="toCommentDetail" data-cid="{{ comment.cid }}" >
               <view style="width:95%;margin:auto">
@@ -192,10 +192,10 @@
       <view style="width: 94%;margin: auto; margin-top: 15rpx;">
         <van-row wx:for="{{ likeList }}" wx:key="key" wx:for-item="like"> 
           <van-col span="4">
-            <van-image style="padding: 15rpx;" lazy-load width="{{imageWidth * 0.33}}px" height="{{imageWidth * 0.33}}px" fit="fill" src="{{like.avatar}}"/>
+            <van-image style="padding: 15rpx;" lazy-load width="{{imageWidth * 0.33}}px" height="{{imageWidth * 0.33}}px" fit="fill" src="{{ like.avatar }}" mut-bind:tap="toUser" data-uid="{{ like.uid }}"/>
           </van-col>
           <van-col span="20">
-            <view class="small-name">{{ like.name }}</view>
+            <view class="small-name" mut-bind:tap="toUser" data-uid="{{ like.uid }}">{{ like.name }}</view>
             <view class="content">{{ like.introduction == null ? 'TA还没有填写个人简介' : like.introduction }}</view>
             <van-divider />
           </van-col>

@@ -1,1 +1,45 @@
-/* components/weibo.wxss */
+@import '/lib/styles/index.wxss';
+@import "/vant/common/index.wxss";
+
+.name {
+  font-size: 36rpx;
+  color: #FD7E01;
+  font-weight: bold;
+}
+.operate {
+  display: flex;
+  justify-content: center;
+  margin-top: 7rpx;
+  margin-bottom: 7rpx;
+}
+.operate-number {
+  margin-left: 10rpx;
+}
+.likeStyle {
+  color: #FD7E01;
+}
+.blue_name {
+  color: #5B7CA5;
+}
+.small_content {
+  color: #696969;
+  font-size: 15px;
+}
+.delete_weibo {
+  color: #696969;
+  font-size: 15px;
+  width: 100%;
+  padding-top: 30rpx;
+  padding-bottom: 30rpx;
+  text-align: center;
+}
+.content {
+  margin-top:15rpx;
+  margin-bottom:20rpx;
+  white-space: pre-line;
+  overflow : hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 7;
+  -webkit-box-orient: vertical;
+}

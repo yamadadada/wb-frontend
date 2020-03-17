@@ -1,0 +1,24 @@
+<mp-navigation-bar title="发现" color="{{color}}" background="{{background}}" back="{{false}}" />
+
+<van-search value="{{ value }}" placeholder="查找精彩内容" show-action="{{ showSearch }}" shape="round" bind:search="onSearch" bind:cancel="onCancel" bindtap="startSearch"/>
+
+<view wx:if="{{ showSearch }}">
+  <van-cell title="#张文宏称疫情今夏结束基本已不可能#" icon="search" >
+    <van-icon slot="right-icon" name="cross" class="custom-icon" />
+  </van-cell>
+  <van-cell title="#房似锦断绝家庭关系#" icon="search" >
+    <van-icon slot="right-icon" name="cross" class="custom-icon" />
+  </van-cell>
+</view>
+
+<view wx:else>
+  <view>微博热搜</view>
+  
+</view>
+
+<van-tabbar active="{{ 1 }}" bind:change="tabChange">
+  <van-tabbar-item icon="wap-home-o">微博</van-tabbar-item>
+  <van-tabbar-item icon="search">发现</van-tabbar-item>
+  <van-tabbar-item icon="envelop-o">消息</van-tabbar-item>
+  <van-tabbar-item icon="contact">我</van-tabbar-item>
+</van-tabbar>

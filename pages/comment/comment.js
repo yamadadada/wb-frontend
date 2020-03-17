@@ -391,8 +391,11 @@ Page({
     })
     if (this.data.checked) {
       // 转发
-      if (comment === '') {
-        comment = '转发微博'
+      var content = '//@' + this.data.commentVO.name + ':' + this.data.commentVO.content;
+      if (commentName.length > 0) {
+        content = '回复@' + commentName + ':' + comment + content;
+      } else {
+        content = comment + content;
       }
       wx.request({
         url: app.globalData.host + '/forward',
@@ -401,7 +404,7 @@ Page({
         },
         method: 'POST',
         data: {
-          content: comment,
+          content: content,
           wid: this.data.commentVO.wid
         },
         success(res) {
@@ -414,6 +417,13 @@ Page({
   fieldChange: function (e) {
     this.setData({
       commentValue: e.detail
+    })
+  },
+
+  toUser: function (e) {
+    const uid = e.currentTarget.dataset.uid;
+    wx.navigateTo({
+      url: '/pages/user/user?uid=' + uid
     })
   }
 })

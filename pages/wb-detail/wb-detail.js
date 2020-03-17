@@ -129,12 +129,19 @@ Page({
   },
 
   showSheet1: function (e) {
-    var action = [{name: '收藏'}, {name: '投诉'}]
+    var actions = [];
+    if (this.data.weibo.isFavorite) {
+      actions.push({name: '取消收藏'});
+    } else {
+      actions.push({name: '收藏'});
+    }
     if (e.currentTarget.dataset.uid == app.globalData.uid) {
-      action = [{name: '收藏'}, {name: '删除'}];
+      actions.push({ name: '删除' });
+    } else {
+      actions.push({name: '投诉'})
     }
     this.setData({
-      actions1: action,
+      actions1: actions,
       sheetVisible1: true
     })
   },
@@ -169,6 +176,48 @@ Page({
             }
           }
         })
+      })
+    } else if (event.detail.name === '收藏') {
+      const that = this;
+      const favoriteIndex = 'weibo.isFavorite';
+      wx.request({
+        url: app.globalData.host + '/favorite/' + this.data.weibo.wid,
+        header: {
+          'token': app.globalData.token
+        },
+        method: 'POST',
+        success(res) {
+          verifyToken(res);
+          if (res.statusCode === 200) {
+            Toast.success('收藏成功');
+            that.setData({
+              [favoriteIndex]: true
+            });
+          } else {
+            Toast.fail('收藏失败，请稍后再试');
+          }
+        }
+      })
+    } else if (event.detail.name === '取消收藏') {
+      const that = this;
+      const favoriteIndex = 'weibo.isFavorite';
+      wx.request({
+        url: app.globalData.host + '/favorite/' + wid,
+        header: {
+          'token': app.globalData.token
+        },
+        method: 'DELETE',
+        success(res) {
+          verifyToken(res);
+          if (res.statusCode === 200) {
+            Toast.success('取消收藏成功');
+            that.setData({
+              [favoriteIndex]: false
+            });
+          } else {
+            Toast.fail('取消收藏失败，请稍后再试');
+          }
+        }
       })
     }
   },
@@ -489,8 +538,11 @@ Page({
     })
     if (this.data.checked) {
       // 转发
-      if (comment === '') {
-        comment = '转发微博'
+      var content = ''
+      if (this.selectName != null && this.selectName != '') {
+        content = comment + '//@' + this.data.description;
+      } else {
+        content = comment;
       }
       wx.request({
         url: app.globalData.host + '/forward',
@@ -499,7 +551,7 @@ Page({
         },
         method: 'POST',
         data: {
-          content: comment,
+          content: content,
           wid: this.data.weibo.wid
         },
         success(res) {
@@ -543,6 +595,13 @@ Page({
   toWeiboDetail: function (e) {
     wx.navigateTo({
       url: '/pages/wb-detail/wb-detail?wid=' + e.currentTarget.dataset.wid
+    })
+  },
+
+  toUser: function (e) {
+    const uid = e.currentTarget.dataset.uid;
+    wx.navigateTo({
+      url: '/pages/user/user?uid=' + uid
     })
   }
 })

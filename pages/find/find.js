@@ -10,42 +10,28 @@ Page({
   data: {
     color: '#3A3A3A',
     background: '#FDFDFD',
-    imageWidth: 0,
-    user: null
+    showSearch: false
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    this.calWidth();
+
   },
 
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
+
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    const that = this;
-    wx.request({
-      url: app.globalData.host + '/user',
-      header: {
-        'token': app.globalData.token
-      },
-      success(res) {
-        verifyToken(res);
-        if (res.statusCode == 200) {
-          that.setData({
-            user: res.data.data
-          })
-        }
-      }
-    })
+
   },
 
   /**
@@ -88,20 +74,28 @@ Page({
       wx.switchTab({
         url: '/pages/index/index'
       })
-    } else if (e.detail == 1) {
-      wx.switchTab({
-        url: '/pages/find/find'
-      })
     } else if (e.detail == 2) {
       
+    } else if (e.detail == 3) {
+      wx.switchTab({
+        url: '/pages/wo/wo'
+      })
     }
   },
 
-  calWidth: function () {
-    const windowWidth = wx.getSystemInfoSync().windowWidth;
-    const imageWidth = windowWidth * 0.15;
+  startSearch: function () {
     this.setData({
-      imageWidth: imageWidth
+      showSearch: true
+    })
+  },
+
+  onSearch: function () {
+
+  },
+
+  onCancel: function () {
+    this.setData({
+      showSearch: false
     })
   }
 })

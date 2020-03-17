@@ -12,14 +12,49 @@ Page({
     color: '#000',
     background: '#f8f8f8',
     content: '',
-    fileList: []
+    fileList: [],
+    showPop1: false,
+    searchValue1: '',
+    showCancel: false,
+    alternative1: [],
+    userIndex: [],
+    indexList: [],
+    nodes: [{
+      name: 'div',
+      attrs: {
+        class: 'blue_name'
+      },
+      children: [{
+        type: 'text',
+        text: 'Hello&nbsp;World!'
+      }]
+    }]
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-
+    const that = this;
+    wx.request({
+      url: app.globalData.host + '/user/userIndex',
+      header: {
+        'token': app.globalData.token
+      },
+      success(res) {
+        verifyToken(res);
+        if (res.statusCode == 200) {
+          var list = []
+          for (var i in res.data.data) {
+            list.push(res.data.data[i].indexBar);
+          }
+          that.setData({
+            indexList: list,
+            userIndex: res.data.data
+          })
+        }
+      }
+    })
   },
 
   /**
@@ -138,6 +173,73 @@ Page({
       success(res) {
         that.sendImage(wid, index + 1);
       }
+    });
+  },
+
+  openPop1: function () {
+    this.setData({
+      showPop1: true
+    })
+  },
+
+  closePop1: function () {
+    this.setData({
+      showPop1: false
+    })
+  },
+
+  startSearch: function () {
+    this.setData({
+      showCancel: true
+    })
+  },
+
+  endSearch: function () {
+    this.setData({
+      showCancel: false,
+      searchValue1: ''
+    })
+  },
+
+  changeSearch1: function (e) {
+    const that = this;
+    this.setData({
+      searchValue1: e.detail
+    })
+    if (e.detail != null && e.detail != '') {
+      wx.request({
+        url: app.globalData.host + '/user/searchByName',
+        header: {
+          'token': app.globalData.token
+        },
+        data: {
+          name: e.detail
+        },
+        success(res) {
+          verifyToken(res);
+          if (res.statusCode == 200) {
+            that.setData({
+              alternative1: res.data.data
+            })
+          }
+        }
+      })
+    }
+  },
+
+  select1: function (e) {
+    const name = e.currentTarget.dataset.name;
+    this.setData({
+      showPop1: false,
+      searchValue1: '',
+      showCancel: false,
+      content: this.data.content + '@' + name + ' '
+    })
+  },
+
+  onPageScroll(event) {
+    this.setData({
+      scrollTop: event.scrollTop
     });
   }
 })

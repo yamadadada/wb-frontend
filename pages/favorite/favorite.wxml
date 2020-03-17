@@ -1,0 +1,38 @@
+<mp-navigation-bar title="" color="{{ color }}" background="{{ background }}" />
+
+<van-tabs active="{{ active }}" sticky animated swipeable color="#FD7E01" bind:change="changeTab">
+  <van-tab title="关注" name="0">
+    <view style="width: 94%;margin: auto; margin-top: 15rpx;">
+      <van-row wx:for="{{ followList }}" wx:key="key" wx:for-item="user"> 
+        <van-col span="4">
+          <van-image style="padding: 15rpx;" lazy-load width="{{ avatarWidth }}px" height="{{ avatarWidth }}px" fit="fill" src="{{ user.avatar }}" mut-bind:tap="toUser" data-uid="{{ user.uid }}"/>
+        </van-col>
+        <van-col span="20">
+          <view class="small-name" mut-bind:tap="toUser" data-uid="{{ user.uid }}">{{ user.name }}</view>
+          <view class="content">{{ user.introduction == null ? 'TA还没有填写个人简介' : user.introduction }}</view>
+          <van-divider />
+        </van-col>
+      </van-row>
+    </view>
+  </van-tab>
+  <van-tab title="粉丝" name="1">
+    <view style="width: 94%;margin: auto; margin-top: 15rpx;">
+      <van-row wx:for="{{ fanList }}" wx:key="key" wx:for-item="user"> 
+        <van-col span="4">
+          <van-image style="padding: 15rpx;" lazy-load width="{{ avatarWidth }}px" height="{{ avatarWidth }}px" fit="fill" src="{{ user.avatar + '?' + Math.random() }}" mut-bind:tap="toUser" data-uid="{{ user.uid }}"/>
+        </van-col>
+        <van-col span="20">
+          <view class="small-name" mut-bind:tap="toUser" data-uid="{{ user.uid }}">{{ user.name }}</view>
+          <view class="content">{{ user.introduction == null ? 'TA还没有填写个人简介' : user.introduction }}</view>
+          <van-divider />
+        </van-col>
+      </van-row>
+    </view>
+  </van-tab>
+  <van-tab title="赞" name="2">
+    <weibo weiboList="{{ likeList }}"></weibo>
+  </van-tab>
+  <van-tab title="收藏" name="3">
+    <weibo weiboList="{{ favoriteList }}"></weibo>
+  </van-tab>
+</van-tabs>

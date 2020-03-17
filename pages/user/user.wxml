@@ -1,14 +1,59 @@
 <mp-navigation-bar title="{{ user.name }}" color="{{ color }}" background="{{ background }}" />
 
+<van-dialog id="van-dialog" />
+
+<van-toast id="van-toast" />
+
 <view style="margin: auto;text-align: center; margin-top: 15rpx;">
-  <van-image lazy-load width="{{ imageWidth }}px" height="{{ imageWidth }}px" fit="fill" src="{{ user.avatar }}"/>
-  <view class="name">{{ user.name }}</view>
-  <view></view>
+  <van-image lazy-load width="{{ avatarWidth }}px" height="{{ avatarWidth }}px" fit="fill" src="{{ user.avatar }}"/>
+  <view>
+    {{ user.name }}
+    <wux-icon wx:if="{{user.gender == 1}}" type="md-male" size="16" color="blue"/>
+    <wux-icon wx:if="{{user.gender == 2}}" type="md-female" size="16" color="pink"/>
+  </view>
+  <view style="margin: 10rpx;">
+    <span>关注  {{ user.followCount }}</span>
+    <span style="margin-left: 50rpx; margin-right: 50rpx;">|</span>
+    <span>粉丝  {{ user.fanCount }}</span>
+  </view>
+  <view style="font-size: 27rpx;">
+    简介: {{ user.introduction == null ? '该用户没有填写个人简介' : user.introduction }}  
+  </view>
 </view>
 
-<van-tabs active="1" bind:change="changeTab" sticky animated>
-  <van-tab name="0" title="主页">
-  </van-tab>
-  <van-tab name="1" title="微博" color="#FD7E01">
-  </van-tab>
-</van-tabs>
+<view style="margin-top: 25rpx;">
+  <van-tabs active="1" sticky animated swipeable color="#FD7E01">
+    <van-tab name="0" title="主页">
+      <view style="margin-top: 20rpx;">
+        <van-cell-group title="个人资料">
+          <van-field label="注册时间" value="{{ user.registerTime }}" readonly />
+          <van-field label="性别" value="{{ user.gender == 0 ? '未知' : user.gender == 1 ? '男' : '女' }}" readonly />
+          <van-field label="生日" value="{{ user.birth == null ? '' : user.birth }}" readonly />
+          <van-field label="所在地" value="{{ user.location == null ? '' : user.location }}" readonly />
+          <van-field label="学校" value="{{ user.school == null ? '' : user.school }}" readonly />
+        </van-cell-group>
+      </view>
+    </van-tab>
+    <van-tab name="1" title="微博">
+      <view class="weibo-top">全部微博({{ user.weiboCount }})</view>
+      <weibo weiboList="{{ weiboList }}" ></weibo>
+    </van-tab>
+  </van-tabs>
+</view>
+
+<view style="height:100rpx;"></view>
+
+<van-row gutter="20" class="van-hairline--top operate-all" wx:if="{{ loginUid != uid }}">
+  <van-col span="8" offset="8" wx:if="{{ user.isFollow }}">
+    <view class="operate" mut-bind:tap="changeFollow">
+      <van-icon name="ellipsis" />
+      <view class="operate-number">已关注</view>
+    </view>
+  </van-col>
+  <van-col span="8" offset="8" wx:else>
+    <view class="operate" style="color: #FD7E01;" mut-bind:tap="changeFollow">
+      <van-icon name="plus" />
+      <view class="operate-number">关注</view>
+    </view>
+  </van-col>
+</van-row>

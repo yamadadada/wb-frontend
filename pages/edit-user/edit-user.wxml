@@ -1,0 +1,46 @@
+<mp-navigation-bar title="修改资料" color="{{ color }}" background="{{ background }}" />
+
+<van-toast id="van-toast" />
+
+<van-popup show="{{ showPop1 }}" position="bottom" round custom-style="height: 30%;" bind:close="closePop1" >
+  <van-picker columns="{{ ['不公开', '男', '女'] }}" default-index="{{ user.gender }}" bind:change="genderChange" 
+  title="性别" bind:cancel="closePop1" bind:confirm="confirmGender" show-toolbar/>
+</van-popup>
+
+<van-popup show="{{ showPop2 }}" position="bottom" round custom-style="height: 30%;" bind:close="closePop2" >
+  <van-datetime-picker
+    type="date" value="{{ currentDate }}" bind:input="onInput" min-date="0" title="出生日期"
+    max-date="{{ maxDate }}" formatter="{{ formatter }}"
+    bind:cancel="closePop2" bind:confirm="confirmBirth" />
+</van-popup>
+
+<van-popup show="{{ showPop3 }}" position="bottom" round custom-style="height: 30%;" bind:close="closePop3" >
+  <van-area area-list="{{ areaList }}" columns-num="{{ 2 }}" bind:confirm="locationConfirm" bind:cancel="closePop3"/>
+</van-popup>
+
+<van-cell-group title="头像">
+  <van-cell value="更换" is-link center bind:click="chooseImage">
+    <view slot="title">
+      <van-image lazy-load width="{{ avatarWidth }}px" height="{{ avatarWidth }}px" fit="fill" src="{{ avatar }}" />
+    </view> 
+  </van-cell>
+</van-cell-group>
+
+<van-cell-group title="昵称">
+  <van-field label="昵称" value="{{ user.name }}" placeholder="请输入昵称" maxlength="16" required bind:change="changeName" error="{{ error1 }}" error-message="{{ errorMessage1 }}"/>
+</van-cell-group>
+
+<van-cell-group title="简介">
+  <van-field value="{{ user.introduction }}" placeholder="请输入简介" maxlength="32" bind:change="changeIntro"/>
+</van-cell-group>
+
+<van-cell-group title="个人信息">
+  <van-field label="性别" value="{{ user.gender == 0 ? '不公开' : user.gender == 1 ? '男' : '女' }}" readonly bind:tap="openPop1" clickable required/>
+  <van-field label="出生日期" value="{{ user.birth == null ? '' : user.birth }}" placeholder="请选择出生日期" readonly bind:tap="openPop2" clickable/>
+  <van-field label="所在地" value="{{ user.location == null ? '' : user.location }}" placeholder="请选择所在地"  click readonly bindtap="showPop3"/>
+  <van-field label="学校" value="{{ user.school == null ? '' : user.school }}" placeholder="请输入学校" maxlength="16" bind:change="changeSchool" error="{{ error2 }}" />
+</van-cell-group>
+
+<view style="margin-top: 50rpx;width: 70%; margin:auto">
+  <van-button type="primary" block bindtap="commit" >提交</van-button>
+</view>

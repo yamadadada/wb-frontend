@@ -1,0 +1,9 @@
+.small-name {
+  font-size: 29rpx;
+}
+.content {
+  font-size: 30rpx;
+  font-weight: 500;
+  margin-top: 8rpx;
+  margin-bottom: 15rpx;
+}

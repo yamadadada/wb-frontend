@@ -1,0 +1,13 @@
+{
+  "usingComponents": {
+    "mp-navigation-bar": "/components/navigation-bar/navigation-bar",
+    "van-tab": "/vant/tab/index",
+    "van-tabs": "/vant/tabs/index",
+    "weibo": "/components/weibo/weibo",
+    "van-image": "/vant/image/index",
+    "van-row": "/vant/row/index",
+    "van-col": "/vant/col/index",
+    "van-divider": "/vant/divider/index"
+  },
+  "navigationStyle": "custom"
+}

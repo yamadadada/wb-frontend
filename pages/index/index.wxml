@@ -1,5 +1,7 @@
 <van-dialog id="van-dialog" />
 
+<van-toast id="van-toast" />
+
 <van-dialog
   use-slot
   title="提示"
@@ -12,118 +14,17 @@
   <view style="text-align:center;">需要授权以完善你的个人信息</view>
 </van-dialog>
 
-<van-action-sheet
-  show="{{ sheetVisible }}"
-  actions="{{ actions }}"
-  cancel-text="取消" 
-  bind:close="sheetClose"
-  bind:select="sheetSelect"
-/>
-
-<wux-gallery id="wux-gallery" />
-
 <mp-navigation-bar title="关注" color="{{color}}" background="{{background}}" back="{{false}}">
   <van-icon slot="left" name="add-o" bindtap="toAddWeibo" size="25px"/>
 </mp-navigation-bar>
 
 <wux-refresher id="wux-refresher" pullingText="释放刷新" refreshingText="刷新中" bind:refresh="getWeiboInfo">
 
-<view wx:for="{{weiboList}}" wx:key="wid" wx:for-item="weibo" wx:for-index="index" 
-style="background: #ffffff;margin-top:15rpx" 
-mut-bind:tap="toWeiboDetail" data-wid="{{weibo.wid}}" data-forward_count="{{weibo.forwardCount}}" data-like_count="{{weibo.likeCount}}" data-is_like="{{ weibo.isLike }}">
-  <view style="width: 95%;margin: auto">
-    <view style="width: 99%;margin: auto;padding-top: 15rpx;">
-      <van-row>
-        <van-col span="3">
-          <van-image style="padding: 15rpx;" lazy-load width="{{imageWidth * 0.33}}px" height="{{imageWidth * 0.33}}px" fit="fill" src="{{weibo.avatar}}"/>
-        </van-col>
-        <van-col span="20" offset="1">
-          <van-row>
-            <van-col span="22">
-              <view class="name">{{weibo.name}}</view>
-            </van-col>
-            <van-col span="2">
-              <van-icon name="ellipsis" mut-bind:tap="showSheet" data-wid="{{weibo.wid}}"/>
-            </van-col>
-          </van-row>
-          <van-row>
-            <wux-timeago to="{{ weibo.fullTime }}" refreshable />
-          </van-row>
-        </van-col>
-      </van-row>
-      <view class="content">{{weibo.content}}</view>
-    </view>
-
-    <view wx:if="{{ weibo.status == 0 }}">
-      <view wx:if="{{ weibo.imageList.length == 1 }}">
-        <van-image 
-        width="{{imageWidth * 2}}px" height="{{imageWidth * 2}}px" fit="fill" src="{{weibo.imageList[0]}}" 
-        mut-bind:tap="showGallery" data-current="{{weibo.imageList[0]}}" data-urls="{{weibo.imageList}}" />
-      </view>
-      <van-grid wx:else column-num="3" gutter="{{boardWidth}}px">
-        <van-image 
-        wx:for="{{weibo.imageList}}" wx:for-item="image" wx:for-index="index" wx:key="key"
-        width="{{imageWidth}}px" height="{{imageWidth}}px" fit="fill" src="{{image}}" 
-        mut-bind:tap="showGallery" data-current="{{image}}" data-urls="{{weibo.imageList}}" />
-      </van-grid>
-    </view>
-
-    <view wx:if="{{ weibo.status == 1 }}" style="background: #f8f8f8" >
-      <view wx:if="{{ weibo.forwardUsername == null }}" class="delete_weibo">该微博已被删除</view>
-      <view wx:else mut-bind:tap="toWeiboDetail" data-wid="{{ weibo.baseForwardWid }}">
-        <view style="width: 99%;margin: auto;padding: 10rpx;">
-          <view class="van-multi-ellipsis--l3" style="margin-top: 10rpx;margin-bottom: 20rpx">
-            <span class="blue_name">{{ '@' + weibo.forwardUsername }}</span>
-            <span class="small_content">{{ ' ' + weibo.forwardContent}}</span>
-          </view>
-          <view wx:if="{{ weibo.forwardImageList.length == 1 }}">
-            <van-image 
-            width="{{imageWidth * 2}}px" height="{{imageWidth * 2}}px" fit="fill" src="{{weibo.forwardImageList[0]}}" 
-            mut-bind:tap="showGallery" data-current="{{weibo.forwardImageList[0]}}" data-urls="{{weibo.forwardImageList}}" />
-          </view>
-          <van-grid wx:else column-num="3" gutter="{{boardWidth}}px">
-            <van-image 
-            wx:for="{{weibo.forwardImageList}}" wx:for-item="image" wx:for-index="index" wx:key="key"
-            width="{{imageWidth}}px" height="{{imageWidth}}px" fit="fill" src="{{image}}" 
-            mut-bind:tap="showGallery" data-current="{{image}}" data-urls="{{weibo.forwardImageList}}" />
-          </van-grid>
-        </view>
-        
-      </view>
-    </view>
-
-    <van-row gutter="20">
-      <view style="color: #A7A7A7;">
-        <van-col span="8">
-          <view class="operate" mut-bind:tap="toAddForward" 
-          data-wid="{{ weibo.wid }}" 
-          data-name="{{ weibo.status==0 ? weibo.name : weibo.forwardUsername }}" 
-          data-image="{{ weibo.status==0 ? (weibo.imageList.length > 0 ? weibo.imageList[0] : weibo.avatar) : (weibo.forwardImageList.length > 0 ? weibo.forwardImageList[0] : weibo.forwardAvatar) }}" 
-          data-content="{{ weibo.status==0 ? weibo.content : weibo.forwardContent }}" >
-            <van-icon name="/icon/forward.png" />
-            <view class="operate-number">{{weibo.forwardCount}}</view>
-          </view>
-        </van-col>
-        <van-col span="8">
-          <view class="operate">
-            <van-icon name="comment-o" />
-            <view class="operate-number">{{weibo.commentCount}}</view>
-          </view>
-        </van-col>
-        <van-col span="8">
-          <view class="operate {{ weibo.isLike ? 'likeStyle' : '' }}" mut-bind:tap="likeChange" data-wid="{{ weibo.wid }}" data-islike="{{ weibo.isLike }}" data-index="{{ index }}">
-            <van-icon name="good-job-o" />
-            <view class="operate-number">{{weibo.likeCount}}</view>
-          </view>
-        </van-col>
-      </view>
-    </van-row>
-  </view>
-</view>
+<weibo weiboList="{{ weiboList }}" ></weibo>
 
 </wux-refresher>
 
-<view style="height:170rpx;"></view>
+<view style="height:140rpx;"></view>
 
 <van-tabbar active="{{ 0 }}" bind:change="tabChange">
   <van-tabbar-item icon="wap-home-o">微博</van-tabbar-item>

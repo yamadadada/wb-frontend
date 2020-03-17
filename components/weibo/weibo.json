@@ -1,9 +1,12 @@
 {
   "component": true,
   "usingComponents": {
-    "wux-media": "/lib/media/index",
-    "wux-avatar": "/lib/avatar/index",
-    "wux-row": "/lib/row/index",
-    "wux-col": "/lib/col/index"
+    "wux-gallery": "/lib/gallery/index",
+    "van-image": "/vant/image/index",
+    "van-grid": "/vant/grid/index",
+    "van-row": "/vant/row/index",
+    "van-col": "/vant/col/index",
+    "van-icon": "/vant/icon/index",
+    "wux-timeago": "/lib/timeago/index"
   }
 }

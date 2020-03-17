@@ -6,7 +6,10 @@
     "pages/add/add",
     "pages/forward/forward",
     "pages/wo/wo",
-    "pages/user/user"
+    "pages/user/user",
+    "pages/edit-user/edit-user",
+    "pages/favorite/favorite",
+    "pages/find/find"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -25,6 +28,10 @@
       {
         "pagePath": "pages/wo/wo",
         "text": "我"
+      },
+      {
+        "pagePath": "pages/find/find",
+        "text": "发现"
       }
     ]
   }
