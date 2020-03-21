@@ -1,5 +1,7 @@
 <mp-navigation-bar title="" color="{{ color }}" background="{{ background }}" />
 
+<van-toast id="van-toast" />
+
 <van-tabs active="{{ active }}" sticky animated swipeable color="#FD7E01" bind:change="changeTab">
   <van-tab title="关注" name="0">
     <view style="width: 94%;margin: auto; margin-top: 15rpx;">

@@ -17,18 +17,13 @@ Page({
     searchValue1: '',
     showCancel: false,
     alternative1: [],
+    showPop2: false,
+    searchValue2: '',
+    alternative2: [],
+    newTopic: null,
     userIndex: [],
     indexList: [],
-    nodes: [{
-      name: 'div',
-      attrs: {
-        class: 'blue_name'
-      },
-      children: [{
-        type: 'text',
-        text: 'Hello&nbsp;World!'
-      }]
-    }]
+    nodes: []
   },
 
   /**
@@ -229,11 +224,23 @@ Page({
 
   select1: function (e) {
     const name = e.currentTarget.dataset.name;
+    var nodes = this.data.nodes;
+    nodes.push({
+      name: 'span',
+      attrs: {
+        class: 'blue_name'
+      },
+      children: [{
+        type: 'text',
+        text: this.data.content + '@' + name + ' '
+      }]
+    })
     this.setData({
       showPop1: false,
       searchValue1: '',
       showCancel: false,
-      content: this.data.content + '@' + name + ' '
+      content: this.data.content + '@' + name + ' ',
+      nodes: nodes
     })
   },
 
@@ -241,5 +248,122 @@ Page({
     this.setData({
       scrollTop: event.scrollTop
     });
+  },
+
+  openPop2: function () {
+    this.setData({
+      showPop2: true
+    })
+  },
+
+  closePop2: function () {
+    this.setData({
+      showPop2: false,
+      searchValue2: '',
+      alternative2: [],
+      newTopic: null
+    })
+  },
+
+  changeSearch2: function (e) {
+    const searchValue = e.detail;
+    const that = this;
+    this.setData({
+      searchValue2: searchValue
+    })
+    if (searchValue != null && searchValue != '') {
+      wx.request({
+        url: app.globalData.host + '/topic/searchByName',
+        header: {
+          'token': app.globalData.token
+        },
+        data: {
+          name: searchValue
+        },
+        success(res) {
+          verifyToken(res);
+          if (res.statusCode == 200) {
+            const topicList = res.data.data
+            var newTopic = '#' + searchValue + '#';
+            for (var i in topicList) {
+              if (topicList[i].name === searchValue) {
+                newTopic = null;
+                break;
+              }
+            }
+            that.setData({
+              alternative2: topicList,
+              newTopic: newTopic
+            })
+          }
+        }
+      })
+    }
+  },
+
+  select2: function (e) {
+    const name = e.currentTarget.dataset.name;
+    var nodes = this.data.nodes;
+    nodes.push({
+      name: 'span',
+      attrs: {
+        class: 'blue_name'
+      },
+      children: [{
+        type: 'text',
+        text: this.data.content + name
+      }]
+    })
+    this.setData({
+      showPop2: false,
+      searchValue2: '',
+      content: this.data.content + name,
+      nodes: nodes
+    })
+  },
+
+  onInput: function (e) {
+    var value = e.detail.value;
+    const patt = /@[\w\u4e00-\u9fa5]{1,16}|#[\w\u4e00-\u9fa5]+#/;
+    var list = patt.exec(value);
+    var nodes = [];
+    while(list != null && list.length > 0) {
+      const item = list[0] + "";
+      const start = value.search(patt);
+      if (start != 0) {
+        nodes.push({
+          name: 'span',
+          children: [{
+            type: 'text',
+            text: value.substring(0, start)
+          }]
+        })
+      }
+      nodes.push({
+        name: 'span',
+        attrs: {
+          class: 'blue_name'
+        },
+        children: [{
+          type: 'text',
+          text: item
+        }]
+      });
+      value = value.substring(start + item.length, value.length);
+      list = patt.exec(value);
+    }
+    if (value.length > 0) {
+      nodes.push({
+        name: 'span',
+        children: [{
+          type: 'text',
+          text: value
+        }]
+      })
+    }
+    this.setData({
+      nodes: nodes,
+      content: e.detail.value
+    })
   }
 })

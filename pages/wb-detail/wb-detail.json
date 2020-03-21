@@ -16,7 +16,8 @@
     "van-field": "/vant/field/index",
     "van-checkbox": "/vant/checkbox/index",
     "van-toast": "/vant/toast/index",
-    "van-dialog": "/vant/dialog/index"
+    "van-dialog": "/vant/dialog/index",
+    "weibo-text": "/components/weibo-text/weibo-text"
   },
   "navigationStyle": "custom"
 }

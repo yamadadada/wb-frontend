@@ -2,9 +2,8 @@
 @import "/vant/common/index.wxss";
 
 .name {
-  font-size: 36rpx;
-  color: #FD7E01;
-  font-weight: bold;
+  font-size: 34rpx;
+  font-weight: 500;
 }
 .date {
   font-size: 26rpx;

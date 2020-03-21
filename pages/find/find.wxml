@@ -1,3 +1,15 @@
+<van-popup show="{{ showPop }}" closeable close-icon-position="top-left" position="right" close-icon="arrow-left" custom-style="width: 100%" bind:close="closePop" >
+<view style="margin-top: 15rpx;">
+  <van-cell is-link>
+    <view slot="title">
+      <view class="van-cell-text">#张文宏称疫情今夏结束基本已不可能#</view>
+      <van-tag type="danger">标</van-tag>
+    </view>
+  </van-cell>
+</view>
+
+</van-popup>
+
 <mp-navigation-bar title="发现" color="{{color}}" background="{{background}}" back="{{false}}" />
 
 <van-search value="{{ value }}" placeholder="查找精彩内容" show-action="{{ showSearch }}" shape="round" bind:search="onSearch" bind:cancel="onCancel" bindtap="startSearch"/>
@@ -12,8 +24,78 @@
 </view>
 
 <view wx:else>
-  <view>微博热搜</view>
-  
+  <view style="background: #ffffff; padding-bottom: 15rpx;">
+    <view style="width: 93%; margin: auto;">
+      <view style="display: flex;">
+        <van-icon name="chart-trending-o" size="22" color="red" />
+        <view style="color: #686868; margin-left: 10rpx;">微博热搜</view>
+      </view>
+      <van-row custom-class="hot-row">
+        <van-col span="12">
+          <view class="van-hairline--right" style="padding-right: 30rpx; display: flex;">
+            <view class="van-ellipsis" style="font-size: 30rpx;">林小宅拿F</view>
+            <van-tag type="primary" custom-class="tag">荐</van-tag>
+          </view>
+        </van-col>
+        <van-col span="12">
+          <view style="padding-left: 30rpx; display: flex;">
+            <view class="van-ellipsis" style="font-size: 30rpx;">意大利市长变身河南村长怒怼市民</view>
+            <van-tag type="primary" custom-class="tag">荐</van-tag>
+          </view>
+        </van-col>
+      </van-row>
+      <van-row custom-class="hot-row">
+        <van-col span="12">
+          <view class="van-hairline--right" style="padding-right: 30rpx; display: flex;">
+            <view class="van-ellipsis" style="font-size: 30rpx;">江苏开学时间</view>
+            <van-tag type="primary" custom-class="tag">荐</van-tag>
+          </view>
+        </van-col>
+        <van-col span="12">
+          <view style="padding-left: 30rpx; display: flex;">
+            <view class="van-ellipsis" style="font-size: 30rpx;">郑恺</view>
+            <van-tag type="primary" custom-class="tag">荐</van-tag>
+          </view>
+        </van-col>
+      </van-row>
+      <van-row custom-class="hot-row">
+        <van-col span="12">
+          <view class="van-hairline--right" style="padding-right: 30rpx; display: flex;">
+            <view class="van-ellipsis" style="font-size: 30rpx;">快乐星球多面体</view>
+            <van-tag type="primary" custom-class="tag">荐</van-tag>
+          </view>
+        </van-col>
+        <van-col span="12">
+          <view style="padding-left: 30rpx; display: flex;">
+            <view class="van-ellipsis" style="font-size: 30rpx;">快乐大本营</view>
+            <van-tag type="primary" custom-class="tag">荐</van-tag>
+          </view>
+        </van-col>
+      </van-row>
+      <van-row custom-class="hot-row">
+        <van-col span="12">
+          <view class="van-hairline--right" style="padding-right: 30rpx; display: flex;">
+            <view class="van-ellipsis" style="font-size: 30rpx;">乃万评级C</view>
+            <van-tag type="primary" custom-class="tag">荐</van-tag>
+          </view>
+        </van-col>
+        <van-col span="12">
+          <view style="padding-left: 30rpx; display: flex; color: #FD7E01;" bindtap="openPop">
+            <view style="font-size: 32rpx;">更多热搜</view>
+            <van-icon name="arrow" size="20" custom-class="arrow-icon" />
+          </view>
+        </van-col>
+      </van-row>
+    </view>
+  </view>
+
+  <van-tabs active="0" custom-class="tabs" sticky animated swipeable color="#FD7E01" bind:change="changeTab">
+    <van-tab title="热点" name="0">内容 1</van-tab>
+    <van-tab title="实时" name="1">
+      <weibo weiboList="{{ realTimeList }}"></weibo>
+    </van-tab>
+    <van-tab title="同校" name="2">内容 3</van-tab>
+  </van-tabs>
 </view>
 
 <van-tabbar active="{{ 1 }}" bind:change="tabChange">

@@ -5,7 +5,14 @@
     "mp-navigation-bar": "/components/navigation-bar/navigation-bar",
     "van-search": "/vant/search/index",
     "van-cell": "/vant/cell/index",
-    "van-icon": "/vant/icon/index"
+    "van-icon": "/vant/icon/index",
+    "van-row": "/vant/row/index",
+    "van-col": "/vant/col/index",
+    "van-tag": "/vant/tag/index",
+    "van-tab": "/vant/tab/index",
+    "van-tabs": "/vant/tabs/index",
+    "van-popup": "/vant/popup/index",
+    "weibo": "/components/weibo/weibo"
   },
   "navigationStyle": "custom"
 }

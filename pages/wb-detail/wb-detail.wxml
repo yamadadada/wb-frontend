@@ -65,7 +65,9 @@
           </van-row>
         </van-col>
       </van-row>
-      <view style="margin-top:15rpx;margin-bottom:20rpx;white-space: pre-line;">{{weibo.content}}</view>
+      <view style="margin-top:15rpx;margin-bottom:20rpx;white-space: pre-line;">
+        <weibo-text textList="{{ weibo.content }}"></weibo-text>
+      </view>
     </view>
 
     <view wx:if="{{ weibo.status == 0 }}">
@@ -84,9 +86,9 @@
       <view wx:if="{{ weibo.forwardUsername == null }}" class="delete_weibo">该微博已被删除</view>
       <view wx:else mut-bind:tap="toWeiboDetail" data-wid="{{ weibo.baseForwardWid }}">
         <view style="width: 99%;margin: auto;padding: 10rpx;">
-          <view class="blue_name">{{ '@' + weibo.forwardUsername }}</view>
-          <view class="van-multi-ellipsis--l3 small_content" style="margin-top: 10rpx;margin-bottom: 20rpx">
-            {{ weibo.forwardContent}}
+          <view class="blue_name" mut-bind:tap="toUserByName" data-name="{{ weibo.forwardUsername }}">{{ '@' + weibo.forwardUsername }}</view>
+          <view class="small_content" style="margin-top: 10rpx;margin-bottom: 20rpx">
+            <weibo-text textList="{{ weibo.forwardContent }}"></weibo-text>
           </view>
           <view wx:if="{{ weibo.forwardImageList.length == 1 }}">
             <van-image 
@@ -116,7 +118,9 @@
           </van-col>
           <van-col span="20">
             <view class="small-name" mut-bind:tap="toUser" data-uid="{{ forward.uid }}">{{ forward.name }}</view>
-            <view class="content">{{ forward.content }}</view>
+            <view class="content">
+              <weibo-text textList="{{ forward.content }}"></weibo-text>
+            </view>
             <van-row>
               <van-col span="6">
                 <view class="comment-date">{{ forward.createTime }}</view>
@@ -144,22 +148,30 @@
           </van-col>
           <van-col span="20">
             <view class="small-name" mut-bind:tap="toUser" data-uid="{{ comment.uid }}">{{ comment.name }}</view>
-            <view class="content">{{ comment.content }}</view>
+            <view class="content">
+              <weibo-text textList="{{ comment.textVOList }}"></weibo-text>
+            </view>
             <view style="background-color: #f8f8f8" wx:if="{{ comment.commentVOList != null }}" mut-bind:tap="toCommentDetail" data-cid="{{ comment.cid }}" >
               <view style="width:95%;margin:auto">
                 <view class="comment-comment" wx:if="{{ comment.commentVOList.length >= 1 }}">
-                  <span class="blue_name">{{ comment.commentVOList[0].name }}</span>
+                  <span class="blue_name" mut-bind:tap="toUser" data-uid="{{ comment.commentVOList[0].uid }}">{{ comment.commentVOList[0].name }}</span>
                   <span wx:if="{{ comment.commentVOList[0].commentName != null }}">回复</span>
-                  <span class="blue_name" wx:if="{{ comment.commentVOList[0].commentName != null }}">{{ '@' +  comment.commentVOList[0].commentName }}</span>
+                  <span class="blue_name" wx:if="{{ comment.commentVOList[0].commentName != null }}"  mut-bind:tap="toUser" data-uid="{{ comment.commentVOList[0].commentUid }}">
+                    {{ '@' +  comment.commentVOList[0].commentName }}
+                  </span>
                   <span>：</span>
-                  <span>{{ comment.commentVOList[0].content }}</span>
+                  <span>
+                    <weibo-text textList="{{ comment.commentVOList[0].textVOList }}"></weibo-text>
+                  </span>
                 </view>
                 <view class="comment-comment" wx:if="{{ comment.commentVOList.length >= 2 }}">
-                  <span class="blue_name">{{ comment.commentVOList[1].name }}</span>
+                  <span class="blue_name" mut-bind:tap="toUser" data-uid="{{ comment.commentVOList[1].uid }}">{{ comment.commentVOList[1].name }}</span>
                   <span wx:if="{{ comment.commentVOList[1].commentName != null }}">回复</span>
-                  <span class="blue_name" wx:if="{{ comment.commentVOList[1].commentName != null }}">{{ '@' + comment.commentVOList[1].commentName }}</span>
+                  <span class="blue_name" wx:if="{{ comment.commentVOList[1].commentName != null }}" mut-bind:tap="toUser" data-uid="{{ comment.commentVOList[1].commentUid }}">{{ '@' + comment.commentVOList[1].commentName }}</span>
                   <span>：</span>
-                  <span>{{ comment.commentVOList[1].content }}</span>
+                  <span>
+                    <weibo-text textList="{{ comment.commentVOList[1].textVOList }}"></weibo-text>
+                  </span>
                 </view>
                 <view class="comment-comment-more" wx:if="{{ comment.commentVOList.length >= 3 }}">共 {{ comment.commentVOList.length }} 条回复 ></view>
               </view>

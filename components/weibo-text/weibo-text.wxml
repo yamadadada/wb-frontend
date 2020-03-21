@@ -1,0 +1,5 @@
+<span wx:for="{{ textList }}" wx:for-item="item" wx:key="key">
+  <span wx:if="{{ item.textType == 0 }}">{{ item.text }}</span>
+  <span wx:if="{{ item.textType == 1 }}" class="blue_name" mut-bind:tap="toUser" data-uid="{{ item.uid }}">{{ item.text }}</span>
+  <span wx:if="{{ item.textType == 2 }}" class="blue_name" mut-bind:tap="toTopic" data-topic="{{ item.topic }}">{{ item.text }}</span>
+</span>

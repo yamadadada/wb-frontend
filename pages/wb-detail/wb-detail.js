@@ -264,15 +264,37 @@ Page({
       })
     } else if (event.detail.name === '转发') {
       var image = '';
-      if (this.data.weibo.imageList.length > 0) {
-        image = this.data.weibo.imageList[0];
+      if (this.data.weibo.status == 0) {
+        if (this.data.weibo.imageList.length > 0) {
+          image = this.data.weibo.imageList[0];
+        } else {
+          image = this.data.weibo.avatar;
+        }
+        var content = "";
+        const contentList = this.data.weibo.content;
+        for (var i in contentList) {
+          content = content + contentList[i].text
+        }
+        const forwardContent = '//@' + this.data.description
+        wx.navigateTo({
+          url: '/pages/forward/forward?wid=' + this.data.weibo.wid + "&name=" + this.data.weibo.name + "&image=" + image + "&content=" + content + "&forward_content=" + forwardContent + "&select_cid=" + this.data.selectCid
+        })
       } else {
-        image = this.data.weibo.avatar;
+        if (this.data.weibo.forwardImageList != null && this.data.weibo.forwardImageList.length > 0) {
+          image = this.data.weibo.forwardImageList[0];
+        } else {
+          image = this.data.weibo.forwardAvatar;
+        }
+        var content = "";
+        const contentList = this.data.weibo.forwardContent;
+        for (var i in contentList) {
+          content = content + contentList[i].text
+        }
+        const forwardContent = '//@' + this.data.description + '//@' + this.data.weibo.name + ":" + content;
+        wx.navigateTo({
+          url: '/pages/forward/forward?wid=' + this.data.weibo.wid + "&name=" + this.data.weibo.forwardUsername + "&image=" + image + "&content=" + content + "&forward_content=" + forwardContent + "&select_cid=" + this.data.selectCid
+        })
       }
-      const forwardContent = '//@' + this.data.description
-      wx.navigateTo({
-        url: '/pages/forward/forward?wid=' + this.data.weibo.wid + "&name=" + this.data.weibo.name + "&image=" + image + "&content=" + this.data.weibo.content + "&forward_content=" + forwardContent
-      })
     }
   },
 
@@ -360,8 +382,26 @@ Page({
     } else {
       image = this.data.weibo.avatar;
     }
+    var content = '';
+    var forwardContent = '';
+    if (this.data.weibo.status == 0) {
+      const contentList = this.data.weibo.content;
+      for (var i in contentList) {
+        content = content + contentList[i].text;
+      }
+    } else {
+      var list = this.data.weibo.forwardContent;
+      for (var i in list) {
+        content = content + list[i].text;
+      }
+      list = this.data.weibo.content;
+      for (var i in list) {
+        forwardContent = forwardContent + list[i].text;
+      }
+      forwardContent = '//@' + this.data.weibo.name + ':' + forwardContent;
+    }
     wx.navigateTo({
-      url: '/pages/comment/comment?cid=' + e.currentTarget.dataset.cid + '&name=' + this.data.weibo.name + '&image=' + image + '&content=' + this.data.weibo.content
+      url: '/pages/comment/comment?cid=' + e.currentTarget.dataset.cid + '&name=' + this.data.weibo.name + '&image=' + image + '&content=' + content + '%forward_content=' + forwardContent
     })
   },
 
@@ -575,9 +615,14 @@ Page({
       } else {
         image = this.data.weibo.avatar;
       }
+      var content = "";
+      const contentList = this.data.weibo.content;
+      for (var i in contentList) {
+        content = content + contentList[i].text
+      }
       const forwardContent = ''
       wx.navigateTo({
-        url: '/pages/forward/forward?wid=' + this.data.weibo.wid + "&name=" + this.data.weibo.name + "&image=" + image + "&content=" + this.data.weibo.content + "&forward_content=" + forwardContent
+        url: '/pages/forward/forward?wid=' + this.data.weibo.wid + "&name=" + this.data.weibo.name + "&image=" + image + "&content=" + content + "&forward_content=" + forwardContent
       })
     } else {
       if (this.data.weibo.forwardImageList != null && this.data.weibo.forwardImageList.length > 0) {
@@ -585,9 +630,19 @@ Page({
       } else {
         image = this.data.weibo.forwardAvatar;
       }
-      const forwardContent = '//@' + this.data.weibo.name + ":" + this.data.weibo.content;
+      var content = "";
+      const contentList = this.data.weibo.forwardContent;
+      for (var i in contentList) {
+        content = content + contentList[i].text
+      }
+      var forwardContent = "";
+      const list = this.data.weibo.content;
+      for (var i in list) {
+        forwardContent = forwardContent + list[i].text;
+      }
+      forwardContent = '//@' + this.data.weibo.name + ":" + forwardContent;
       wx.navigateTo({
-        url: '/pages/forward/forward?wid=' + this.data.weibo.wid + "&name=" + this.data.weibo.forwardUsername + "&image=" + image + "&content=" + this.data.weibo.forwardContent + "&forward_content=" + forwardContent
+        url: '/pages/forward/forward?wid=' + this.data.weibo.wid + "&name=" + this.data.weibo.forwardUsername + "&image=" + image + "&content=" + content + "&forward_content=" + forwardContent
       })
     }
   },
@@ -602,6 +657,13 @@ Page({
     const uid = e.currentTarget.dataset.uid;
     wx.navigateTo({
       url: '/pages/user/user?uid=' + uid
+    })
+  },
+
+  toUserByName: function (e) {
+    const name = e.currentTarget.dataset.name;
+    wx.navigateTo({
+      url: '/pages/user/user?name=' + name
     })
   }
 })

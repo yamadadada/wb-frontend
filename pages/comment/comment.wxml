@@ -34,7 +34,7 @@
 <mp-navigation-bar title="{{ count }} 条回复" color="{{color}}" background="{{background}}" />
 
 <view style="background-color:#ffffff;padding: 15rpx">
-  <van-row mut-bind:tap="sheetOpen" data-have_delete="{{ false }}" data-name="{{ commentVO.name }}" data-content="{{ commentVO.content }}">
+  <van-row mut-bind:tap="sheetOpen" data-have_delete="{{ false }}" data-name="{{ commentVO.name }}" data-content="{{ commentVO.content }}" data-uid="{{ commentVO.uid }}">
     <van-col span="4">
       <van-image style="padding: 15rpx;" lazy-load width="{{ avatarWidth }}px" height="{{ avatarWidth }}px" fit="fill" src="{{ commentVO.avatar }}" mut-bind:tap="toUser" data-uid="{{ commentVO.uid }}"/>
     </van-col>
@@ -46,7 +46,9 @@
       </view>
       <view class="small-name" mut-bind:tap="toUser" data-uid="{{ commentVO.uid }}">{{ commentVO.name }}</view>
       <view class="comment-date">{{ commentVO.createTime }}</view>
-      <view class="content" >{{ commentVO.content }}</view>
+      <view class="content" >
+        <weibo-text textList="{{ commentVO.textVOList }}"></weibo-text>
+      </view>
     </van-col>
   </van-row>
 </view>
@@ -77,9 +79,9 @@
         <view class="comment-date">{{ item.createTime }}</view>
         <view class="content">
           <span wx:if="{{ item.commentName != null }}">回复 </span>
-          <span class="blue_name" wx:if="{{ item.commentName != null }}">{{ '@' + item.commentName }}</span>
+          <span class="blue_name" wx:if="{{ item.commentName != null }}" mut-bind:tap="toUser" data-uid="{{ item.commentUid }}">{{ '@' + item.commentName }}</span>
           <span wx:if="{{ item.commentName != null }}">: </span>
-          {{ item.content }}
+          <weibo-text textList="{{ item.textVOList }}"></weibo-text>
         </view>
         <van-divider />
       </van-col>

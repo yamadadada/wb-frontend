@@ -1,1 +1,16 @@
-/* pages/find/find.wxss */
+@import "/vant/common/index.wxss";
+
+.tag {
+  margin-left: 20rpx;
+  font-size: 20rpx;
+}
+.hot-row {
+  margin-top: 30rpx;
+  margin-bottom: 30rpx;
+}
+.arrow-icon {
+  margin-left: 20rpx;
+}
+.tabs {
+  margin-top: 20rpx;
+}

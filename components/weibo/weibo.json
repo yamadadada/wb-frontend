@@ -7,6 +7,7 @@
     "van-row": "/vant/row/index",
     "van-col": "/vant/col/index",
     "van-icon": "/vant/icon/index",
-    "wux-timeago": "/lib/timeago/index"
+    "wux-timeago": "/lib/timeago/index",
+    "weibo-text": "/components/weibo-text/weibo-text"
   }
 }

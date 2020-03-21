@@ -10,7 +10,11 @@ Page({
   data: {
     color: '#3A3A3A',
     background: '#FDFDFD',
-    showSearch: false
+    showSearch: false,
+    showPop: false,
+    hotList: [],
+    realTimeList: [],
+    schoolList: []
   },
 
   /**
@@ -97,5 +101,44 @@ Page({
     this.setData({
       showSearch: false
     })
+  },
+
+  openPop: function () {
+    this.setData({
+      showPop: true
+    })
+  },
+
+  closePop: function () {
+    this.setData({
+      showPop: false
+    })
+  },
+
+  changeTab: function () {
+    const type = event.detail.name;
+    const that = this;
+    if (type === '0') {
+
+    } else if (type === '1') {
+      if (this.data.realTimeList.length === 0) {
+        wx.request({
+          url: app.globalData.host + '/weibo/realTime',
+          header: {
+            'token': app.globalData.token
+          },
+          success(res) {
+            verifyToken(res);
+            if (res.statusCode == 200) {
+              that.setData({
+                realTimeList: res.data.data
+              })
+            }
+          }
+        })
+      }
+    } else {
+
+    }
   }
 })

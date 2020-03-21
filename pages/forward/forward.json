@@ -5,8 +5,14 @@
     "van-row": "/vant/row/index",
     "van-col": "/vant/col/index",
     "van-image": "/vant/image/index",
-    "van-button": "/vant/button/index",
-    "van-toast": "/vant/toast/index"
+    "van-toast": "/vant/toast/index",
+    "van-icon": "/vant/icon/index",
+    "van-popup": "/vant/popup/index",
+    "van-search": "/vant/search/index",
+    "van-index-bar": "/vant/index-bar/index",
+    "van-index-anchor": "/vant/index-anchor/index",
+    "van-cell": "/vant/cell/index",
+    "van-checkbox": "/vant/checkbox/index"
   },
   "navigationStyle": "custom"
 }

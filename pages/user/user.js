@@ -30,14 +30,37 @@ Page({
       loginUid: app.globalData.uid
     })
     this.calWidth();
-    if (options.uid) {
-      this.setData({
-        uid: options.uid
+    if (options.name) {
+      const that = this;
+      wx.request({
+        url: app.globalData.host + '/getByName',
+        header: {
+          'token': app.globalData.token
+        },
+        data: {
+          name: options.name
+        },
+        success(res) {
+          verifyToken(res);
+          if (res.statusCode == 200) {
+            that.setData({
+              user: res.data.data,
+              uid: res.data.data.uid
+            });
+            that.getWeiboList();
+          }
+        }
       })
     } else {
-      this.setData({
-        uid: app.globalData.uid 
-      })
+      if (options.uid) {
+        this.setData({
+          uid: options.uid
+        })
+      } else {
+        this.setData({
+          uid: app.globalData.uid
+        })
+      }
     }
   },
 
@@ -56,24 +79,12 @@ Page({
         if (res.statusCode == 200) {
           that.setData({
             user: res.data.data
-          })
+          });
+          that.getWeiboList();
         }
       }
     })
-    wx.request({
-      url: app.globalData.host + '/weibo/user/' + this.data.uid,
-      header: {
-        'token': app.globalData.token
-      },
-      success(res) {
-        verifyToken(res);
-        if (res.statusCode == 200) {
-          that.setData({
-            weiboList: res.data.data
-          })
-        }
-      }
-    })
+    
   },
 
   /**
@@ -167,5 +178,23 @@ Page({
         }
       })
     }
+  },
+
+  getWeiboList: function () {
+    const that = this;
+    wx.request({
+      url: app.globalData.host + '/weibo/user/' + this.data.uid,
+      header: {
+        'token': app.globalData.token
+      },
+      success(res) {
+        verifyToken(res);
+        if (res.statusCode == 200) {
+          that.setData({
+            weiboList: res.data.data
+          })
+        }
+      }
+    })
   }
 })

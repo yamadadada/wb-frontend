@@ -17,6 +17,7 @@ Page({
     name: '',
     image: '',
     content: '',
+    forwardContent: '',
     sheetShow: false,
     sheetActions: [],
     description: '',
@@ -30,7 +31,8 @@ Page({
     placeholder: '写评论',
     checked: false,
     selectCid: null,
-    selectName: ''
+    selectName: '',
+    selectUid: null
   },
 
   /**
@@ -41,7 +43,8 @@ Page({
       uid: app.globalData.uid,
       name: options.name,
       image: options.image,
-      content: options.content
+      content: options.content,
+      forwardContent: options.forward_content
     })
     this.calWidth();
     const cid = options.cid;
@@ -132,6 +135,7 @@ Page({
     const cid = e.currentTarget.dataset.cid;
     const haveDelete = e.currentTarget.dataset.have_delete;
     const name = e.currentTarget.dataset.name;
+    const uid = e.currentTarget.dataset.uid;
     const content = e.currentTarget.dataset.content;
     if (haveDelete) {
       this.setData({
@@ -161,7 +165,8 @@ Page({
       selectCid: cid,
       sheetShow: true,
       description: description,
-      selectName: name
+      selectName: name,
+      selectUid: uid
     })
   },
 
@@ -170,7 +175,8 @@ Page({
       popupShow: true,
       commentValue: '',
       placeholder: '回复 @' + this.data.commentVO.name,
-      selectName: ''
+      selectName: '',
+      selectUid: null
     })
   },
 
@@ -334,14 +340,14 @@ Page({
         })
       })
     } else if (event.detail.name === '转发') {
-      var forwardContent = '';
+      var forwardContent = this.data.forwardContent;
       if (this.data.selectCid === this.data.commentVO.cid) {
-        forwardContent = '//@' + this.data.description
+        forwardContent = '//@' + this.data.description + forwardContent;
       } else {
-        forwardContent = '//@' + this.data.description + '//@' + this.data.name + ':' + this.data.content
+        forwardContent = '//@' + this.data.description + '//@' + this.data.commentVO.name + ':' + this.data.commentVO.content + forwardContent;
       }
       wx.navigateTo({
-        url: '/pages/forward/forward?wid=' + this.data.commentVO.wid + "&name=" + this.data.name + "&image=" + this.data.image + "&content=" + this.data.content + "&forward_content=" + forwardContent
+        url: '/pages/forward/forward?wid=' + this.data.commentVO.wid + "&name=" + this.data.name + "&image=" + this.data.image + "&content=" + this.data.content + "&forward_content=" + this.data.forwardContent + "&select_cid=" + this.data.commentVO.cid + "&select_name=" + this.data.selectName + "&select_uid=" + this.dtat.selectUid
       })
     }
   },
@@ -358,8 +364,10 @@ Page({
       message: '提交中...'
     });
     var commentName = this.data.selectName;
-    if (commentName === this.data.commentVO.name) {
+    var commentUid = this.data.selectUid;
+    if (this.data.selectUid === this.data.commentVO.uid) {
       commentName = '';
+      commentUid = null;
     }
     const that = this;
     wx.request({
@@ -371,7 +379,8 @@ Page({
         wid: this.data.commentVO.wid,
         content: comment,
         commentCid: this.data.commentVO.cid,
-        commentName: commentName
+        commentName: commentName,
+        commentUid: commentUid
       },
       method: 'POST',
       success(res) {
@@ -392,6 +401,9 @@ Page({
     if (this.data.checked) {
       // 转发
       var content = '//@' + this.data.commentVO.name + ':' + this.data.commentVO.content;
+      if (this.data.forwardContent != null && this.data.forwardContent != '') {
+        content = content + this.data.forwardContent;
+      }
       if (commentName.length > 0) {
         content = '回复@' + commentName + ':' + comment + content;
       } else {

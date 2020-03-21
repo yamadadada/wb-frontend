@@ -16,7 +16,22 @@ Page({
     name: '',
     image: '',
     content: '',
-    forwardContent: ''
+    forwardContent: '',
+    showPop1: false,
+    searchValue1: '',
+    showCancel: false,
+    alternative1: [],
+    showPop2: false,
+    searchValue2: '',
+    alternative2: [],
+    newTopic: null,
+    userIndex: [],
+    indexList: [],
+    checked: false,
+    commentCid: null,
+    commentName: null,
+    commentUid: null,
+    nodes: []
   },
 
   /**
@@ -24,6 +39,17 @@ Page({
    */
   onLoad: function (options) {
     this.calWidth();
+    if (options.select_cid) {
+      this.setData({
+        selectCid: options.select_cid
+      })
+    }
+    if (options.select_name) {
+      this.setData({
+        selectName: options.select_name,
+        selectUid: options.select_uid
+      })
+    }
     this.setData({
       wid: options.wid,
       name: options.name,
@@ -31,6 +57,69 @@ Page({
       content: options.content,
       forwardContent: options.forward_content
     })
+    const that = this;
+    wx.request({
+      url: app.globalData.host + '/user/userIndex',
+      header: {
+        'token': app.globalData.token
+      },
+      success(res) {
+        verifyToken(res);
+        if (res.statusCode == 200) {
+          var list = []
+          for (var i in res.data.data) {
+            list.push(res.data.data[i].indexBar);
+          }
+          that.setData({
+            indexList: list,
+            userIndex: res.data.data
+          })
+        }
+      }
+    });
+    if (this.data.forwardContent != null && this.data.forwardContent != '') {
+      var value = e.detail.value;
+      const patt = /@[\w\u4e00-\u9fa5]{1,16}|#[\w\u4e00-\u9fa5]+#/;
+      var list = patt.exec(value);
+      var nodes = [];
+      while (list != null && list.length > 0) {
+        const item = list[0] + "";
+        const start = value.search(patt);
+        if (start != 0) {
+          nodes.push({
+            name: 'span',
+            children: [{
+              type: 'text',
+              text: value.substring(0, start)
+            }]
+          })
+        }
+        nodes.push({
+          name: 'span',
+          attrs: {
+            class: 'blue_name'
+          },
+          children: [{
+            type: 'text',
+            text: item
+          }]
+        });
+        value = value.substring(start + item.length, value.length);
+        list = patt.exec(value);
+      }
+      if (value.length > 0) {
+        nodes.push({
+          name: 'span',
+          children: [{
+            type: 'text',
+            text: value
+          }]
+        })
+      }
+      this.setData({
+        nodes: nodes
+      })
+    }
   },
 
   /**
@@ -127,6 +216,225 @@ Page({
           Toast.fail(res.data.msg);
         }
       }
+    });
+    if (this.data.checked) {
+      // 同时评论
+      wx.request({
+        url: app.globalData.host + '/comment',
+        header: {
+          'token': app.globalData.token
+        },
+        data: {
+          wid: this.data.wid,
+          content: content,
+          commentCid: this.data.commentCid,
+          commentName: this.data.commentName,
+          commentUid: this.data.commentUid
+        },
+        method: 'POST'
+      })
+    }
+  },
+
+  openPop1: function () {
+    this.setData({
+      showPop1: true
+    })
+  },
+
+  closePop1: function () {
+    this.setData({
+      showPop1: false
+    })
+  },
+
+  startSearch: function () {
+    this.setData({
+      showCancel: true
+    })
+  },
+
+  endSearch: function () {
+    this.setData({
+      showCancel: false,
+      searchValue1: ''
+    })
+  },
+
+  changeSearch1: function (e) {
+    const that = this;
+    this.setData({
+      searchValue1: e.detail
+    })
+    if (e.detail != null && e.detail != '') {
+      wx.request({
+        url: app.globalData.host + '/user/searchByName',
+        header: {
+          'token': app.globalData.token
+        },
+        data: {
+          name: e.detail
+        },
+        success(res) {
+          verifyToken(res);
+          if (res.statusCode == 200) {
+            that.setData({
+              alternative1: res.data.data
+            })
+          }
+        }
+      })
+    }
+  },
+
+  select1: function (e) {
+    const name = e.currentTarget.dataset.name;
+    var nodes = this.data.nodes;
+    nodes.push({
+      name: 'span',
+      attrs: {
+        class: 'blue_name'
+      },
+      children: [{
+        type: 'text',
+        text: this.data.content + '@' + name + ' '
+      }]
+    })
+    this.setData({
+      showPop1: false,
+      searchValue1: '',
+      showCancel: false,
+      content: this.data.content + '@' + name + ' ',
+      nodes: nodes
+    })
+  },
+
+  onPageScroll(event) {
+    this.setData({
+      scrollTop: event.scrollTop
+    });
+  },
+
+  openPop2: function () {
+    this.setData({
+      showPop2: true
+    })
+  },
+
+  closePop2: function () {
+    this.setData({
+      showPop2: false,
+      searchValue2: '',
+      alternative2: [],
+      newTopic: null
+    })
+  },
+
+  changeSearch2: function (e) {
+    const searchValue = e.detail;
+    const that = this;
+    this.setData({
+      searchValue2: searchValue
+    })
+    if (searchValue != null && searchValue != '') {
+      wx.request({
+        url: app.globalData.host + '/topic/searchByName',
+        header: {
+          'token': app.globalData.token
+        },
+        data: {
+          name: searchValue
+        },
+        success(res) {
+          verifyToken(res);
+          if (res.statusCode == 200) {
+            const topicList = res.data.data
+            var newTopic = '#' + searchValue + '#';
+            for (var i in topicList) {
+              if (topicList[i].name === searchValue) {
+                newTopic = null;
+                break;
+              }
+            }
+            that.setData({
+              alternative2: topicList,
+              newTopic: newTopic
+            })
+          }
+        }
+      })
+    }
+  },
+
+  select2: function (e) {
+    const name = e.currentTarget.dataset.name;
+    var nodes = this.data.nodes;
+    nodes.push({
+      name: 'span',
+      attrs: {
+        class: 'blue_name'
+      },
+      children: [{
+        type: 'text',
+        text: this.data.content + name
+      }]
+    })
+    this.setData({
+      showPop2: false,
+      searchValue2: '',
+      content: this.data.content + name,
+      nodes: nodes
+    })
+  },
+
+  checkedChange: function (e) {
+    this.setData({
+      checked: e.detail
+    })
+  },
+
+  onInput: function (e) {
+    var value = e.detail.value;
+    const patt = /@[\w\u4e00-\u9fa5]{1,16}|#[\w\u4e00-\u9fa5]+#/;
+    var list = patt.exec(value);
+    var nodes = [];
+    while (list != null && list.length > 0) {
+      const item = list[0] + "";
+      const start = value.search(patt);
+      if (start != 0) {
+        nodes.push({
+          name: 'span',
+          children: [{
+            type: 'text',
+            text: value.substring(0, start)
+          }]
+        })
+      }
+      nodes.push({
+        name: 'span',
+        attrs: {
+          class: 'blue_name'
+        },
+        children: [{
+          type: 'text',
+          text: item
+        }]
+      });
+      value = value.substring(start + item.length, value.length);
+      list = patt.exec(value);
+    }
+    if (value.length > 0) {
+      nodes.push({
+        name: 'span',
+        children: [{
+          type: 'text',
+          text: value
+        }]
+      })
+    }
+    this.setData({
+      nodes: nodes,
+      forwardContent: e.detail.value
     })
   }
 })
