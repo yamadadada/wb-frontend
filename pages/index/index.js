@@ -1,5 +1,6 @@
-import { verifyToken, openDialog } from '../../utils/util'
+import { verifyToken } from '../../utils/util'
 import { $stopWuxRefresher } from '../../lib/index'
+import Toast from '../../vant/toast/toast';
 
 const app = getApp()
 
@@ -14,6 +15,10 @@ Page({
     dialogVisible: false,
     canIUse: wx.canIUse('button.open-type.getUserInfo'),
     weiboList: [],
+    page: 1,
+    size: 10,
+    isAll: false,
+    totalCount: null
   },
 
   tabChange: function (e) {
@@ -22,7 +27,9 @@ Page({
         url: '/pages/find/find'
       })
     } else if (e.detail == 2) {
-
+      wx.switchTab({
+        url: '/pages/message/message'
+      })
     } else if (e.detail == 3) {
       wx.switchTab({
         url: '/pages/wo/wo'
@@ -54,18 +61,21 @@ Page({
                 'code': res.code
               },
               success(res) {
-                app.globalData.uid = res.data.data.uid;
-                app.globalData.token = res.data.data.token;
+                if (res.statusCode === 200) {
+                  app.globalData.uid = res.data.data.uid;
+                  app.globalData.token = res.data.data.token;
+                  that.getWeiboInfo();
+                  that.getBadge();
+                } else {
+                  Toast.fail('登录失败: ' + res.data.msg);
+                }
               },
               fail() {
-                openDialog('错误', '登录失败，请稍后再试！');
-              },
-              complete() {
-                that.getWeiboInfo();
+                Toast.fail('登录失败，请稍后再试！');
               }
             })
           } else {
-            openDialog('错误', '登录失败：' + res.errMsg);
+            Toast.fail('登录失败：' + res.errMsg);
           }
         }
       })
@@ -91,6 +101,16 @@ Page({
   onShow: function () {
     if (app.globalData.token != null) {
       this.getWeiboInfo();
+    };
+    var totalCount = wx.getStorageSync('messageCount').totalCount;
+    if (totalCount > 0) {
+      this.setData({
+        totalCount: totalCount
+      })
+    } else {
+      this.setData({
+        totalCount: null
+      })
     }
   },
 
@@ -140,7 +160,10 @@ Page({
         verifyToken(res);
         if (res.statusCode == 200) {
           that.setData({
-            weiboList: res.data.data
+            weiboList: res.data.data,
+            page: 1,
+            size: 10,
+            isAll: false
           })
         }
       },
@@ -153,6 +176,91 @@ Page({
   toAddWeibo: function () {
     wx.navigateTo({
       url: '/pages/add/add'
+    })
+  },
+
+/**
+ * 监听用户上拉触底事件
+ */
+  onReachBottom: function () {
+    if (this.data.isAll) {
+      return;
+    }
+    const that = this;
+    wx.request({
+      url: app.globalData.host + '/weibo',
+      header: {
+        'token': app.globalData.token
+      },
+      data: {
+        page: this.data.page + 1,
+        size: this.data.size
+      },
+      success(res) {
+        verifyToken(res);
+        if (res.statusCode == 200) {
+          const list = res.data.data;
+          if (list == null || list.length == 0) {
+            that.setData({
+              isAll: true
+            })
+          } else {
+            that.setData({
+              weiboList: that.data.weiboList.concat(list),
+              page: that.data.page + 1
+            });
+            if (list.length < that.data.size) {
+              that.setData({
+                isAll: true
+              })
+            }
+          } 
+        } else {
+          Toast.fail('加载失败，请稍后再试')
+        }
+      }
+    })
+  },
+
+  toTop: function () {
+    wx.pageScrollTo({
+      scrollTop: 0,
+      duration: 300
+    })
+  },
+
+  getBadge: function () {
+    var messageId = wx.getStorageSync('messageId');
+    if (messageId == null) {
+      messageId = { 'atId': 0, 'commentId': 0, 'likeId': 0, 'systemId': 0}
+    }
+    const that = this;
+    wx.request({
+      url: app.globalData.host + '/message/badge',
+      header: {
+        'token': app.globalData.token
+      },
+      data: {
+        atId: messageId.atId,
+        commentId: messageId.commentId,
+        likeId: messageId.likeId,
+        systemId: messageId.systemId
+      },
+      success(res) {
+        verifyToken(res);
+        if (res.statusCode == 200) {
+          var messageCount = res.data.data;
+          wx.setStorage({
+            key: 'messageCount',
+            data: messageCount
+          });
+          if (messageCount.totalCount > 0) {
+            that.setData({
+              totalCount: messageCount.totalCount
+            })
+          }
+        }
+      }
     })
   }
 })

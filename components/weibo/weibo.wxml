@@ -1,5 +1,8 @@
 <wux-gallery id="wux-gallery" />
 
+<view wx:if="{{ weiboList.length == 0 }}" class="prompt">
+  暂无相关微博
+</view>
 <view wx:for="{{weiboList}}" wx:key="wid" wx:for-item="weibo" wx:for-index="index" 
 style="background: #ffffff;margin-top:15rpx" 
 mut-bind:tap="toWeiboDetail" data-wid="{{weibo.wid}}" >
@@ -71,7 +74,7 @@ mut-bind:tap="toWeiboDetail" data-wid="{{weibo.wid}}" >
       </view>
     </view>
 
-    <van-row gutter="20">
+    <van-row gutter="20" wx:if="{{ showOperation }}">
       <view style="color: #A7A7A7;">
         <van-col span="8">
           <view class="operate" mut-bind:tap="toAddForward" 
@@ -82,19 +85,19 @@ mut-bind:tap="toWeiboDetail" data-wid="{{weibo.wid}}" >
           data-forward_content="{{ weibo.status==0 ? '' : weibo.content }}" 
           data-forward_name="{{ weibo.status==0 ? '' : weibo.name}}">
             <van-icon name="/icon/forward.png" />
-            <view class="operate-number">{{weibo.forwardCount}}</view>
+            <view class="operate-number">{{ weibo.forwardCount == 0 ? '转发' : weibo.forwardCount }}</view>
           </view>
         </van-col>
         <van-col span="8">
           <view class="operate">
             <van-icon name="comment-o" />
-            <view class="operate-number">{{weibo.commentCount}}</view>
+            <view class="operate-number">{{ weibo.commentCount == 0 ? '评论' : weibo.commentCount }}</view>
           </view>
         </van-col>
         <van-col span="8">
           <view class="operate {{ weibo.isLike ? 'likeStyle' : '' }}" mut-bind:tap="likeChange" data-wid="{{ weibo.wid }}" data-islike="{{ weibo.isLike }}" data-index="{{ index }}">
             <van-icon name="good-job-o" />
-            <view class="operate-number">{{weibo.likeCount}}</view>
+            <view class="operate-number">{{ weibo.likeCount == 0 ? '赞' : weibo.likeCount }}</view>
           </view>
         </van-col>
       </view>

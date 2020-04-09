@@ -1,26 +1,35 @@
-<van-popup show="{{ showPop }}" closeable close-icon-position="top-left" position="right" close-icon="arrow-left" custom-style="width: 100%" bind:close="closePop" >
-<view style="margin-top: 15rpx;">
-  <van-cell is-link>
-    <view slot="title">
-      <view class="van-cell-text">#张文宏称疫情今夏结束基本已不可能#</view>
-      <van-tag type="danger">标</van-tag>
-    </view>
-  </van-cell>
-</view>
+<van-dialog id="van-dialog" />
 
+<van-toast id="van-toast" />
+
+<van-popup show="{{ showPop }}" closeable close-icon-position="top-left" position="right" close-icon="arrow-left" custom-style="height: 80%; width: 100%; background:#f8f8f8" bind:close="closePop" >
+  <view style="margin-top: 60rpx;">
+    <van-cell-group title="实时热点，每分钟更新一次">
+      <van-cell is-link wx:for="{{ hotList }}" wx:key="key" wx:for-item="item" data-content="{{ item }}" mut-bind:tap="onSearch3">
+        <view slot="title" style="display: flex;">
+          <view class="van-cell-text van-ellipsis">{{ item }}</view>
+        </view>
+      </van-cell>
+    </van-cell-group>
+  </view>
 </van-popup>
 
-<mp-navigation-bar title="发现" color="{{color}}" background="{{background}}" back="{{false}}" />
+<mp-navigation-bar title="发现" color="{{color}}" background="{{background}}" back="{{false}}" mut-bind:tap="toTop"/>
 
-<van-search value="{{ value }}" placeholder="查找精彩内容" show-action="{{ showSearch }}" shape="round" bind:search="onSearch" bind:cancel="onCancel" bindtap="startSearch"/>
+<van-search value="{{ searchValue }}" placeholder="查找精彩内容" show-action="{{ showSearch }}" shape="round" bind:search="onSearch1" bind:cancel="onCancel" bindtap="startSearch" bind:change="changeSearch" />
 
 <view wx:if="{{ showSearch }}">
-  <van-cell title="#张文宏称疫情今夏结束基本已不可能#" icon="search" >
-    <van-icon slot="right-icon" name="cross" class="custom-icon" />
-  </van-cell>
-  <van-cell title="#房似锦断绝家庭关系#" icon="search" >
-    <van-icon slot="right-icon" name="cross" class="custom-icon" />
-  </van-cell>
+  <view wx:if="{{ searchValue != null && searchValue.length > 0 }}">
+    <van-cell wx:for="{{ candidateList }}" wx:key="key" wx:for-item="item" wx:for-index="index" title="{{ item }}" icon="search" data-content="{{ item }}" mut-bind:tap="onSearch2" />
+  </view>
+  <view wx:else>
+    <van-cell wx:for="{{ history }}" wx:key="key" wx:for-item="item" wx:for-index="index" title="{{ item }}" icon="search" data-content="{{ item }}" mut-bind:tap="onSearch2">
+      <van-icon data-index="{{ index }}" mut-bind:tap="deleteHistory" slot="right-icon" name="cross" class="custom-icon" />
+    </van-cell>
+    <view style="width: 100%">
+      <van-button type="default" block bindtap="clearHistory">清除搜索记录</van-button>
+    </view>
+  </view>
 </view>
 
 <view wx:else>
@@ -30,53 +39,25 @@
         <van-icon name="chart-trending-o" size="22" color="red" />
         <view style="color: #686868; margin-left: 10rpx;">微博热搜</view>
       </view>
+      <view wx:for="{{3 - 0}}" wx:key="key">
+        <van-row custom-class="hot-row" wx:if="{{ preHotList.length >= index * 2 + 3 }}">
+          <van-col span="12" data-content="{{ preHotList[index * 2 + 1] }}" mut-bind:tap="onSearch3">
+            <view class="van-hairline--right" style="padding-right: 30rpx; display: flex;">
+              <view class="van-ellipsis" style="font-size: 30rpx;">{{ preHotList[index * 2 + 1] }}</view>
+            </view>
+          </van-col>
+          <van-col span="12" data-content="{{ preHotList[index * 2 + 2] }}" mut-bind:tap="onSearch3">
+            <view style="padding-left: 30rpx; display: flex;">
+              <view class="van-ellipsis" style="font-size: 30rpx;">{{ preHotList[index * 2 + 2] }}</view>
+            </view>
+          </van-col>
+        </van-row>
+      </view>
+
       <van-row custom-class="hot-row">
-        <van-col span="12">
+        <van-col span="12" data-content="{{ preHotList.length > 0 ? preHotList[0] : '' }}" mut-bind:tap="onSearch3">
           <view class="van-hairline--right" style="padding-right: 30rpx; display: flex;">
-            <view class="van-ellipsis" style="font-size: 30rpx;">林小宅拿F</view>
-            <van-tag type="primary" custom-class="tag">荐</van-tag>
-          </view>
-        </van-col>
-        <van-col span="12">
-          <view style="padding-left: 30rpx; display: flex;">
-            <view class="van-ellipsis" style="font-size: 30rpx;">意大利市长变身河南村长怒怼市民</view>
-            <van-tag type="primary" custom-class="tag">荐</van-tag>
-          </view>
-        </van-col>
-      </van-row>
-      <van-row custom-class="hot-row">
-        <van-col span="12">
-          <view class="van-hairline--right" style="padding-right: 30rpx; display: flex;">
-            <view class="van-ellipsis" style="font-size: 30rpx;">江苏开学时间</view>
-            <van-tag type="primary" custom-class="tag">荐</van-tag>
-          </view>
-        </van-col>
-        <van-col span="12">
-          <view style="padding-left: 30rpx; display: flex;">
-            <view class="van-ellipsis" style="font-size: 30rpx;">郑恺</view>
-            <van-tag type="primary" custom-class="tag">荐</van-tag>
-          </view>
-        </van-col>
-      </van-row>
-      <van-row custom-class="hot-row">
-        <van-col span="12">
-          <view class="van-hairline--right" style="padding-right: 30rpx; display: flex;">
-            <view class="van-ellipsis" style="font-size: 30rpx;">快乐星球多面体</view>
-            <van-tag type="primary" custom-class="tag">荐</van-tag>
-          </view>
-        </van-col>
-        <van-col span="12">
-          <view style="padding-left: 30rpx; display: flex;">
-            <view class="van-ellipsis" style="font-size: 30rpx;">快乐大本营</view>
-            <van-tag type="primary" custom-class="tag">荐</van-tag>
-          </view>
-        </van-col>
-      </van-row>
-      <van-row custom-class="hot-row">
-        <van-col span="12">
-          <view class="van-hairline--right" style="padding-right: 30rpx; display: flex;">
-            <view class="van-ellipsis" style="font-size: 30rpx;">乃万评级C</view>
-            <van-tag type="primary" custom-class="tag">荐</van-tag>
+            <view class="van-ellipsis" style="font-size: 30rpx;">{{ preHotList.length > 0 ? preHotList[0] : '' }}</view>
           </view>
         </van-col>
         <van-col span="12">
@@ -90,17 +71,21 @@
   </view>
 
   <van-tabs active="0" custom-class="tabs" sticky animated swipeable color="#FD7E01" bind:change="changeTab">
-    <van-tab title="热点" name="0">内容 1</van-tab>
+    <van-tab title="热点" name="0">
+      <weibo weiboList="{{ hotWeiboList }}"></weibo>
+    </van-tab>
     <van-tab title="实时" name="1">
       <weibo weiboList="{{ realTimeList }}"></weibo>
     </van-tab>
-    <van-tab title="同校" name="2">内容 3</van-tab>
+    <van-tab title="同校" name="2">
+      <weibo weiboList="{{ schoolList }}"></weibo>
+    </van-tab>
   </van-tabs>
-</view>
 
-<van-tabbar active="{{ 1 }}" bind:change="tabChange">
-  <van-tabbar-item icon="wap-home-o">微博</van-tabbar-item>
-  <van-tabbar-item icon="search">发现</van-tabbar-item>
-  <van-tabbar-item icon="envelop-o">消息</van-tabbar-item>
-  <van-tabbar-item icon="contact">我</van-tabbar-item>
-</van-tabbar>
+  <van-tabbar active="{{ 1 }}" bind:change="tabChange">
+    <van-tabbar-item icon="wap-home-o">微博</van-tabbar-item>
+    <van-tabbar-item icon="search">发现</van-tabbar-item>
+    <van-tabbar-item icon="envelop-o" info="{{ totalCount }}">消息</van-tabbar-item>
+    <van-tabbar-item icon="contact">我</van-tabbar-item>
+  </van-tabbar>
+</view>

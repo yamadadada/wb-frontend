@@ -9,7 +9,10 @@
     "pages/user/user",
     "pages/edit-user/edit-user",
     "pages/favorite/favorite",
-    "pages/find/find"
+    "pages/find/find",
+    "pages/search/search",
+    "pages/message/message",
+    "pages/message-detail/message-detail"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -26,12 +29,16 @@
         "text": "微博"
       },
       {
-        "pagePath": "pages/wo/wo",
-        "text": "我"
-      },
-      {
         "pagePath": "pages/find/find",
         "text": "发现"
+      },
+      {
+        "pagePath": "pages/message/message",
+        "text": "消息"
+      },
+      {
+        "pagePath": "pages/wo/wo",
+        "text": "我"
       }
     ]
   }

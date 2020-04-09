@@ -26,6 +26,13 @@ Component({
       wx.navigateTo({
         url: '/pages/user/user?uid=' + uid
       })
+    },
+
+    toTopic: function (e) {
+      const content = e.currentTarget.dataset.topic;
+      wx.navigateTo({
+        url: '/pages/search/search?content=' + content,
+      })
     }
   }
 })

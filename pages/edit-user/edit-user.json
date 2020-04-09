@@ -10,7 +10,8 @@
     "van-datetime-picker": "/vant/datetime-picker/index",
     "van-button": "/vant/button/index",
     "van-toast": "/vant/toast/index",
-    "van-area": "/vant/area/index"
+    "van-area": "/vant/area/index",
+    "van-dialog": "/vant/dialog/index"
   },
   "navigationStyle": "custom"
 }

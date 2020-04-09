@@ -11,7 +11,8 @@ Page({
     color: '#3A3A3A',
     background: '#FDFDFD',
     imageWidth: 0,
-    user: null
+    user: null,
+    totalCount: null
   },
 
   /**
@@ -45,7 +46,17 @@ Page({
           })
         }
       }
-    })
+    });
+    var totalCount = wx.getStorageSync('messageCount').totalCount;
+    if (totalCount > 0) {
+      this.setData({
+        totalCount: totalCount
+      })
+    } else {
+      this.setData({
+        totalCount: null
+      })
+    }
   },
 
   /**
@@ -93,7 +104,9 @@ Page({
         url: '/pages/find/find'
       })
     } else if (e.detail == 2) {
-      
+      wx.switchTab({
+        url: '/pages/message/message'
+      })
     }
   },
 

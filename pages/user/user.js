@@ -18,8 +18,13 @@ Page({
     boardWidth: 0,
     loginUid: null,
     uid: null,
+    name: null,
     user: null,
     weiboList: [],
+    type: '1',
+    page: 1,
+    size: 10,
+    isAll: false
   },
 
   /**
@@ -31,25 +36,8 @@ Page({
     })
     this.calWidth();
     if (options.name) {
-      const that = this;
-      wx.request({
-        url: app.globalData.host + '/getByName',
-        header: {
-          'token': app.globalData.token
-        },
-        data: {
-          name: options.name
-        },
-        success(res) {
-          verifyToken(res);
-          if (res.statusCode == 200) {
-            that.setData({
-              user: res.data.data,
-              uid: res.data.data.uid
-            });
-            that.getWeiboList();
-          }
-        }
+      this.setData({
+        name: options.name
       })
     } else {
       if (options.uid) {
@@ -68,22 +56,6 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-    const that = this;
-    wx.request({
-      url: app.globalData.host + '/user/' + this.data.uid,
-      header: {
-        'token': app.globalData.token
-      },
-      success(res) {
-        verifyToken(res);
-        if (res.statusCode == 200) {
-          that.setData({
-            user: res.data.data
-          });
-          that.getWeiboList();
-        }
-      }
-    })
     
   },
 
@@ -91,7 +63,45 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
+    const that = this;
+    if (this.data.name) {
+      const that = this;
+      wx.request({
+        url: app.globalData.host + '/getByName',
+        header: {
+          'token': app.globalData.token
+        },
+        data: {
+          name: this.data.name
+        },
+        success(res) {
+          verifyToken(res);
+          if (res.statusCode == 200) {
+            that.setData({
+              user: res.data.data,
+              uid: res.data.data.uid
+            });
+            that.getWeiboList();
+          }
+        }
+      })
+    } else {
+      wx.request({
+        url: app.globalData.host + '/user/' + this.data.uid,
+        header: {
+          'token': app.globalData.token
+        },
+        success(res) {
+          verifyToken(res);
+          if (res.statusCode == 200) {
+            that.setData({
+              user: res.data.data
+            });
+            that.getWeiboList();
+          }
+        }
+      })
+    }
   },
 
   /**
@@ -119,7 +129,9 @@ Page({
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
-
+    if (this.data.type === '1') {
+      this.getWeiboList();
+    }
   },
 
   /**
@@ -181,20 +193,60 @@ Page({
   },
 
   getWeiboList: function () {
+    if (this.data.isAll) {
+      return;
+    }
     const that = this;
     wx.request({
       url: app.globalData.host + '/weibo/user/' + this.data.uid,
       header: {
         'token': app.globalData.token
       },
+      data: {
+        page: this.data.page + 1,
+        size: this.data.size
+      },
       success(res) {
         verifyToken(res);
         if (res.statusCode == 200) {
-          that.setData({
-            weiboList: res.data.data
-          })
+          const list = res.data.data;
+          if (list == null || list.length == 0) {
+            that.setData({
+              isAll: true
+            })
+          } else{
+            that.setData({
+              weiboList: that.data.weiboList.concat(list),
+              page: that.data.page + 1
+            })
+            if (list.length < that.data.size) {
+              that.setData({
+                isAll: true
+              })
+            }
+          }
         }
       }
+    })
+  },
+
+  changeTab: function (event) {
+    const type = event.detail.name;
+    if (type === '0') {
+      this.setData({
+        type: '0'
+      })
+    } else {
+      this.setData({
+        type: '1'
+      })
+    }
+  },
+
+  toTop: function () {
+    wx.pageScrollTo({
+      scrollTop: 0,
+      duration: 300
     })
   }
 })

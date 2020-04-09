@@ -1,0 +1,47 @@
+@import '/lib/styles/index.wxss';
+@import "/vant/common/index.wxss";
+
+.name {
+  color: #212121;
+  font-size: 26rpx;
+  font-weight: 550;
+}
+.content {
+  color: #2B2B2B;
+  margin-top: 8rpx;
+  margin-bottom: 15rpx;
+  white-space: pre-line;
+  overflow : hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  font-size: 26rpx;
+  font-weight: 500;
+}
+.time {
+  color: #9A9A9A;
+  font-size: 23rpx;
+  margin-bottom: 23rpx;
+}
+.van-swipe-cell__right {
+  display: inline-block;
+  width: 65px;
+  height: 75px;
+  font-size: 15px;
+  line-height: 75px;
+  color: #fff;
+  text-align: center;
+  background-color: #ee0a24;
+}
+.title {
+  font-size: 28rpx;
+}
+.prompt {
+  background-color: #f8f8f8;
+  color: gray;
+  text-align: center;
+  width: 100%;
+  padding-top: 260rpx;
+  padding-bottom: 260rpx;
+}

@@ -1,0 +1,43 @@
+<van-dialog id="van-dialog" />
+
+<van-toast id="van-toast" />
+
+<mp-navigation-bar title="{{ title }}" color="{{ color }}" background="{{ background }}" mut-bind:tap="toTop"/>
+
+<view wx:if="{{ messageList.length == 0 }}" class="prompt">
+  木有更多了...
+</view>
+<view wx:else>
+  <view wx:for="{{ messageList }}" wx:key="key" wx:for-item="message" wx:for-index="index" style="background: #ffffff; padding-top:25rpx;">
+    <van-swipe-cell id="swipe-cell" right-width="{{ 65 }}" async-close bind:close="closeSwipe" data-mid="{{ message.mid }}" data-index="{{ index }}" >
+      <view style="width: 93%; margin: auto;" mut-bind:tap="toDetail" data-wid="{{ message.wid }}" data-cid="{{ message.cid }}">
+        <van-row>
+          <van-col span="3">
+            <van-image style="padding-right: 10rpx;" lazy-load width="{{ avatarWidth }}px" height="{{ avatarWidth }}px" fit="fill" src="{{ message.sendAvatar }}" mut-bind:tap="toUser" data-uid="{{ message.sendUid }}" />
+          </van-col>
+          <van-col span="18">
+            <view style="display: flex">
+              <view class="name">{{ message.sendName }}</view>
+              <view class="description">{{ message.description }}</view>
+            </view>
+            <view class="content">{{ message.content }}</view>
+            <view class="time">
+              <wux-timeago to="{{ message.createTime }}" refreshable />
+            </view>
+          </van-col>
+          <van-col span="3">
+            <view wx:if="{{ message.image != null }}" style="margin-top: 20rpx; margin-left: 10rpx;">
+              <van-image lazy-load width="{{ avatarWidth }}px" height="{{ avatarWidth }}px" fit="fill" src="{{ message.image }}" />
+            </view>
+            <view wx:else>
+              <view wx:if="{{ message.baseContent != null }}" class="base-content" style="margin-top: 20rpx; margin-left: 10rpx;" >
+                {{ message.baseContent }}
+              </view>
+            </view>
+          </van-col>
+        </van-row>
+      </view>
+      <view slot="right" class="van-swipe-cell__right">删除</view>
+    </van-swipe-cell>
+  </view>
+</view>

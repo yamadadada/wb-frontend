@@ -57,3 +57,11 @@
 .blue_name {
   color: #5B7CA5;
 }
+.prompt {
+  background-color: #ffffff;
+  color: gray;
+  text-align: center;
+  width: 100%;
+  padding-top: 100rpx;
+  padding-bottom: 100rpx;
+}

@@ -1,13 +1,13 @@
 {
   "usingComponents": {
     "mp-navigation-bar": "/components/navigation-bar/navigation-bar",
-    "van-tab": "/vant/tab/index",
-    "van-tabs": "/vant/tabs/index",
-    "weibo": "/components/weibo/weibo",
-    "van-image": "/vant/image/index",
+    "van-toast": "/vant/toast/index",
     "van-row": "/vant/row/index",
     "van-col": "/vant/col/index",
-    "van-divider": "/vant/divider/index",
+    "van-image": "/vant/image/index",
+    "wux-timeago": "/lib/timeago/index",
+    "van-swipe-cell": "/vant/swipe-cell/index",
+    "wux-prompt": "/lib/prompt/index",
     "van-dialog": "/vant/dialog/index"
   },
   "navigationStyle": "custom"

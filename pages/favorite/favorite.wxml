@@ -1,10 +1,15 @@
-<mp-navigation-bar title="" color="{{ color }}" background="{{ background }}" />
+<van-dialog id="van-dialog" />
 
 <van-toast id="van-toast" />
+
+<mp-navigation-bar title="" color="{{ color }}" background="{{ background }}" mut-bind:tap="toTop"/>
 
 <van-tabs active="{{ active }}" sticky animated swipeable color="#FD7E01" bind:change="changeTab">
   <van-tab title="关注" name="0">
     <view style="width: 94%;margin: auto; margin-top: 15rpx;">
+      <view wx:if="{{ followList.length == 0 }}" class="prompt">
+        暂无相关数据
+      </view>
       <van-row wx:for="{{ followList }}" wx:key="key" wx:for-item="user"> 
         <van-col span="4">
           <van-image style="padding: 15rpx;" lazy-load width="{{ avatarWidth }}px" height="{{ avatarWidth }}px" fit="fill" src="{{ user.avatar }}" mut-bind:tap="toUser" data-uid="{{ user.uid }}"/>
@@ -19,6 +24,9 @@
   </van-tab>
   <van-tab title="粉丝" name="1">
     <view style="width: 94%;margin: auto; margin-top: 15rpx;">
+      <view wx:if="{{ fanList.length == 0 }}" class="prompt">
+        暂无相关数据
+      </view>
       <van-row wx:for="{{ fanList }}" wx:key="key" wx:for-item="user"> 
         <van-col span="4">
           <van-image style="padding: 15rpx;" lazy-load width="{{ avatarWidth }}px" height="{{ avatarWidth }}px" fit="fill" src="{{ user.avatar + '?' + Math.random() }}" mut-bind:tap="toUser" data-uid="{{ user.uid }}"/>

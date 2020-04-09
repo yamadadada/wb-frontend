@@ -1,0 +1,48 @@
+<van-dialog id="van-dialog" />
+
+<van-toast id="van-toast" />
+
+<mp-navigation-bar title="发现" color="{{color}}" background="{{background}}" mut-bind:tap="toTop"/>
+
+<van-search value="{{ searchValue }}" placeholder="查找精彩内容" show-action="{{ showSearch }}" shape="round" bind:search="onSearch1" bind:cancel="onCancel" bindtap="startSearch" bind:change="changeSearch" />
+
+<view wx:if="{{ showSearch }}">
+  <view wx:if="{{ searchValue != null && searchValue.length > 0 }}">
+    <van-cell wx:for="{{ candidateList }}" wx:key="key" wx:for-item="item" wx:for-index="index" title="{{ item }}" icon="search" data-content="{{ item }}" mut-bind:tap="onSearch2" />
+  </view>
+  <view wx:else>
+    <van-cell wx:for="{{ history }}" wx:key="key" wx:for-item="item" wx:for-index="index" title="{{ item }}" icon="search" data-content="{{ item }}" mut-bind:tap="onSearch2">
+      <van-icon data-index="{{ index }}" mut-bind:tap="deleteHistory" slot="right-icon" name="cross" class="custom-icon" />
+    </van-cell>
+    <view style="width: 100%">
+      <van-button type="default" block bindtap="clearHistory">清除搜索记录</van-button>
+    </view>
+  </view>
+</view>
+
+<view wx:else>
+  <van-tabs active="0" custom-class="tabs" sticky animated swipeable color="#FD7E01" bind:change="changeTab">
+    <van-tab title="微博" name="0">
+      <weibo weiboList="{{ weiboList }}"></weibo>
+    </van-tab>
+    <van-tab title="用户" name="1">
+      <view style="background: #ffffff;">
+        <view style="width: 94%;margin: auto; margin-top: 15rpx;">
+          <view wx:if="{{ userList.length == 0 }}" class="prompt">
+            没有找到相关用户
+          </view>
+          <van-row wx:for="{{ userList }}" wx:key="key" wx:for-item="user"> 
+            <van-col span="4">
+              <van-image style="padding: 15rpx;" lazy-load width="{{ avatarWidth }}px" height="{{ avatarWidth }}px" fit="fill" src="{{ user.avatar }}" mut-bind:tap="toUser" data-uid="{{ user.uid }}"/>
+            </van-col>
+            <van-col span="20">
+              <view class="small-name" mut-bind:tap="toUser" data-uid="{{ user.uid }}">{{ user.name }}</view>
+              <view class="content">{{ user.introduction == null ? 'TA还没有填写个人简介' : user.introduction }}</view>
+              <van-divider />
+            </van-col>
+          </van-row>
+        </view>
+      </view>
+    </van-tab>
+  </van-tabs>
+</view>

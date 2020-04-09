@@ -1,4 +1,5 @@
 <van-toast id="van-toast" />
+
 <van-dialog id="van-dialog" />
 
 <van-action-sheet
@@ -42,7 +43,7 @@
 
 <wux-gallery id="wux-gallery" />
 
-<mp-navigation-bar title="微博正文" color="{{ color }}" background="{{ background }}" />
+<mp-navigation-bar title="微博正文" color="{{ color }}" background="{{ background }}" mut-bind:tap="toTop"/>
 
 <view class="wux-light--bg" >
   <view style="width: 95%;margin: auto">
@@ -111,7 +112,10 @@
 
   <van-tabs active="1" bind:change="changeTab" sticky animated swipeable>
     <van-tab name="0" title="转发 {{ forwardCount }}">
-      <view style="width: 94%;margin: auto; margin-top: 15rpx;">
+      <view wx:if="{{ forwardList.length == 0 }}" class="prompt">
+        快来转发精彩内容吧
+      </view>
+      <view wx:else style="width: 94%;margin: auto; margin-top: 15rpx;">
         <van-row wx:for="{{ forwardList }}" wx:key="fid" wx:for-item="forward"> 
           <van-col span="4">
             <van-image style="padding: 15rpx;" lazy-load width="{{imageWidth * 0.33}}px" height="{{imageWidth * 0.33}}px" fit="fill" src="{{ forward.avatar }}" mut-bind:tap="toUser" data-uid="{{ forward.uid }}"/>
@@ -132,7 +136,10 @@
       </view>
     </van-tab>
     <van-tab name="1" title="评论 {{ commentCount }}" color="#FD7E01">
-      <view style="width: 94%;margin: auto; margin-top: 15rpx;">
+      <view wx:if="{{ commentVOList.length == 0 }}" class="prompt">
+        快来发表你的评论吧
+      </view>
+      <view wx:else style="width: 94%;margin: auto; margin-top: 15rpx;">
         <van-row>
           <van-col span="5" offset="19">
             <view class="sort" bindtap="changeSort">
@@ -201,7 +208,10 @@
       </view>
     </van-tab>
     <van-tab name="2" title="赞 {{ likeCount }}">
-      <view style="width: 94%;margin: auto; margin-top: 15rpx;">
+      <view wx:if="{{ likeList.length == 0 }}" class="prompt">
+        暂无相关数据
+      </view>
+      <view wx:else style="width: 94%;margin: auto; margin-top: 15rpx;">
         <van-row wx:for="{{ likeList }}" wx:key="key" wx:for-item="like"> 
           <van-col span="4">
             <van-image style="padding: 15rpx;" lazy-load width="{{imageWidth * 0.33}}px" height="{{imageWidth * 0.33}}px" fit="fill" src="{{ like.avatar }}" mut-bind:tap="toUser" data-uid="{{ like.uid }}"/>

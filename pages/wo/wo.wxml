@@ -1,3 +1,5 @@
+<van-dialog id="van-dialog" />
+
 <mp-navigation-bar title="我" color="{{color}}" background="{{background}}" back="{{false}}" />
 
 <view style="background: #FFFFFF; margin-top: 30rpx; padding-top: 30rpx; padding-bottom: 25rpx">
@@ -50,6 +52,6 @@
 <van-tabbar active="{{ 3 }}" bind:change="tabChange">
   <van-tabbar-item icon="wap-home-o">微博</van-tabbar-item>
   <van-tabbar-item icon="search">发现</van-tabbar-item>
-  <van-tabbar-item icon="envelop-o">消息</van-tabbar-item>
+  <van-tabbar-item icon="envelop-o" info="{{ totalCount }}">消息</van-tabbar-item>
   <van-tabbar-item icon="contact">我</van-tabbar-item>
 </van-tabbar>

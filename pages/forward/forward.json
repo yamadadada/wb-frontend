@@ -12,7 +12,8 @@
     "van-index-bar": "/vant/index-bar/index",
     "van-index-anchor": "/vant/index-anchor/index",
     "van-cell": "/vant/cell/index",
-    "van-checkbox": "/vant/checkbox/index"
+    "van-checkbox": "/vant/checkbox/index",
+    "van-dialog": "/vant/dialog/index"
   },
   "navigationStyle": "custom"
 }

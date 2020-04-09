@@ -1,4 +1,3 @@
-import { $wuxDialog } from '../lib/index';
 import Dialog from '../vant/dialog/dialog';
 import Toast from '../vant/toast/toast';
 
@@ -31,40 +30,46 @@ const login = function login() {
             'code': res.code
           },
           success(res) {
-            app.globalData.uid = res.data.data.uid;
-            app.globalData.token = res.data.data.token;
+            if (res.statusCode === 200) {
+              app.globalData.uid = res.data.data.uid;
+              app.globalData.token = res.data.data.token;
+              // 刷新页面
+              let pages = getCurrentPages();
+              let curPage = pages[pages.length - 1];
+              curPage.onShow();
+              Dialog.close();
+            } else {
+              Toast.fail('登录失败: ' + res.data.msg);
+            }
           },
           fail() {
-            openDialog('错误', '登录失败，请稍后再试！');
+            Toast.fail('登录失败，请稍后再试！');
           }
         })
       } else {
-        openDialog('错误', '登录失败：' + res.errMsg);
+        Toast.fail('登录失败：' + res.errMsg);
       }
     }
   })
 }
 
-const openDialog = function openDialog(title, message) {
-  Dialog.alert({
-    title: title,
-    message: message
-  }).then(() => {
-    // on close
-  });
-}
-
 const verifyToken = function verifyToken(res) {
   if (res.data.code == -3) {
     app.globalData.token = null;
-    login();
-    Toast.fail('登录已过期，请重新操作!');
+    Dialog.confirm({
+      title: '提示',
+      message: '登录已过期，请点击确认重新登录!',
+      asyncClose: true
+    }).then(() => {
+      login();
+    }).catch(() => {
+      Dialog.close();
+    });
   }
 }
 
 module.exports = {
   formatTime: formatTime,
   login: login,
-  verifyToken: verifyToken,
-  openDialog: openDialog
+  verifyToken: verifyToken
 }

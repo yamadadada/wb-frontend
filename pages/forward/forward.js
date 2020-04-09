@@ -57,6 +57,19 @@ Page({
       content: options.content,
       forwardContent: options.forward_content
     })
+  },
+
+  /**
+   * 生命周期函数--监听页面初次渲染完成
+   */
+  onReady: function () {
+
+  },
+
+  /**
+   * 生命周期函数--监听页面显示
+   */
+  onShow: function () {
     const that = this;
     wx.request({
       url: app.globalData.host + '/user/userIndex',
@@ -120,20 +133,6 @@ Page({
         nodes: nodes
       })
     }
-  },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-
   },
 
   /**
@@ -297,7 +296,7 @@ Page({
       },
       children: [{
         type: 'text',
-        text: this.data.content + '@' + name + ' '
+        text: '@' + name + ' '
       }]
     })
     this.setData({
@@ -376,7 +375,7 @@ Page({
       },
       children: [{
         type: 'text',
-        text: this.data.content + name
+        text: name
       }]
     })
     this.setData({
@@ -395,7 +394,7 @@ Page({
 
   onInput: function (e) {
     var value = e.detail.value;
-    const patt = /@[\w\u4e00-\u9fa5]{1,16}|#[\w\u4e00-\u9fa5]+#/;
+    const patt = /@[\w\u4e00-\u9fa5]{1,16}|#.+?#/;
     var list = patt.exec(value);
     var nodes = [];
     while (list != null && list.length > 0) {

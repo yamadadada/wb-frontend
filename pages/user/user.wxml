@@ -1,4 +1,4 @@
-<mp-navigation-bar title="{{ user.name }}" color="{{ color }}" background="{{ background }}" />
+<mp-navigation-bar title="{{ user.name }}" color="{{ color }}" background="{{ background }}" mut-bind:tap="toTop"/>
 
 <van-dialog id="van-dialog" />
 
@@ -22,7 +22,7 @@
 </view>
 
 <view style="margin-top: 25rpx;">
-  <van-tabs active="1" sticky animated swipeable color="#FD7E01">
+  <van-tabs active="1" sticky animated swipeable color="#FD7E01" bind:change="changeTab">
     <van-tab name="0" title="主页">
       <view style="margin-top: 20rpx;">
         <van-cell-group title="个人资料">

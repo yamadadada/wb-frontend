@@ -11,6 +11,10 @@ Component({
     weiboList: {
       type: Array,
       value: []
+    },
+    showOperation: {
+      type: Boolean,
+      value: true
     }
   },
 

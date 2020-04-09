@@ -42,3 +42,11 @@
   -webkit-line-clamp: 7;
   -webkit-box-orient: vertical;
 }
+.prompt {
+  background: #f8f8f8;
+  color: gray;
+  text-align: center;
+  width: 100%;
+  padding-top: 100rpx;
+  padding-bottom: 100rpx;
+}

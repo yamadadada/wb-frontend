@@ -36,13 +36,24 @@ Page({
     sheetVisible2: false,
     description: '',
     selectCid: '',
-    selectName: ''
+    selectName: '',
+    page1: 1,
+    size1: 10,
+    isAll1: false,
+    page2: 1,
+    size2: 10,
+    isAll2: false,
+    page3: 1,
+    size3: 10,
+    isAll3: false,
+    type: '1'
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    this.calWidth();
     this.setData({
       uid: app.globalData.uid,
       wid: options.wid
@@ -53,7 +64,13 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-    this.calWidth();
+    
+  },
+
+  /**
+   * 生命周期函数--监听页面显示
+   */
+  onShow: function () {
     const that = this;
     wx.request({
       url: app.globalData.host + '/weibo/' + this.data.wid,
@@ -69,18 +86,13 @@ Page({
             forwardCount: res.data.data.forwardCount,
             commentCount: res.data.data.commentCount,
             likeCount: res.data.data.likeCount,
-            isLike: res.data.data.isLike
+            isLike: res.data.data.isLike,
+            page2: 1,
+            isAll2: false
           })
         }
       }
     })
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-
   },
 
   /**
@@ -108,7 +120,81 @@ Page({
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
-
+    const type = this.data.type;
+    const that = this;
+    if (type == '0' && !this.data.isAll1) {
+      wx.request({
+        url: app.globalData.host + '/weibo/forward/' + this.data.weibo.wid,
+        header: {
+          'token': app.globalData.token
+        },
+        data: {
+          page: this.data.page1 + 1,
+          size: this.data.size1
+        },
+        success(res) {
+          verifyToken(res);
+          if (res.statusCode == 200) {
+            const list = res.data.data.forwardList;
+            if (list == null || list.length == 0) {
+              that.setData({
+                isAll11: true
+              })
+            } else {
+              that.setData({
+                forwardList: that.data.forwardList.concat(list),
+                forwardCount: res.data.data.forwardCount,
+                page1: that.data.page1 + 1
+              })
+              if (list.length < that.data.size1) {
+                that.setData({
+                  isAll11: true
+                })
+              }
+            }
+          } else {
+            Toast.fail('加载失败，请稍后再试')
+          }
+        }
+      })
+    } else if (type == '1' && !this.data.isAll2) {
+      this.getCommentVOList();
+    } else if (type == '2' && !this.data.isAll3) {
+      wx.request({
+        url: app.globalData.host + '/weibo/like/' + this.data.weibo.wid,
+        header: {
+          'token': app.globalData.token
+        },
+        data: {
+          page: this.data.page3 + 1,
+          size: this.data.size3
+        },
+        success(res) {
+          verifyToken(res);
+          if (res.statusCode == 200) {
+            const list = res.data.data.weiboLikeVOList;
+            if (list == null || list.length == 0) {
+              that.setData({
+                isAll13: true
+              })
+            } else {
+              that.setData({
+                likeList: that.data.likeList.concat(list),
+                likeCount: res.data.data.likeCount,
+                page3: that.data.page3 + 1
+              })
+              if (list.length < that.data.size3) {
+                that.setData({
+                  isAll13: true
+                })
+              }
+            }
+          } else {
+            Toast.fail('加载失败，请稍后再试')
+          }
+        }
+      })
+    }
   },
 
   /**
@@ -233,7 +319,7 @@ Page({
       this.setData({
         popupShow: true,
         commentValue: '',
-        placeholder: '回复 @' + this.selectName
+        placeholder: '回复 @' + this.data.selectName
       })
     } else if (event.detail.name === '删除') {
       const cid = this.data.selectCid;
@@ -253,7 +339,9 @@ Page({
             if (res.statusCode == 200) {
               Toast.success('删除成功');
               that.setData({
-                commentVOList: []
+                commentVOList: [],
+                page2: 0,
+                isAll2: false
               })
               that.getCommentVOList();
             } else {
@@ -339,6 +427,9 @@ Page({
   changeTab: function (event) {
     const that = this;
     const type = event.detail.name;
+    this.setData({
+      type: type
+    })
     if (type == '0') {
       wx.request({
         url: app.globalData.host + '/weibo/forward/' + this.data.weibo.wid,
@@ -356,6 +447,7 @@ Page({
         }
       })
     } else if (type == '1') {
+
     } else {
       wx.request({
         url: app.globalData.host + '/weibo/like/' + this.data.weibo.wid,
@@ -406,19 +498,39 @@ Page({
   },
 
   getCommentVOList: function () {
+    if (this.data.isAll2) {
+      return;
+    }
     const that = this;
     wx.request({
       url: app.globalData.host + '/weibo/comment/' + this.data.weibo.wid + "?sort=" + this.data.sort,
       header: {
         'token': app.globalData.token
       },
+      data: {
+        page: this.data.page2 + 1,
+        size: this.data.size2
+      },
       success(res) {
         verifyToken(res);
         if (res.statusCode == 200) {
-          that.setData({
-            commentVOList: that.data.commentVOList.concat(res.data.data.commentVOList),
-            commentCount: res.data.data.commentCount
-          })
+          const list = res.data.data.commentVOList;
+          if (list == null || list.length == 0) {
+            that.setData({
+              isAll2: true
+            })
+          } else {
+            if (list.length < that.data.size2) {
+              that.setData({
+                isAll2: true
+              })
+            }
+            that.setData({
+              commentVOList: that.data.commentVOList.concat(list),
+              commentCount: res.data.data.commentCount,
+              page2: that.data.page2 + 1
+            })
+          }
         }
       }
     })
@@ -429,13 +541,17 @@ Page({
       this.setData({
         sort: 'create_time',
         sortName: '按时间',
-        commentVOList: []
+        commentVOList: [],
+        page2: 0,
+        isAll2: false
       })
     } else {
       this.setData({
         sort: 'like_count',
         sortName: '按热度',
-        commentVOList: []
+        commentVOList: [],
+        page2: 0,
+        isAll2: false
       })
     }
     this.getCommentVOList();
@@ -568,7 +684,9 @@ Page({
           that.setData({
             sort: 'create_time',
             sortName: '按时间',
-            commentVOList: []
+            commentVOList: [],
+            page2: 0,
+            isAll2: false
           })
           that.getCommentVOList();
         } else {
@@ -664,6 +782,13 @@ Page({
     const name = e.currentTarget.dataset.name;
     wx.navigateTo({
       url: '/pages/user/user?name=' + name
+    })
+  },
+
+  toTop: function () {
+    wx.pageScrollTo({
+      scrollTop: 0,
+      duration: 300
     })
   }
 })

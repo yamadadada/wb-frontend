@@ -1,0 +1,57 @@
+<van-toast id="van-toast" />
+
+<van-dialog id="van-dialog" />
+
+<mp-navigation-bar title="消息" color="{{color}}" background="{{background}}" back="{{false}}" mut-bind:tap="toTop"/>
+
+<van-grid column-num="3">
+  <view style="color: #59CBA7">
+    <van-grid-item icon="/icon/at_green.png" text="@我的" link-type="navigateTo" url="/pages/message-detail/message-detail?type=0" info="{{ atCount }}"/>
+  </view>
+  <view style="color: #FDC362">
+    <van-grid-item icon="chat-o" text="评论我的" link-type="navigateTo" url="/pages/message-detail/message-detail?type=1" info="{{ commentCount }}"/>
+  </view>
+  <view style="color: #FF5D7A">
+    <van-grid-item icon="good-job-o" text="收到的赞" link-type="navigateTo" url="/pages/message-detail/message-detail?type=2" info="{{ likeCount }}"/>
+  </view>
+</van-grid>
+
+<view style="background: #ffffff; margin-top:25rpx">
+  <view style="width: 94%; margin: auto; padding: 15rpx;">
+    <view class="title">系统消息</view>
+  </view>
+</view>
+<view wx:if="{{ messageList.length == 0 }}" class="prompt">
+  木有更多数据了...
+</view>
+<view wx:else>
+  <view wx:for="{{ messageList }}" wx:key="key" wx:for-item="message" wx:for-index="index" style="background: #ffffff;">
+    <van-swipe-cell id="swipe-cell" right-width="{{ 65 }}" async-close bind:close="closeSwipe" data-mid="{{ message.mid }}" data-index="{{ index }}" >
+      <view style="width: 94%; margin: auto;" >
+        <van-row>
+          <van-col span="4">
+            <van-image style="padding-right: 10rpx;" lazy-load width="{{ avatarWidth }}px" height="{{ avatarWidth }}px" fit="fill" src="{{ message.sendAvatar }}" mut-bind:tap="toUser" data-uid="{{ message.sendUid }}" />
+          </van-col>
+          <van-col span="18">
+            <view style="display: flex">
+              <view class="name" mut-bind:tap="toUser" data-uid="{{ message.sendUid }}">{{ message.sendName }}</view>
+            </view>
+            <view class="content">{{ message.content }}</view>
+          </van-col>
+          <van-col span="2">
+            <view class="time">{{ message.createTime }}</view>
+          </van-col>
+        </van-row>
+      </view>
+      <view slot="right" class="van-swipe-cell__right">删除</view>
+    </van-swipe-cell>
+    <van-divider/>
+  </view>
+</view>
+
+<van-tabbar active="{{ 2 }}" bind:change="tabbarChange">
+  <van-tabbar-item icon="wap-home-o">微博</van-tabbar-item>
+  <van-tabbar-item icon="search">发现</van-tabbar-item>
+  <van-tabbar-item icon="envelop-o" info="{{ totalCount }}">消息</van-tabbar-item>
+  <van-tabbar-item icon="contact">我</van-tabbar-item>
+</van-tabbar>

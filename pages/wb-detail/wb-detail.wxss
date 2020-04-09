@@ -86,3 +86,11 @@
   padding-bottom: 30rpx;
   text-align: center;
 }
+.prompt {
+  background-color: #f8f8f8;
+  color: gray;
+  text-align: center;
+  width: 100%;
+  padding-top: 260rpx;
+  padding-bottom: 260rpx;
+}

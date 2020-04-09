@@ -14,14 +14,12 @@
   <view style="text-align:center;">需要授权以完善你的个人信息</view>
 </van-dialog>
 
-<mp-navigation-bar title="关注" color="{{color}}" background="{{background}}" back="{{false}}">
-  <van-icon slot="left" name="add-o" bindtap="toAddWeibo" size="25px"/>
+<mp-navigation-bar title="关注" color="{{color}}" background="{{background}}" back="{{false}}" mut-bind:tap="toTop">
+  <van-icon slot="left" name="add-o" mut-bind:tap="toAddWeibo" size="25px"/>
 </mp-navigation-bar>
 
 <wux-refresher id="wux-refresher" pullingText="释放刷新" refreshingText="刷新中" bind:refresh="getWeiboInfo">
-
-<weibo weiboList="{{ weiboList }}" ></weibo>
-
+  <weibo weiboList="{{ weiboList }}" ></weibo>
 </wux-refresher>
 
 <view style="height:140rpx;"></view>
@@ -29,6 +27,6 @@
 <van-tabbar active="{{ 0 }}" bind:change="tabChange">
   <van-tabbar-item icon="wap-home-o">微博</van-tabbar-item>
   <van-tabbar-item icon="search">发现</van-tabbar-item>
-  <van-tabbar-item icon="envelop-o">消息</van-tabbar-item>
+  <van-tabbar-item icon="envelop-o" info="{{ totalCount }}">消息</van-tabbar-item>
   <van-tabbar-item icon="contact">我</van-tabbar-item>
 </van-tabbar>

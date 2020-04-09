@@ -1,4 +1,5 @@
 <van-toast id="van-toast" />
+
 <van-dialog id="van-dialog" />
 
 <van-action-sheet
@@ -31,7 +32,7 @@
   </view>
 </van-popup>
 
-<mp-navigation-bar title="{{ count }} 条回复" color="{{color}}" background="{{background}}" />
+<mp-navigation-bar title="{{ count }} 条回复" color="{{color}}" background="{{background}}" mut-bind:tap="toTop"/>
 
 <view style="background-color:#ffffff;padding: 15rpx">
   <van-row mut-bind:tap="sheetOpen" data-have_delete="{{ false }}" data-name="{{ commentVO.name }}" data-content="{{ commentVO.content }}" data-uid="{{ commentVO.uid }}">
@@ -64,6 +65,9 @@
   </van-row>
   <van-divider />
 
+  <view wx:if="{{ commentVOList.length == 0 }}" class="prompt">
+    暂无相关回复
+  </view>
   <view wx:for="{{ commentVOList }}" wx:key="cid" wx:for-item="item" wx:for-index="index">
     <van-row mut-bind:tap="sheetOpen" data-cid="{{ item.cid }}" data-have_delete="{{ item.uid === uid }}" data-name="{{ item.name }}" data-content="{{ item.content }} " data-comment_name="{{ item.commentName }}">
       <van-col span="4">

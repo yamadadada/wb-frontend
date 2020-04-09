@@ -13,6 +13,7 @@ Page({
     color: '#000',
     background: '#ffffff',
     avatarWidth: app.globalData.avatarWidth,
+    cid: null,
     uid: null,
     name: '',
     image: '',
@@ -32,39 +33,24 @@ Page({
     checked: false,
     selectCid: null,
     selectName: '',
-    selectUid: null
+    selectUid: null,
+    page: 1,
+    size: 10,
+    isAll: false
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    this.calWidth();
     this.setData({
+      cid: options.cid,
       uid: app.globalData.uid,
       name: options.name,
       image: options.image,
       content: options.content,
       forwardContent: options.forward_content
-    })
-    this.calWidth();
-    const cid = options.cid;
-    const that = this;
-    wx.request({
-      url: app.globalData.host + '/comment/' + cid,
-      header: {
-        'token': app.globalData.token
-      },
-      success(res) {
-        verifyToken(res);
-        if (res.statusCode == 200) {
-          that.setData({
-            commentVO: res.data.data.commentVO,
-            commentVOList: res.data.data.commentVO.commentVOList,
-            count: res.data.data.count,
-            placeholder: '回复 @' + res.data.data.commentVO.name
-          })
-        }
-      }
     })
   },
 
@@ -79,7 +65,27 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
+    const that = this;
+    const cid = this.data.cid;
+    wx.request({
+      url: app.globalData.host + '/comment/' + cid,
+      header: {
+        'token': app.globalData.token
+      },
+      success(res) {
+        verifyToken(res);
+        if (res.statusCode == 200) {
+          that.setData({
+            commentVO: res.data.data.commentVO,
+            commentVOList: res.data.data.commentVO.commentVOList,
+            count: res.data.data.count,
+            placeholder: '回复 @' + res.data.data.commentVO.name,
+            page: 1,
+            isAll: false
+          })
+        }
+      }
+    })
   },
 
   /**
@@ -107,7 +113,7 @@ Page({
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
-
+    this.getCommentVOList();
   },
 
   /**
@@ -193,19 +199,41 @@ Page({
   },
 
   getCommentVOList: function () {
+    if (this.data.isAll) {
+      return;
+    }
     const that = this;
     wx.request({
       url: app.globalData.host + '/comment/' + this.data.commentVO.cid + "/comment?sort=" + this.data.sort,
       header: {
         'token': app.globalData.token
       },
+      data: {
+        page: this.data.page + 1,
+        size: this.data.size
+      },
       success(res) {
         verifyToken(res);
         if (res.statusCode == 200) {
-          that.setData({
-            commentVOList: that.data.commentVOList.concat(res.data.data.commentVOList),
-            count: res.data.data.count
-          })
+          const list = res.data.data.commentVOList;
+          if (list == null || list.length == 0) {
+            that.setData({
+              isAll: true
+            })
+          } else {
+            that.setData({
+              commentVOList: that.data.commentVOList.concat(list),
+              count: res.data.data.count,
+              page: that.data.page + 1,
+            })
+            if (list.length < that.data.size) {
+              that.setData({
+                isAll: true
+              })
+            }
+          }
+        } else {
+          Toast.fail('加载失败，请稍后再试')
         }
       }
     })
@@ -216,13 +244,17 @@ Page({
       this.setData({
         sort: 'create_time',
         sortName: '按时间',
-        commentVOList: []
+        commentVOList: [],
+        page: 0,
+        isAll: false
       })
     } else {
       this.setData({
         sort: 'like_count',
         sortName: '按热度',
-        commentVOList: []
+        commentVOList: [],
+        page: 0,
+        isAll: false
       })
     }
     this.getCommentVOList();
@@ -330,7 +362,9 @@ Page({
             if (res.statusCode == 200) {
               Toast.success('删除成功');
               that.setData({
-                commentVOList: []
+                commentVOList: [],
+                page: 0,
+                isAll: false
               })
               that.getCommentVOList();
             } else {
@@ -390,7 +424,9 @@ Page({
           that.setData({
             sort: 'create_time',
             sortName: '按时间',
-            commentVOList: []
+            commentVOList: [],
+            page: 0,
+            isAll: false
           })
           that.getCommentVOList();
         } else {
@@ -436,6 +472,13 @@ Page({
     const uid = e.currentTarget.dataset.uid;
     wx.navigateTo({
       url: '/pages/user/user?uid=' + uid
+    })
+  },
+
+  toTop: function () {
+    wx.pageScrollTo({
+      scrollTop: 0,
+      duration: 300
     })
   }
 })

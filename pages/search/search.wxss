@@ -1,3 +1,8 @@
+@import "/vant/common/index.wxss";
+
+.tabs {
+  margin-top: 20rpx;
+}
 .small-name {
   font-size: 29rpx;
 }
