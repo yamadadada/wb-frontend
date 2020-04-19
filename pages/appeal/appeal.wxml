@@ -1,0 +1,82 @@
+<van-dialog id="van-dialog" />
+
+<van-toast id="van-toast" />
+
+<mp-navigation-bar title="投诉" color="{{ color }}" background="{{ background }}" />
+
+<view style="margin-top: 10rpx; background: #ffffff">
+  <view style="width: 95%; margin: auto; padding-top: 20rpx; padding-bottom: 80rpx;">
+    <van-radio-group value="{{ appealType }}" bind:change="onChange">
+      <view wx:if="{{ targetType == '2' }}">
+        <van-row>
+          <van-col span="8" custom-class="col">
+            <van-radio name="12">头像违规</van-radio>
+          </van-col>
+          <van-col span="8" custom-class="col">
+            <van-radio name="13">昵称违规</van-radio>
+          </van-col>
+          <van-col span="8" custom-class="col">
+            <van-radio name="14">签名违规</van-radio>
+          </van-col>
+          <van-col span="8" custom-class="col">
+            <van-radio name="10">其他</van-radio>
+          </van-col>
+        </van-row>
+      </view>
+      <view wx:else>
+        <view class="title">违反法律法规</view>
+        <van-row>
+          <van-col span="8" custom-class="col">
+            <van-radio name="0">违法违规</van-radio>
+          </van-col>
+          <van-col span="8" custom-class="col">
+            <van-radio name="1">色情</van-radio>
+          </van-col>
+          <van-col span="8" custom-class="col">
+            <van-radio name="2">低俗</van-radio>
+          </van-col>
+          <van-col span="8" custom-class="col">
+            <van-radio name="3">赌博诈骗</van-radio>
+          </van-col>
+        </van-row>
+        <view class="title">侵犯个人权益</view>
+        <van-row>
+          <van-col span="8" custom-class="col">
+            <van-radio name="4">人身攻击</van-radio>
+          </van-col>
+          <van-col span="8" custom-class="col">
+            <van-radio name="5">侵犯隐私</van-radio>
+          </van-col>
+        </van-row>
+        <view class="title">有害平台环境</view>
+        <van-row>
+          <van-col span="8" custom-class="col">
+            <van-radio name="6">垃圾广告</van-radio>
+          </van-col>
+          <van-col span="8" custom-class="col">
+            <van-radio name="7">引战</van-radio>
+          </van-col>
+          <van-col span="8" custom-class="col">
+            <van-radio name="8">刷屏</van-radio>
+          </van-col>
+          <van-col span="8" custom-class="col" wx:if="{{ targetType == '1' }}">
+            <van-radio name="9">微博不相关</van-radio>
+          </van-col>
+          <van-col span="8" custom-class="col" wx:if="{{ targetType == '0' }}">
+            <van-radio name="11">话题不相关</van-radio>
+          </van-col>
+          <van-col span="8" custom-class="col">
+            <van-radio name="10">其他</van-radio>
+          </van-col>
+        </van-row>
+      </view>
+    </van-radio-group>
+    <view style="margin-top: 20rpx; padding: 20rpx; background: #f8f8f8;">
+      <textarea placeholder="请填写投诉理由" focus="{{ focus }}" maxlength="400" auto-height adjust-position value="{{ content }}" bindinput="onInput"/>
+    </view>
+  </view>
+</view>
+
+<view class="bottom">
+  <van-button type="primary" block bind:click="commit" disabled="{{ disabled }}">提交</van-button>
+</view>

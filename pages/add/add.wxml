@@ -2,6 +2,8 @@
 
 <van-toast id="van-toast" />
 
+<mp-navigation-bar title="发微博" color="{{color}}" background="{{background}}" />
+
 <van-popup show="{{ showPop1 }}" round position="bottom" custom-style="height: 70%" bind:close="closePop1" >
   <van-search value="{{ searchValue1 }}" placeholder="输入想@的人" bind:change="changeSearch1" show-action="{{ showCancel }}" bindtap="startSearch" bind:cancel="endSearch" />
   <view wx:if="{{ showCancel }}" >
@@ -29,8 +31,6 @@
     <van-cell wx:for="{{ alternative2 }}" wx:for-item="item" wx:key="key" title="{{ '#' + item.name + '#' }}" bindtap="select2" data-name="{{ '#' + item.name + '#' }}" clickable />
   </view>
 </van-popup>
-
-<mp-navigation-bar title="发微博" color="{{color}}" background="{{background}}" />
 
 <view style="width:96%;margin:auto">
   <view style="float: left;">

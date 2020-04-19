@@ -248,5 +248,11 @@ Page({
       scrollTop: 0,
       duration: 300
     })
+  },
+
+  appeal: function () {
+    wx.navigateTo({
+      url: '/pages/appeal/appeal?id=' + this.data.user.uid + '&type=2'
+    })
   }
 })

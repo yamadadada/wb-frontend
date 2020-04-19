@@ -305,6 +305,10 @@ Page({
           }
         }
       })
+    } else if (event.detail.name === '投诉') {
+      wx.navigateTo({
+        url: '/pages/appeal/appeal?id=' + this.data.weibo.wid + '&type=0'
+      })
     }
   },
 
@@ -383,6 +387,10 @@ Page({
           url: '/pages/forward/forward?wid=' + this.data.weibo.wid + "&name=" + this.data.weibo.forwardUsername + "&image=" + image + "&content=" + content + "&forward_content=" + forwardContent + "&select_cid=" + this.data.selectCid
         })
       }
+    } else if (event.detail.name === '投诉') {
+      wx.navigateTo({
+        url: '/pages/appeal/appeal?id=' + this.data.selectCid + '&type=1'
+      })
     }
   },
 

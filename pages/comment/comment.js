@@ -383,6 +383,14 @@ Page({
       wx.navigateTo({
         url: '/pages/forward/forward?wid=' + this.data.commentVO.wid + "&name=" + this.data.name + "&image=" + this.data.image + "&content=" + this.data.content + "&forward_content=" + this.data.forwardContent + "&select_cid=" + this.data.commentVO.cid + "&select_name=" + this.data.selectName + "&select_uid=" + this.dtat.selectUid
       })
+    } else if (event.detail.name === '投诉') {
+      var selectCid = this.data.selectCid;
+      if (selectCid == null) {
+        selectCid = this.data.cid;
+      }
+      wx.navigateTo({
+        url: '/pages/appeal/appeal?id=' + selectCid + '&type=1'
+      })
     }
   },
 

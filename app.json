@@ -12,7 +12,8 @@
     "pages/find/find",
     "pages/search/search",
     "pages/message/message",
-    "pages/message-detail/message-detail"
+    "pages/message-detail/message-detail",
+    "pages/appeal/appeal"
   ],
   "window": {
     "backgroundTextStyle": "light",

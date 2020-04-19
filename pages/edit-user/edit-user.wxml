@@ -28,8 +28,8 @@
   </van-cell>
 </van-cell-group>
 
-<van-cell-group title="昵称">
-  <van-field label="昵称" value="{{ user.name }}" placeholder="请输入昵称" maxlength="16" required bind:change="changeName" error="{{ error1 }}" error-message="{{ errorMessage1 }}"/>
+<van-cell-group title="{{ nameReadOnly ? '昵称(修改昵称30天内无法再次修改)' : '昵称' }}">
+  <van-field label="昵称" value="{{ user.name }}" placeholder="请输入昵称" maxlength="16" required bind:change="changeName" error="{{ error1 }}" error-message="{{ errorMessage1 }}" readonly="{{ nameReadOnly }}"/>
 </van-cell-group>
 
 <van-cell-group title="简介">
@@ -43,6 +43,6 @@
   <van-field label="学校" value="{{ user.school == null ? '' : user.school }}" placeholder="请输入学校" maxlength="16" bind:change="changeSchool" error="{{ error2 }}" />
 </van-cell-group>
 
-<view style="margin-top: 50rpx;width: 70%; margin:auto">
+<view class="bottom">
   <van-button type="primary" block bindtap="commit" >提交</van-button>
 </view>

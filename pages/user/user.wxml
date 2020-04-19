@@ -16,7 +16,7 @@
     <span style="margin-left: 50rpx; margin-right: 50rpx;">|</span>
     <span>粉丝  {{ user.fanCount }}</span>
   </view>
-  <view style="font-size: 27rpx;">
+  <view style="font-size: 27rpx;" class="van-ellipsis">
     简介: {{ user.introduction == null ? '该用户没有填写个人简介' : user.introduction }}  
   </view>
 </view>
@@ -25,6 +25,9 @@
   <van-tabs active="1" sticky animated swipeable color="#FD7E01" bind:change="changeTab">
     <van-tab name="0" title="主页">
       <view style="margin-top: 20rpx;">
+        <van-cell-group title="用户信息">
+          <van-field label="个人简介" value="{{ user.introduction == null ? '该用户没有填写个人简介' : user.introduction }}" readonly />
+        </van-cell-group>
         <van-cell-group title="个人资料">
           <van-field label="注册时间" value="{{ user.registerTime }}" readonly />
           <van-field label="性别" value="{{ user.gender == 0 ? '未知' : user.gender == 1 ? '男' : '女' }}" readonly />
@@ -54,6 +57,11 @@
     <view class="operate" style="color: #FD7E01;" mut-bind:tap="changeFollow">
       <van-icon name="plus" />
       <view class="operate-number">关注</view>
+    </view>
+  </van-col>
+  <van-col span="3" offset="5">
+    <view class="operate">
+      <van-icon name="warning-o" bindtap="appeal"/>
     </view>
   </van-col>
 </van-row>

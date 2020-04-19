@@ -143,7 +143,7 @@ Page({
       success(res) {
         verifyToken(res);
         if (res.statusCode == 200 && !res.data.data.isNameChange) {
-          openDialog('提示', '当前昵称已被占用，请前往个人中心修改昵称')
+          Toast.fail('当前昵称已被占用，请前往个人中心修改昵称')
         }
       }
     })
@@ -231,8 +231,9 @@ Page({
 
   getBadge: function () {
     var messageId = wx.getStorageSync('messageId');
-    if (messageId == null) {
-      messageId = { 'atId': 0, 'commentId': 0, 'likeId': 0, 'systemId': 0}
+    if (messageId == '') {
+      messageId = {atId: 0, commentId: 0, likeId: 0, systemId: 0};
+      wx.setStorageSync('messageId', messageId)
     }
     const that = this;
     wx.request({
@@ -250,10 +251,7 @@ Page({
         verifyToken(res);
         if (res.statusCode == 200) {
           var messageCount = res.data.data;
-          wx.setStorage({
-            key: 'messageCount',
-            data: messageCount
-          });
+          wx.setStorageSync('messageCount', messageCount);
           if (messageCount.totalCount > 0) {
             that.setData({
               totalCount: messageCount.totalCount

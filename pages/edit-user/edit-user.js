@@ -32,7 +32,9 @@ Page({
     errorMessage1: '',
     error2: false,
     avatar: '',
-    areaList: areaList.default
+    areaList: areaList.default,
+    nameReadOnly: false,
+    nameLabel: ''
   },
 
   /**
@@ -59,6 +61,24 @@ Page({
             pickGender: res.data.data.gender,
             avatar: res.data.data.avatar
           })
+        }
+      }
+    })
+    // 检测昵称修改是否在间隔期
+    wx.request({
+      url: app.globalData.host + '/user/isNameInterval',
+      header: {
+        'token': app.globalData.token
+      },
+      success(res) {
+        verifyToken(res);
+        if (res.statusCode == 200) {
+          if (res.data.data == true) {
+            that.setData({
+              nameReadOnly: true,
+              nameLabel: '修改昵称30天内无法再次修改'
+            })
+          }
         }
       }
     })

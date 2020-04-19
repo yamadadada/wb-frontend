@@ -128,12 +128,15 @@ Page({
             var messageCount = wx.getStorageSync('messageCount');
             var messageId = wx.getStorageSync('messageId');
             if (that.data.type == '0') {
+              messageCount.totalCount = messageCount.totalCount - messageCount.atCount;
               messageCount.atCount = 0;
               messageId.atId = list[0].mid;
             } else if (that.data.type == '1') {
+              messageCount.totalCount = messageCount.totalCount - messageCount.commentCount;
               messageCount.commentCount = 0;
               messageId.commentId = list[0].mid;
             } else {
+              messageCount.totalCount = messageCount.totalCount - messageCount.likeCount;
               messageCount.likeCount = 0;
               messageId.likeId = list[0].mid;
             }

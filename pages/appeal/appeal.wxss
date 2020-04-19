@@ -9,3 +9,10 @@
   padding-top: 20rpx;
   padding-bottom: 20rpx;
 }
+.col {
+  margin-top: 30rpx;
+}
+.title {
+  color: #929292;
+  margin-top: 35rpx;
+}

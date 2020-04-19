@@ -30,6 +30,7 @@
 .comment-comment {
   font-size: 28rpx;
   padding-top: 10rpx;
+  padding-bottom: 10rpx;
   margin-bottom: 10rpx;
 }
 .blue_name {
