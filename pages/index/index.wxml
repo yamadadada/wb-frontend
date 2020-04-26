@@ -19,10 +19,10 @@
 </mp-navigation-bar>
 
 <wux-refresher id="wux-refresher" pullingText="释放刷新" refreshingText="刷新中" bind:refresh="getWeiboInfo">
-  <weibo weiboList="{{ weiboList }}" ></weibo>
+  <view>
+    <weibo weiboList="{{ weiboList }}" ></weibo>
+  </view>
 </wux-refresher>
-
-<view style="height:140rpx;"></view>
 
 <van-tabbar active="{{ 0 }}" bind:change="tabChange">
   <van-tabbar-item icon="wap-home-o">微博</van-tabbar-item>

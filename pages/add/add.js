@@ -122,8 +122,12 @@ Page({
   },
 
   addWeibo: function (e) {
-    if (this.data.content == '') {
+    if (this.data.content == null || this.data.content == '') {
       Toast.fail('微博内容不能为空');
+      return;
+    }
+    if (this.data.content.length > 2000) {
+      Toast.fail('微博正文不能超过2000字');
       return;
     }
     const that = this;

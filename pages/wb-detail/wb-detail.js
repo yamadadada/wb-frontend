@@ -88,7 +88,9 @@ Page({
             likeCount: res.data.data.likeCount,
             isLike: res.data.data.isLike,
             page2: 1,
-            isAll2: false
+            isAll2: false,
+            sort: "like_count",
+            sortName: "按热度"
           })
         }
       }

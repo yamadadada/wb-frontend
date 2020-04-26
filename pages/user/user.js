@@ -22,7 +22,7 @@ Page({
     user: null,
     weiboList: [],
     type: '1',
-    page: 1,
+    page: 0,
     size: 10,
     isAll: false
   },
@@ -67,7 +67,7 @@ Page({
     if (this.data.name) {
       const that = this;
       wx.request({
-        url: app.globalData.host + '/getByName',
+        url: app.globalData.host + '/user/getByName',
         header: {
           'token': app.globalData.token
         },

@@ -296,7 +296,7 @@ Page({
 
   search: function (content) {
     var list = wx.getStorageSync('searchHistory');
-    if (list == null) {
+    if (list == null || list == '') {
       list = [];
     }
     for (var index in list) {
