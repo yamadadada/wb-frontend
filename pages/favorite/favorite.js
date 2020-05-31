@@ -11,22 +11,23 @@ Page({
   data: {
     color: '#3A3A3A',
     background: '#FDFDFD',
+    loading: false,
     avatarWidth: 0,
     active: 0,
     followList: [],
     fanList: [],
     likeList: [],
     favoriteList: [],
-    page1: 1,
+    page1: 0,
     size1: 10,
     isAll1: false,
-    page2: 1,
+    page2: 0,
     size2: 10,
     isAll2: false,
-    page3: 1,
+    page3: 0,
     size3: 10,
     isAll3: false,
-    page4: 1,
+    page4: 0,
     size4: 10,
     isAll4: false
   },
@@ -175,6 +176,9 @@ Page({
       return;
     }
     const that = this;
+    this.setData({
+      loading: true
+    })
     wx.request({
       url: app.globalData.host + '/user/myFollow',
       header: {
@@ -206,6 +210,11 @@ Page({
         } else {
           Toast.fail('加载失败，请稍后再试');
         }
+      },
+      complete() {
+        that.setData({
+          loading: false
+        })
       }
     })
   },
@@ -215,6 +224,9 @@ Page({
       return;
     }
     const that = this;
+    this.setData({
+      loading: true
+    })
     wx.request({
       url: app.globalData.host + '/user/myFans',
       header: {
@@ -246,6 +258,11 @@ Page({
         } else {
           Toast.fail('加载失败，请稍后再试');
         }
+      },
+      complete() {
+        that.setData({
+          loading: false
+        })
       }
     })
   },
@@ -255,6 +272,9 @@ Page({
       return;
     }
     const that = this;
+    this.setData({
+      loading: true
+    })
     wx.request({
       url: app.globalData.host + '/weibo/myLike',
       header: {
@@ -286,6 +306,11 @@ Page({
         } else {
           Toast.fail('加载失败，请稍后再试');
         }
+      },
+      complete() {
+        that.setData({
+          loading: false
+        })
       }
     })
   },
@@ -295,6 +320,9 @@ Page({
       return;
     }
     const that = this;
+    this.setData({
+      loading: true
+    })
     wx.request({
       url: app.globalData.host + '/weibo/myFavorite',
       header: {
@@ -326,6 +354,11 @@ Page({
         } else {
           Toast.fail('加载失败，请稍后再试');
         }
+      },
+      complete() {
+        that.setData({
+          loading: false
+        })
       }
     })
   },

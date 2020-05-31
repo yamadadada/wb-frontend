@@ -12,6 +12,7 @@ Page({
   data: {
     color: '#000',
     background: '#ffffff',
+    loading: false,
     imageWidth: 0,
     boardWidth: 0,
     uid: null,
@@ -72,6 +73,9 @@ Page({
    */
   onShow: function () {
     const that = this;
+    this.setData({
+      loading: true
+    })
     wx.request({
       url: app.globalData.host + '/weibo/' + this.data.wid,
       header: {
@@ -93,6 +97,11 @@ Page({
             sortName: "按热度"
           })
         }
+      },
+      complete() {
+        that.setData({
+          loading: false
+        })
       }
     })
   },
@@ -159,7 +168,7 @@ Page({
           }
         }
       })
-    } else if (type == '1' && !this.data.isAll2) {
+    } else if (type == '1' && !this.data.isAll2 && this.data.page2 != 0) {
       this.getCommentVOList();
     } else if (type == '2' && !this.data.isAll3) {
       wx.request({
@@ -264,7 +273,9 @@ Page({
             }
           }
         })
-      })
+      }).then(() => {
+        // on close
+      });
     } else if (event.detail.name === '收藏') {
       const that = this;
       const favoriteIndex = 'weibo.isFavorite';
@@ -357,38 +368,14 @@ Page({
         })
       })
     } else if (event.detail.name === '转发') {
-      var image = '';
-      if (this.data.weibo.status == 0) {
-        if (this.data.weibo.imageList.length > 0) {
-          image = this.data.weibo.imageList[0];
-        } else {
-          image = this.data.weibo.avatar;
-        }
-        var content = "";
-        const contentList = this.data.weibo.content;
-        for (var i in contentList) {
-          content = content + contentList[i].text
-        }
-        const forwardContent = '//@' + this.data.description
-        wx.navigateTo({
-          url: '/pages/forward/forward?wid=' + this.data.weibo.wid + "&name=" + this.data.weibo.name + "&image=" + image + "&content=" + content + "&forward_content=" + forwardContent + "&select_cid=" + this.data.selectCid
-        })
-      } else {
-        if (this.data.weibo.forwardImageList != null && this.data.weibo.forwardImageList.length > 0) {
-          image = this.data.weibo.forwardImageList[0];
-        } else {
-          image = this.data.weibo.forwardAvatar;
-        }
-        var content = "";
-        const contentList = this.data.weibo.forwardContent;
-        for (var i in contentList) {
-          content = content + contentList[i].text
-        }
-        const forwardContent = '//@' + this.data.description + '//@' + this.data.weibo.name + ":" + content;
-        wx.navigateTo({
-          url: '/pages/forward/forward?wid=' + this.data.weibo.wid + "&name=" + this.data.weibo.forwardUsername + "&image=" + image + "&content=" + content + "&forward_content=" + forwardContent + "&select_cid=" + this.data.selectCid
-        })
+      var attach = ''
+      if (this.data.weibo.status == 1) {
+        attach = '//@' + this.data.weibo.name + ':' + this.data.weibo.contentString;
       }
+      attach = '//@' + this.data.description + attach;
+      wx.navigateTo({
+        url: '/pages/forward/forward?wid=' + this.data.weibo.wid + '&attach=' + attach
+      })
     } else if (event.detail.name === '投诉') {
       wx.navigateTo({
         url: '/pages/appeal/appeal?id=' + this.data.selectCid + '&type=1'
@@ -478,32 +465,12 @@ Page({
   },
   
   toCommentDetail: function (e) {
-    var image = '';
-    if (this.data.weibo.imageList.length > 0) {
-      image = this.data.weibo.imageList[0];
-    } else {
-      image = this.data.weibo.avatar;
-    }
-    var content = '';
-    var forwardContent = '';
-    if (this.data.weibo.status == 0) {
-      const contentList = this.data.weibo.content;
-      for (var i in contentList) {
-        content = content + contentList[i].text;
-      }
-    } else {
-      var list = this.data.weibo.forwardContent;
-      for (var i in list) {
-        content = content + list[i].text;
-      }
-      list = this.data.weibo.content;
-      for (var i in list) {
-        forwardContent = forwardContent + list[i].text;
-      }
-      forwardContent = '//@' + this.data.weibo.name + ':' + forwardContent;
+    var attach = '';
+    if (this.data.weibo.status == 1) {
+      attach = '//@' + this.data.weibo.name + ':' + this.data.weibo.contentString;
     }
     wx.navigateTo({
-      url: '/pages/comment/comment?cid=' + e.currentTarget.dataset.cid + '&name=' + this.data.weibo.name + '&image=' + image + '&content=' + content + '%forward_content=' + forwardContent
+      url: '/pages/comment/comment?cid=' + e.currentTarget.dataset.cid + '&attach=' + attach
     })
   },
 
@@ -736,43 +703,13 @@ Page({
   },
 
   toAddForward: function () {
-    var image = '';
-    if (this.data.weibo.status == 0) {
-      if (this.data.weibo.imageList.length > 0) {
-        image = this.data.weibo.imageList[0];
-      } else {
-        image = this.data.weibo.avatar;
-      }
-      var content = "";
-      const contentList = this.data.weibo.content;
-      for (var i in contentList) {
-        content = content + contentList[i].text
-      }
-      const forwardContent = ''
-      wx.navigateTo({
-        url: '/pages/forward/forward?wid=' + this.data.weibo.wid + "&name=" + this.data.weibo.name + "&image=" + image + "&content=" + content + "&forward_content=" + forwardContent
-      })
-    } else {
-      if (this.data.weibo.forwardImageList != null && this.data.weibo.forwardImageList.length > 0) {
-        image = this.data.weibo.forwardImageList[0];
-      } else {
-        image = this.data.weibo.forwardAvatar;
-      }
-      var content = "";
-      const contentList = this.data.weibo.forwardContent;
-      for (var i in contentList) {
-        content = content + contentList[i].text
-      }
-      var forwardContent = "";
-      const list = this.data.weibo.content;
-      for (var i in list) {
-        forwardContent = forwardContent + list[i].text;
-      }
-      forwardContent = '//@' + this.data.weibo.name + ":" + forwardContent;
-      wx.navigateTo({
-        url: '/pages/forward/forward?wid=' + this.data.weibo.wid + "&name=" + this.data.weibo.forwardUsername + "&image=" + image + "&content=" + content + "&forward_content=" + forwardContent
-      })
+    var attach = ''
+    if (this.data.weibo.status == 1) {
+      attach = '//@' + this.data.weibo.name + ':' + this.data.weibo.contentString;
     }
+    wx.navigateTo({
+      url: '/pages/forward/forward?wid=' + this.data.weibo.wid + "&attach=" + attach
+    })
   },
 
   toWeiboDetail: function (e) {

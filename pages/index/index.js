@@ -1,6 +1,7 @@
 import { verifyToken } from '../../utils/util'
 import { $stopWuxRefresher } from '../../lib/index'
 import Toast from '../../vant/toast/toast';
+import Dialog from '../../vant/dialog/dialog';
 
 const app = getApp()
 
@@ -12,6 +13,7 @@ Page({
   data: {
     color: '#000',
     background: '#ffffff',
+    loading: false,
     dialogVisible: false,
     canIUse: wx.canIUse('button.open-type.getUserInfo'),
     weiboList: [],
@@ -64,6 +66,12 @@ Page({
                 if (res.statusCode === 200) {
                   app.globalData.uid = res.data.data.uid;
                   app.globalData.token = res.data.data.token;
+                  if (res.data.data.school) {
+                    app.globalData.school = res.data.data.school
+                  }
+                  if (res.data.data.city) {
+                    app.globalData.city = res.data.data.city
+                  }
                   that.getWeiboInfo();
                   that.getBadge();
                 } else {
@@ -142,8 +150,18 @@ Page({
       method: 'POST',
       success(res) {
         verifyToken(res);
-        if (res.statusCode == 200 && !res.data.data.isNameChange) {
-          Toast.fail('当前昵称已被占用，请前往个人中心修改昵称')
+        if (res.statusCode == 200) {
+          app.globalData.city = res.data.data.city;
+          if (res.data.data.message) {
+            Dialog.confirm({
+              title: '提示',
+              message: res.data.data.message
+            }).then(() => {
+              wx.navigateTo({
+                url: '/pages/edit-user/edit-user',
+              })
+            })
+          }
         }
       }
     })
@@ -151,6 +169,9 @@ Page({
   
   getWeiboInfo: function () {
     const that = this;
+    this.setData({
+      loading: true
+    })
     wx.request({
       url: app.globalData.host + '/weibo',
       header: {
@@ -169,6 +190,9 @@ Page({
       },
       complete() {
         $stopWuxRefresher();
+        that.setData({
+          loading: false
+        })
       }
     })
   },
@@ -186,6 +210,9 @@ Page({
     if (this.data.isAll) {
       return;
     }
+    this.setData({
+      loading: true
+    })
     const that = this;
     wx.request({
       url: app.globalData.host + '/weibo',
@@ -218,6 +245,11 @@ Page({
         } else {
           Toast.fail('加载失败，请稍后再试')
         }
+      },
+      complete() {
+        that.setData({
+          loading: false
+        })
       }
     })
   },

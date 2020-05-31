@@ -10,6 +10,7 @@ Page({
   data: {
     color: '#3A3A3A',
     background: '#FDFDFD',
+    loading: false,
     imageWidth: 0,
     user: null,
     totalCount: null
@@ -33,6 +34,9 @@ Page({
    */
   onShow: function () {
     const that = this;
+    this.setData({
+      loading: true
+    })
     wx.request({
       url: app.globalData.host + '/user',
       header: {
@@ -45,6 +49,11 @@ Page({
             user: res.data.data
           })
         }
+      },
+      complete() {
+        that.setData({
+          loading: false
+        })
       }
     });
     var totalCount = wx.getStorageSync('messageCount').totalCount;

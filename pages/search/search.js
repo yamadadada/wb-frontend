@@ -11,6 +11,7 @@ Page({
   data: {
     color: '#3A3A3A',
     background: '#FDFDFD',
+    loading: false,
     avatarWidth: 0,
     showSearch: false,
     searchValue: '',
@@ -196,6 +197,9 @@ Page({
   },
 
   search: function (content) {
+    this.setData({
+      loading: true
+    })
     var list = wx.getStorageSync('searchHistory');
     if (list == null) {
       list = [];
@@ -237,6 +241,11 @@ Page({
         } else {
           Toast.fail("加载失败，请稍后再试")
         }
+      },
+      complete() {
+        that.setData({
+          loading: false
+        })
       }
     })
   },

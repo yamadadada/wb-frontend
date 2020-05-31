@@ -2,22 +2,28 @@
 
 <van-toast id="van-toast" />
 
-<mp-navigation-bar title="修改资料" color="{{ color }}" background="{{ background }}" />
+<mp-navigation-bar title="修改资料" color="{{ color }}" background="{{ background }}" loading="{{ loading }}" />
 
-<van-popup show="{{ showPop1 }}" position="bottom" round custom-style="height: 30%;" bind:close="closePop1" >
-  <van-picker columns="{{ ['不公开', '男', '女'] }}" default-index="{{ user.gender }}" bind:change="genderChange" 
-  title="性别" bind:cancel="closePop1" bind:confirm="confirmGender" show-toolbar/>
+<van-popup show="{{ showPop1 }}" position="bottom" round custom-style="height: 35%;" bind:close="closePop1" >
+  <van-picker columns="{{ ['不公开', '男', '女'] }}" default-index="{{ user.gender }}" 
+  title="选择性别" bind:cancel="closePop1" bind:confirm="confirmGender" show-toolbar/>
 </van-popup>
 
-<van-popup show="{{ showPop2 }}" position="bottom" round custom-style="height: 30%;" bind:close="closePop2" >
+<van-popup show="{{ showPop2 }}" position="bottom" round custom-style="height: 35%;" bind:close="closePop2" >
   <van-datetime-picker
-    type="date" value="{{ currentDate }}" bind:input="onInput" min-date="0" title="出生日期"
-    max-date="{{ maxDate }}" formatter="{{ formatter }}"
-    bind:cancel="closePop2" bind:confirm="confirmBirth" />
+    type="date" value="{{ currentDate }}" min-date="0" title="选择出生日期"
+    max-date="{{ maxDate }}" bind:cancel="closePop2" bind:confirm="confirmBirth" />
 </van-popup>
 
-<van-popup show="{{ showPop3 }}" position="bottom" round custom-style="height: 30%;" bind:close="closePop3" >
-  <van-area area-list="{{ areaList }}" columns-num="{{ 2 }}" bind:confirm="locationConfirm" bind:cancel="closePop3"/>
+<van-popup show="{{ showPop3 }}" position="bottom" round custom-style="height: 35%;" bind:close="closePop3" >
+  <van-area title="选择所在地" area-list="{{ areaList }}" columns-num="{{ 2 }}" bind:confirm="locationConfirm" bind:cancel="closePop3"/>
+</van-popup>
+
+<van-popup show="{{ showPop4 }}" round position="bottom" custom-style="height: 50%" bind:close="closePop4" >
+  <van-search value="{{ searchValue }}" adjust-position placeholder="输入学校名称" bind:change="changeSearch" />
+  <van-skeleton row="3" loading="{{ searchLoading }}" >
+    <van-cell wx:for="{{ schoolList }}" wx:for-item="item" wx:key="key" title="{{ item }}" bindtap="selectSchool" data-name="{{ item }}" />
+  </van-skeleton>
 </van-popup>
 
 <van-cell-group title="头像">
@@ -39,10 +45,10 @@
 <van-cell-group title="个人信息">
   <van-field label="性别" value="{{ user.gender == 0 ? '不公开' : user.gender == 1 ? '男' : '女' }}" readonly bind:tap="openPop1" clickable required/>
   <van-field label="出生日期" value="{{ user.birth == null ? '' : user.birth }}" placeholder="请选择出生日期" readonly bind:tap="openPop2" clickable/>
-  <van-field label="所在地" value="{{ user.location == null ? '' : user.location }}" placeholder="请选择所在地"  click readonly bindtap="showPop3"/>
-  <van-field label="学校" value="{{ user.school == null ? '' : user.school }}" placeholder="请输入学校" maxlength="16" bind:change="changeSchool" error="{{ error2 }}" />
+  <van-field label="所在地" value="{{ user.location == null ? '' : user.location }}" placeholder="请选择所在地" clickable readonly bindtap="showPop3"/>
+  <van-field label="学校" value="{{ user.school == null ? '' : user.school }}" placeholder="请选择学校" clickable readonly bindtap="showPop4" />
 </van-cell-group>
 
-<view class="bottom">
+<view class="bottom ios_padding">
   <van-button type="primary" block bindtap="commit" >提交</van-button>
 </view>

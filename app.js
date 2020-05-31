@@ -4,8 +4,10 @@ App({
   },
   globalData: {
     uid: null,
+    school: null,
+    city: null,
     token: null,
     userInfo: null,
-    host: 'http://127.0.0.1:8080'
+    host: 'http://111.230.220.64:8080'
   }
 })

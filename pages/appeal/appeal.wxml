@@ -77,6 +77,6 @@
   </view>
 </view>
 
-<view class="bottom">
+<view class="bottom ios_padding">
   <van-button type="primary" block bind:click="commit" disabled="{{ disabled }}">提交</van-button>
 </view>

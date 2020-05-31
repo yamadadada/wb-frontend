@@ -28,14 +28,14 @@
   custom-style="height: 20%"
   bind:close="popupClose"
 >
-  <view style="width: 95%; margin: auto;">
-    <van-field value="{{ commentValue }}" autosize type="textarea" placeholder="{{ placeholder }}" border="{{ true }}" fixed="{{ true }}" custom-style="height: 240rpx; background: #f8f8f8; margin-top: 15rpx;margin-bottom: 15rpx" maxlength="140" bind:change="fieldChange"/>
+  <view style="width: 95%; margin: auto;" class="ios_padding">
+    <van-field value="{{ commentValue }}" autosize adjust-position type="textarea" placeholder="{{ placeholder }}" border="{{ true }}" fixed="{{ true }}" custom-style="height: 240rpx; background: #f8f8f8; margin-top: 15rpx;margin-bottom: 15rpx" maxlength="140" bind:change="fieldChange"/>
     <van-row>
       <van-col span="10">
         <van-checkbox value="{{ checked }}" shape="square" bind:change="checkedChange">同时转发</van-checkbox>
       </van-col>
       <van-col span="3" offset="11">
-        <view style="color: #FD7E01" bindtap="addComment">发送</view>
+        <view style="color: #576B95" bindtap="addComment">发送</view>
       </van-col>
     </van-row>
   </view>
@@ -43,69 +43,71 @@
 
 <wux-gallery id="wux-gallery" />
 
-<mp-navigation-bar title="微博正文" color="{{ color }}" background="{{ background }}" mut-bind:tap="toTop"/>
+<mp-navigation-bar title="微博正文" color="{{ color }}" background="{{ background }}" loading="{{ loading }}" mut-bind:tap="toTop"/>
 
 <view class="wux-light--bg" >
-  <view style="width: 95%;margin: auto">
-    <view style="width: 99%;margin: auto;padding-top: 15rpx;">
-      <van-row>
-        <van-col span="3">
-          <van-image style="padding: 15rpx;" lazy-load width="{{imageWidth * 0.33}}px" height="{{imageWidth * 0.33}}px" fit="fill" src="{{ weibo.avatar }}" mut-bind:tap="toUser" data-uid="{{ weibo.uid }}"/>
-        </van-col>
-        <van-col span="20" offset="1">
-          <van-row>
-            <van-col span="22">
-              <view class="name" mut-bind:tap="toUser" data-uid="{{ weibo.uid }}">{{weibo.name}}</view>
-            </van-col>
-            <van-col span="2">
-              <van-icon name="ellipsis" bindtap="showSheet1" data-wid="{{ weibo.wid }}" data-uid="{{ weibo.uid }}"/>
-            </van-col>
-          </van-row>
-          <van-row>
-            <view class="date">{{weibo.createTime}}</view>
-          </van-row>
-        </van-col>
-      </van-row>
-      <view style="margin-top:15rpx;margin-bottom:20rpx;white-space: pre-line;">
-        <weibo-text textList="{{ weibo.content }}"></weibo-text>
+  <van-skeleton title avatar row="3" loading="{{ loading }}" > 
+    <view style="width: 95%;margin: auto">
+      <view style="width: 99%;margin: auto;padding-top: 15rpx;">
+        <van-row>
+          <van-col span="3">
+            <van-image style="padding: 15rpx;" lazy-load width="{{imageWidth * 0.33}}px" height="{{imageWidth * 0.33}}px" fit="fill" src="{{ weibo.avatar }}" mut-bind:tap="toUser" data-uid="{{ weibo.uid }}"/>
+          </van-col>
+          <van-col span="20" offset="1">
+            <van-row>
+              <van-col span="22">
+                <view class="name" mut-bind:tap="toUser" data-uid="{{ weibo.uid }}">{{weibo.name}}</view>
+              </van-col>
+              <van-col span="2">
+                <van-icon name="ellipsis" size="20px;" bindtap="showSheet1" data-wid="{{ weibo.wid }}" data-uid="{{ weibo.uid }}"/>
+              </van-col>
+            </van-row>
+            <van-row>
+              <view class="date">{{weibo.createTime}}</view>
+            </van-row>
+          </van-col>
+        </van-row>
+        <view style="margin-top:15rpx;margin-bottom:20rpx;white-space: pre-line;">
+          <weibo-text textList="{{ weibo.content }}"></weibo-text>
+        </view>
       </view>
-    </view>
 
-    <view wx:if="{{ weibo.status == 0 }}">
-      <van-image wx:if="{{ weibo.imageList.length == 1 }}"
-        width="{{imageWidth * 3}}px" height="{{imageWidth * 3}}px" fit="fill" src="{{weibo.imageList[0]}}" 
-        bindtap="showGallery" data-current="{{weibo.imageList[0]}}" data-urls="{{weibo.imageList}}" />
-      <van-grid wx:else column-num="3" gutter="{{boardWidth}}px">
-        <van-image 
-        wx:for="{{weibo.imageList}}" wx:for-item="image" wx:for-index="index" wx:key="key"
-        width="{{imageWidth}}px" height="{{imageWidth}}px" fit="fill" src="{{image}}" 
-        bindtap="showGallery" data-current="{{image}}" data-urls="{{weibo.imageList}}" />
-      </van-grid>
-    </view>
+      <view wx:if="{{ weibo.status == 0 }}">
+        <van-image wx:if="{{ weibo.imageList.length == 1 }}"
+          width="{{imageWidth * 3}}px" height="{{imageWidth * 3}}px" fit="fill" src="{{weibo.imageList[0]}}" 
+          bindtap="showGallery" data-current="{{weibo.imageList[0]}}" data-urls="{{weibo.imageList}}" />
+        <van-grid wx:else column-num="3" gutter="{{boardWidth}}px">
+          <van-image 
+          wx:for="{{weibo.imageList}}" wx:for-item="image" wx:for-index="index" wx:key="key"
+          width="{{imageWidth}}px" height="{{imageWidth}}px" fit="fill" src="{{image}}" 
+          bindtap="showGallery" data-current="{{image}}" data-urls="{{weibo.imageList}}" />
+        </van-grid>
+      </view>
 
-    <view wx:if="{{ weibo.status == 1 }}" style="background: #f8f8f8" >
-      <view wx:if="{{ weibo.forwardUsername == null }}" class="delete_weibo">该微博已被删除</view>
-      <view wx:else mut-bind:tap="toWeiboDetail" data-wid="{{ weibo.baseForwardWid }}">
-        <view style="width: 99%;margin: auto;padding: 10rpx;">
-          <view class="blue_name" mut-bind:tap="toUserByName" data-name="{{ weibo.forwardUsername }}">{{ '@' + weibo.forwardUsername }}</view>
-          <view class="small_content" style="margin-top: 10rpx;margin-bottom: 20rpx">
-            <weibo-text textList="{{ weibo.forwardContent }}"></weibo-text>
+      <view wx:if="{{ weibo.status == 1 }}" style="background: #f8f8f8" >
+        <view wx:if="{{ weibo.forwardUsername == null }}" class="delete_weibo">该微博已被删除</view>
+        <view wx:else mut-bind:tap="toWeiboDetail" data-wid="{{ weibo.baseForwardWid }}">
+          <view style="width: 99%;margin: auto;padding: 10rpx;">
+            <view class="blue_name" mut-bind:tap="toUserByName" data-name="{{ weibo.forwardUsername }}">{{ '@' + weibo.forwardUsername }}</view>
+            <view class="small_content" style="margin-top: 10rpx;margin-bottom: 20rpx">
+              <weibo-text textList="{{ weibo.forwardContent }}"></weibo-text>
+            </view>
+            <view wx:if="{{ weibo.forwardImageList.length == 1 }}">
+              <van-image 
+              width="{{imageWidth * 3}}px" height="{{imageWidth * 3}}px" fit="fill" src="{{weibo.forwardImageList[0]}}" 
+              mut-bind:tap="showGallery" data-current="{{weibo.forwardImageList[0]}}" data-urls="{{weibo.forwardImageList}}" />
+            </view>
+            <van-grid wx:else column-num="3" gutter="{{boardWidth}}px">
+              <van-image 
+              wx:for="{{weibo.forwardImageList}}" wx:for-item="image" wx:for-index="index" wx:key="key"
+              width="{{imageWidth}}px" height="{{imageWidth}}px" fit="fill" src="{{image}}" 
+              mut-bind:tap="showGallery" data-current="{{image}}" data-urls="{{weibo.forwardImageList}}" />
+            </van-grid>
           </view>
-          <view wx:if="{{ weibo.forwardImageList.length == 1 }}">
-            <van-image 
-            width="{{imageWidth * 3}}px" height="{{imageWidth * 3}}px" fit="fill" src="{{weibo.forwardImageList[0]}}" 
-            mut-bind:tap="showGallery" data-current="{{weibo.forwardImageList[0]}}" data-urls="{{weibo.forwardImageList}}" />
-          </view>
-          <van-grid wx:else column-num="3" gutter="{{boardWidth}}px">
-            <van-image 
-            wx:for="{{weibo.forwardImageList}}" wx:for-item="image" wx:for-index="index" wx:key="key"
-            width="{{imageWidth}}px" height="{{imageWidth}}px" fit="fill" src="{{image}}" 
-            mut-bind:tap="showGallery" data-current="{{image}}" data-urls="{{weibo.forwardImageList}}" />
-          </van-grid>
         </view>
       </view>
     </view>
-  </view>
+  </van-skeleton>
 </view>
 
 <view class="wux-light--bg" style="margin-top:20rpx">
@@ -116,7 +118,7 @@
         快来转发精彩内容吧
       </view>
       <view wx:else style="width: 94%;margin: auto; margin-top: 15rpx;">
-        <van-row wx:for="{{ forwardList }}" wx:key="fid" wx:for-item="forward"> 
+        <van-row wx:for="{{ forwardList }}" wx:key="key" wx:for-item="forward"> 
           <van-col span="4">
             <van-image style="padding: 15rpx;" lazy-load width="{{imageWidth * 0.33}}px" height="{{imageWidth * 0.33}}px" fit="fill" src="{{ forward.avatar }}" mut-bind:tap="toUser" data-uid="{{ forward.uid }}"/>
           </van-col>
@@ -148,7 +150,7 @@
             </view>
           </van-col>
         </van-row>
-        <van-row wx:if="{{ commentVOList.length > 0 }}" wx:for="{{ commentVOList }}" wx:key="cid" wx:for-index="index" wx:for-item="comment" 
+        <van-row wx:if="{{ commentVOList.length > 0 }}" wx:for="{{ commentVOList }}" wx:key="key" wx:for-index="index" wx:for-item="comment" 
         mut-bind:tap="showSheet2" data-cid="{{ comment.cid }}" data-have_delete="{{ comment.uid === uid }}" data-name="{{ comment.name }}" data-content="{{ comment.content }}"> 
           <van-col span="4">
             <van-image style="padding: 15rpx;" lazy-load width="{{imageWidth * 0.33}}px" height="{{imageWidth * 0.33}}px" fit="fill" src="{{comment.avatar}}" mut-bind:tap="toUser" data-uid="{{ comment.uid }}"/>
@@ -167,18 +169,14 @@
                     {{ '@' +  comment.commentVOList[0].commentName }}
                   </span>
                   <span>：</span>
-                  <span>
-                    <weibo-text textList="{{ comment.commentVOList[0].textVOList }}"></weibo-text>
-                  </span>
+                  <weibo-text textList="{{ comment.commentVOList[0].textVOList }}"></weibo-text>
                 </view>
                 <view class="comment-comment" wx:if="{{ comment.commentVOList.length >= 2 }}">
                   <span class="blue_name" mut-bind:tap="toUser" data-uid="{{ comment.commentVOList[1].uid }}">{{ comment.commentVOList[1].name }}</span>
                   <span wx:if="{{ comment.commentVOList[1].commentName != null }}">回复</span>
                   <span class="blue_name" wx:if="{{ comment.commentVOList[1].commentName != null }}" mut-bind:tap="toUser" data-uid="{{ comment.commentVOList[1].commentUid }}">{{ '@' + comment.commentVOList[1].commentName }}</span>
                   <span>：</span>
-                  <span>
-                    <weibo-text textList="{{ comment.commentVOList[1].textVOList }}"></weibo-text>
-                  </span>
+                  <weibo-text textList="{{ comment.commentVOList[1].textVOList }}"></weibo-text>
                 </view>
                 <view class="comment-comment-more" wx:if="{{ comment.commentVOList.length >= 3 }}">共 {{ comment.commentVOList.length }} 条回复 ></view>
               </view>
@@ -229,7 +227,7 @@
 
 <view style="height:100rpx;"></view>
 
-<van-row gutter="20" class="van-hairline--top operate-all">
+<van-row gutter="20" class="van-hairline--top operate-all ios_padding">
   <van-col span="8" bindtap="toAddForward">
     <view class="operate">
       <van-icon name="/icon/forward.png" />

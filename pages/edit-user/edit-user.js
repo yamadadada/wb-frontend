@@ -13,28 +13,22 @@ Page({
   data: {
     color: '#3A3A3A',
     background: '#FDFDFD',
+    loading: false,
     user: null,
     avatarWidth: 0,
     showPop1: false,
     showPop2: false,
     showPop3: false,
-    pickGender: 0,
+    showPop4: false,
     maxDate: new Date().getTime(),
-    formatter(type, value) {
-      if (type === 'year') {
-        return `${value}年`;
-      } else if (type === 'month') {
-        return `${value}月`;
-      }
-      return value;
-    },
     error1: false,
     errorMessage1: '',
-    error2: false,
     avatar: '',
     areaList: areaList.default,
     nameReadOnly: false,
-    nameLabel: ''
+    nameLabel: '',
+    searchValue: '',
+    searchLoading: false
   },
 
   /**
@@ -43,6 +37,9 @@ Page({
   onLoad: function (options) {
     this.calWidth();
     const that = this;
+    this.setData({
+      loading: true
+    })
     wx.request({
       url: app.globalData.host + '/user',
       header: {
@@ -58,10 +55,14 @@ Page({
           that.setData({
             user: res.data.data,
             currentDate: birth,
-            pickGender: res.data.data.gender,
             avatar: res.data.data.avatar
           })
         }
+      },
+      complete() {
+        that.setData({
+          loading: false
+        })
       }
     })
     // 检测昵称修改是否在间隔期
@@ -179,17 +180,10 @@ Page({
     })
   },
 
-  genderChange: function (event) {
-    this.setData({
-      pickGender: event.detail.index
-    })
-  },
-
-  confirmGender: function () {
-    const pickGender = this.data.pickGender;
+  confirmGender: function (event) {
     const genderIndex = "user.gender"
     this.setData({
-      [genderIndex]: pickGender,
+      [genderIndex]: event.detail.index,
       showPop1: false
     })
   },
@@ -206,15 +200,9 @@ Page({
     })
   },
 
-  onInput: function (event) {
-    this.setData({
-      currentDate: event.detail
-    });
-  },
-
-  confirmBirth: function () {
+  confirmBirth: function (event) {
     const birthIndex = "user.birth"
-    const date = new Date(this.data.currentDate);
+    const date = new Date(event.detail);
     const birth = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
     this.setData({
       [birthIndex]: birth,
@@ -256,31 +244,68 @@ Page({
     })
   },
 
-  changeSchool: function (e) {
-    var patt2 = /^[\u4e00-\u9fa5]{0,16}$/
-    if (patt2.test(e.detail)) {
+  changeSearch: function (event) {
+    const searchValue = event.detail
+    if (searchValue.length == 0) {
       this.setData({
-        error2: false
-      })
-    } else {
-      this.setData({
-        error2: true
+        searchValue: '',
+        searchLoading: false,
+        schoolList: []
       })
       return;
     }
+    this.setData({
+      searchValue: searchValue,
+      searchLoading: true
+    })
+    const that = this;
+    wx.request({
+      url: app.globalData.host + '/user/searchSchool',
+      header: {
+        'token': app.globalData.token
+      },
+      data: {
+        school: searchValue
+      },
+      success(res) {
+        verifyToken(res);
+        if (res.statusCode == 200) {
+          that.setData({
+            schoolList: res.data.data
+          })
+        }
+      },
+      complete() {
+        that.setData({
+          searchLoading: false
+        })
+      }
+    })
+  },
+
+  selectSchool: function (e) {
     const schoolIndex = "user.school";
     this.setData({
-      [schoolIndex]: e.detail
+      [schoolIndex]: e.currentTarget.dataset.name,
+      showPop4: false
+    })
+  },
+
+  showPop4: function () {
+    this.setData({
+      showPop4: true
+    })
+  },
+
+  closePop4: function () {
+    this.setData({
+      showPop4: false
     })
   },
 
   commit: function () {
     if (this.data.error1) {
       Toast.fail('昵称格式不正确');
-      return;
-    }
-    if (this.data.error2) {
-      Toast.fail('学校格式不正确');
       return;
     }
     if (this.data.user.avatar != this.data.avatar) {
@@ -293,6 +318,7 @@ Page({
         name: 'file'
       });
     }
+    const that = this;
     wx.request({
       url: app.globalData.host + '/user/' + app.globalData.uid,
       header: {
@@ -310,6 +336,12 @@ Page({
       success(res) {
         verifyToken(res);
         if (res.statusCode == 200) {
+          if (that.data.user.location) {
+            app.globalData.city = that.data.user.location;
+          }
+          if (that.data.user.school) {
+            app.globalData.school = that.data.user.school;
+          }
           Toast.success('更新成功')
           setTimeout(function(){
             wx.navigateBack({});

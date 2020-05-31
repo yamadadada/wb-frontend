@@ -1,7 +1,6 @@
 {
   "usingComponents": {
     "mp-navigation-bar": "/components/navigation-bar/navigation-bar",
-    "wux-textarea": "/lib/textarea/index",
     "van-uploader": "/vant/uploader/index",
     "van-toast": "/vant/toast/index",
     "van-row": "/vant/row/index",

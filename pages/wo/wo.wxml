@@ -1,6 +1,6 @@
 <van-dialog id="van-dialog" />
 
-<mp-navigation-bar title="我" color="{{color}}" background="{{background}}" back="{{false}}" />
+<mp-navigation-bar title="我" color="{{color}}" background="{{background}}" loading="{{ loading }}" back="{{false}}" />
 
 <view style="background: #FFFFFF; margin-top: 30rpx; padding-top: 30rpx; padding-bottom: 25rpx">
   <view style="width: 95%; margin: auto">

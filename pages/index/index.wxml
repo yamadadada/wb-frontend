@@ -1,3 +1,5 @@
+<view class="icon van-icon van-icon van-icon-upgrade van-icon-upgrade" style="font-size: 32rpx;"></view> 
+
 <van-dialog id="van-dialog" />
 
 <van-toast id="van-toast" />
@@ -14,7 +16,7 @@
   <view style="text-align:center;">需要授权以完善你的个人信息</view>
 </van-dialog>
 
-<mp-navigation-bar title="关注" color="{{color}}" background="{{background}}" back="{{false}}" mut-bind:tap="toTop">
+<mp-navigation-bar title="关注" color="{{ color }}" background="{{ background }}" back="{{ false }}" loading="{{ loading }}" mut-bind:tap="toTop">
   <van-icon slot="left" name="add-o" mut-bind:tap="toAddWeibo" size="25px"/>
 </mp-navigation-bar>
 

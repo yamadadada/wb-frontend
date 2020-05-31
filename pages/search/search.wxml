@@ -2,7 +2,7 @@
 
 <van-toast id="van-toast" />
 
-<mp-navigation-bar title="发现" color="{{color}}" background="{{background}}" mut-bind:tap="toTop"/>
+<mp-navigation-bar title="发现" color="{{color}}" background="{{background}}" loading="{{ loading }}" mut-bind:tap="toTop"/>
 
 <van-search value="{{ searchValue }}" placeholder="查找精彩内容" show-action="{{ showSearch }}" shape="round" bind:search="onSearch1" bind:cancel="onCancel" bindtap="startSearch" bind:change="changeSearch" />
 

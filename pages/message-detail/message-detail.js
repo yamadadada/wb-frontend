@@ -11,6 +11,7 @@ Page({
   data: {
     color: '#3A3A3A',
     background: '#FDFDFD',
+    loading: false,
     avatarWidth: 0,
     title: '',
     type: 0,
@@ -107,6 +108,9 @@ Page({
       return;
     }
     const that = this;
+    this.setData({
+      loading: true
+    })
     wx.request({
       url: app.globalData.host + '/message/' + type,
       header: {
@@ -156,6 +160,11 @@ Page({
         } else {
           Toast.fail(res.data.msg);
         }
+      },
+      complete() {
+        that.setData({
+          loading: false
+        })
       }
     })
   },

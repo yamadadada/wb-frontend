@@ -16,26 +16,26 @@
   show="{{ popupShow }}"
   round
   position="bottom"
-  custom-style="height: 20%"
+  custom-style="height: 25%"
   bind:close="popupClose"
 >
-  <view style="width: 95%; margin: auto;">
-    <van-field value="{{ commentValue }}" autosize type="textarea" placeholder="{{ placeholder }}" border="{{ true }}" fixed="{{ true }}" custom-style="height: 240rpx; background: #f8f8f8; margin-top: 15rpx;margin-bottom: 15rpx" bind:change="fieldChange"/>
+  <view style="width: 95%; margin: auto;" class="ios_padding">
+    <van-field value="{{ commentValue }}" autosize adjust-position type="textarea" placeholder="{{ placeholder }}" border="{{ true }}" fixed="{{ true }}" custom-style="height: 240rpx; background: #f8f8f8; margin-top: 15rpx;margin-bottom: 15rpx" bind:change="fieldChange"/>
     <van-row>
       <van-col span="10">
         <van-checkbox value="{{ checked }}" shape="square" bind:change="checkedChange">同时转发</van-checkbox>
       </van-col>
       <van-col span="3" offset="11">
-        <view style="color: #FD7E01" bindtap="addComment">发送</view>
+        <view style="color: #576B95" bindtap="addComment">发送</view>
       </van-col>
     </van-row>
   </view>
 </van-popup>
 
-<mp-navigation-bar title="{{ count }} 条回复" color="{{color}}" background="{{background}}" mut-bind:tap="toTop"/>
+<mp-navigation-bar title="{{ count }} 条回复" color="{{color}}" background="{{background}}" loading="{{ loading }}" mut-bind:tap="toTop"/>
 
 <view style="background-color:#ffffff;padding: 15rpx">
-  <van-row mut-bind:tap="sheetOpen" data-have_delete="{{ false }}" data-name="{{ commentVO.name }}" data-content="{{ commentVO.content }}" data-uid="{{ commentVO.uid }}">
+  <van-row mut-bind:tap="sheetOpen" data-cid="{{ commentVO.cid }}" data-have_delete="{{ false }}" data-name="{{ commentVO.name }}" data-content="{{ commentVO.content }}" data-uid="{{ commentVO.uid }}" data-comment_name="{{ null }}" >
     <van-col span="4">
       <van-image style="padding: 15rpx;" lazy-load width="{{ avatarWidth }}px" height="{{ avatarWidth }}px" fit="fill" src="{{ commentVO.avatar }}" mut-bind:tap="toUser" data-uid="{{ commentVO.uid }}"/>
     </van-col>
@@ -69,7 +69,7 @@
     暂无相关回复
   </view>
   <view wx:for="{{ commentVOList }}" wx:key="cid" wx:for-item="item" wx:for-index="index">
-    <van-row mut-bind:tap="sheetOpen" data-cid="{{ item.cid }}" data-have_delete="{{ item.uid === uid }}" data-name="{{ item.name }}" data-content="{{ item.content }} " data-comment_name="{{ item.commentName }}">
+    <van-row mut-bind:tap="sheetOpen" data-cid="{{ item.cid }}" data-have_delete="{{ item.uid === uid }}" data-name="{{ item.name }}" data-content="{{ item.content }}" data-uid="{{ item.uid }}" data-comment_name="{{ item.commentName }}">
       <van-col span="4">
         <van-image style="padding: 15rpx;" lazy-load width="{{ avatarWidth }}px" height="{{ avatarWidth }}px" fit="fill" src="{{ item.avatar }}" mut-bind:tap="toUser" data-uid="{{ item.uid }}"/>
       </van-col>
@@ -94,6 +94,6 @@
 
 </view>
 
-<van-row class="comment-button" bindtap="popupOpen">
+<van-row class="comment-button ios_padding" bindtap="popupOpen">
   <input class="comment-input" type="text" placeholder="回复评论" disabled="true"></input>
 </van-row>

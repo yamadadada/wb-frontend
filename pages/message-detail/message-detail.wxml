@@ -2,7 +2,7 @@
 
 <van-toast id="van-toast" />
 
-<mp-navigation-bar title="{{ title }}" color="{{ color }}" background="{{ background }}" mut-bind:tap="toTop"/>
+<mp-navigation-bar title="{{ title }}" color="{{ color }}" background="{{ background }}" loading="{{ loading }}" mut-bind:tap="toTop"/>
 
 <view wx:if="{{ messageList.length == 0 }}" class="prompt">
   木有更多了...

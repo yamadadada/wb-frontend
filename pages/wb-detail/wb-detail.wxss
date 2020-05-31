@@ -23,7 +23,6 @@
 }
 .content {
   font-size: 30rpx;
-  font-weight: 500;
   margin-top: 8rpx;
   margin-bottom: 15rpx;
 }
@@ -31,7 +30,6 @@
   font-size: 28rpx;
   padding-top: 10rpx;
   padding-bottom: 10rpx;
-  margin-bottom: 10rpx;
 }
 .blue_name {
   color: #5B7CA5;
@@ -94,4 +92,8 @@
   width: 100%;
   padding-top: 260rpx;
   padding-bottom: 260rpx;
+}
+.ios_padding {
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
 }

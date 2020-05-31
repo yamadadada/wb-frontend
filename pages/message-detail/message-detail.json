@@ -7,7 +7,6 @@
     "van-image": "/vant/image/index",
     "wux-timeago": "/lib/timeago/index",
     "van-swipe-cell": "/vant/swipe-cell/index",
-    "wux-prompt": "/lib/prompt/index",
     "van-dialog": "/vant/dialog/index"
   },
   "navigationStyle": "custom"

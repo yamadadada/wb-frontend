@@ -10,6 +10,7 @@ mut-bind:tap="toWeiboDetail" data-wid="{{weibo.wid}}" >
     <view style="width: 99%;margin: auto;padding-top: 15rpx;">
       <van-row>
         <van-col span="3">
+          <view style="height: 10rpx;"></view>
           <van-image style="padding: 15rpx;" lazy-load width="{{imageWidth * 0.33}}px" height="{{imageWidth * 0.33}}px" fit="fill" src="{{weibo.avatar}}" mut-bind:tap="toUser" data-uid="{{ weibo.uid }}"/>
         </van-col>
         <van-col span="20" offset="1">
@@ -18,7 +19,7 @@ mut-bind:tap="toWeiboDetail" data-wid="{{weibo.wid}}" >
               <view class="name" mut-bind:tap="toUser" data-uid="{{ weibo.uid }}">{{ weibo.name }}</view>
             </van-col>
             <van-col span="2">
-              <van-icon name="star-o" color="{{ weibo.isFavorite ? '#FD7E01': '' }}" mut-bind:tap="favoriteChange" data-wid="{{ weibo.wid }}" data-index="{{ index }}" data-is_favorite="{{ weibo.isFavorite }}"/>
+              <van-icon name="star-o" size="20px" color="{{ weibo.isFavorite ? '#FD7E01': '' }}" mut-bind:tap="favoriteChange" data-wid="{{ weibo.wid }}" data-index="{{ index }}" data-is_favorite="{{ weibo.isFavorite }}"/>
             </van-col>
           </van-row>
           <van-row>
@@ -77,13 +78,7 @@ mut-bind:tap="toWeiboDetail" data-wid="{{weibo.wid}}" >
     <van-row gutter="20" wx:if="{{ showOperation }}">
       <view style="color: #A7A7A7;">
         <van-col span="8">
-          <view class="operate" mut-bind:tap="toAddForward" 
-          data-wid="{{ weibo.wid }}" 
-          data-name="{{ weibo.status==0 ? weibo.name : weibo.forwardUsername }}" 
-          data-image="{{ weibo.status==0 ? (weibo.imageList.length > 0 ? weibo.imageList[0] : weibo.avatar) : (weibo.forwardImageList.length > 0 ? weibo.forwardImageList[0] : weibo.forwardAvatar) }}" 
-          data-content="{{ weibo.status==0 ? weibo.content : weibo.forwardContent }}" 
-          data-forward_content="{{ weibo.status==0 ? '' : weibo.content }}" 
-          data-forward_name="{{ weibo.status==0 ? '' : weibo.name}}">
+          <view class="operate" mut-bind:tap="toAddForward" data-wid="{{ weibo.wid }}" data-attach="{{ weibo.status==1 ?  '//@' + weibo.name + ':' + weibo.contentString : '' }}" >
             <van-icon name="/icon/forward.png" />
             <view class="operate-number">{{ weibo.forwardCount == 0 ? '转发' : weibo.forwardCount }}</view>
           </view>

@@ -2,7 +2,7 @@
 
 <van-toast id="van-toast" />
 
-<van-popup show="{{ showPop }}" closeable close-icon-position="top-left" position="right" close-icon="arrow-left" custom-style="height: 80%; width: 100%; background:#f8f8f8" bind:close="closePop" >
+<van-popup show="{{ showPop }}" position="bottom" closeable custom-style="height: 70%; background:#f8f8f8" bind:close="closePop" >
   <view style="margin-top: 60rpx;">
     <van-cell-group title="实时热点，每分钟更新一次">
       <van-cell is-link wx:for="{{ hotList }}" wx:key="key" wx:for-item="item" data-content="{{ item }}" mut-bind:tap="onSearch3">
@@ -14,7 +14,7 @@
   </view>
 </van-popup>
 
-<mp-navigation-bar title="发现" color="{{color}}" background="{{background}}" back="{{false}}" mut-bind:tap="toTop"/>
+<mp-navigation-bar title="发现" loading="{{ loading }}" color="{{color}}" background="{{background}}" back="{{false}}" mut-bind:tap="toTop"/>
 
 <van-search value="{{ searchValue }}" placeholder="查找精彩内容" show-action="{{ showSearch }}" shape="round" bind:search="onSearch1" bind:cancel="onCancel" bindtap="startSearch" bind:change="changeSearch" />
 
@@ -63,22 +63,24 @@
         <van-col span="12">
           <view style="padding-left: 30rpx; display: flex; color: #FD7E01;" bindtap="openPop">
             <view style="font-size: 32rpx;">更多热搜</view>
-            <van-icon name="arrow" size="20" custom-class="arrow-icon" />
           </view>
         </van-col>
       </van-row>
     </view>
   </view>
 
-  <van-tabs active="0" custom-class="tabs" sticky animated swipeable color="#FD7E01" bind:change="changeTab">
-    <van-tab title="热点" name="0">
+  <van-tabs active="2" custom-class="tabs" sticky animated swipeable color="#FD7E01" bind:change="changeTab">
+    <van-tab title="同校" name="2">
+      <weibo weiboList="{{ schoolList }}"></weibo>
+    </van-tab>
+    <van-tab title="同城" name="3">
+      <weibo weiboList="{{ cityList }}"></weibo>
+    </van-tab>
+    <van-tab title="热门" name="0">
       <weibo weiboList="{{ hotWeiboList }}"></weibo>
     </van-tab>
     <van-tab title="实时" name="1">
       <weibo weiboList="{{ realTimeList }}"></weibo>
-    </van-tab>
-    <van-tab title="同校" name="2">
-      <weibo weiboList="{{ schoolList }}"></weibo>
     </van-tab>
   </van-tabs>
 

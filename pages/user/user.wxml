@@ -1,4 +1,4 @@
-<mp-navigation-bar title="{{ user.name }}" color="{{ color }}" background="{{ background }}" mut-bind:tap="toTop"/>
+<mp-navigation-bar title="{{ title }}" color="{{ color }}" background="{{ background }}" loading="{{ loading }}" mut-bind:tap="toTop"/>
 
 <van-dialog id="van-dialog" />
 
@@ -26,7 +26,7 @@
     <van-tab name="0" title="主页">
       <view style="margin-top: 20rpx;">
         <van-cell-group title="用户信息">
-          <van-field label="个人简介" value="{{ user.introduction == null ? '该用户没有填写个人简介' : user.introduction }}" readonly />
+          <van-field label="个人简介" type="textarea" autosize value="{{ user.introduction == null ? '该用户没有填写个人简介' : user.introduction }}" readonly />
         </van-cell-group>
         <van-cell-group title="个人资料">
           <van-field label="注册时间" value="{{ user.registerTime }}" readonly />
@@ -46,7 +46,7 @@
 
 <view style="height:100rpx;"></view>
 
-<van-row gutter="20" class="van-hairline--top operate-all" wx:if="{{ loginUid != uid }}">
+<van-row gutter="20" class="van-hairline--top operate-all ios_padding" wx:if="{{ loginUid != uid }}">
   <van-col span="8" offset="8" wx:if="{{ user.isFollow }}">
     <view class="operate" mut-bind:tap="changeFollow">
       <van-icon name="ellipsis" />
@@ -61,7 +61,7 @@
   </van-col>
   <van-col span="3" offset="5">
     <view class="operate">
-      <van-icon name="warning-o" bindtap="appeal"/>
+      <van-icon size="20px" name="warning-o" bindtap="appeal"/>
     </view>
   </van-col>
 </van-row>

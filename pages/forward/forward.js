@@ -1,5 +1,6 @@
 import Toast from '../../vant/toast/toast';
 import { verifyToken } from '../../utils/util'
+import Dialog from '../../vant/dialog/dialog';
 
 const app = getApp()
 
@@ -13,10 +14,8 @@ Page({
     background: '#f8f8f8',
     imageWidth: 0,
     wid: null,
-    name: '',
-    image: '',
+    weiboVO: null,
     content: '',
-    forwardContent: '',
     showPop1: false,
     searchValue1: '',
     showCancel: false,
@@ -30,8 +29,7 @@ Page({
     checked: false,
     commentCid: null,
     commentName: null,
-    commentUid: null,
-    nodes: []
+    commentUid: null
   },
 
   /**
@@ -39,6 +37,14 @@ Page({
    */
   onLoad: function (options) {
     this.calWidth();
+    this.setData({
+      wid: options.wid
+    })
+    if (options.attach) {
+      this.setData({
+        content: options.attach
+      })
+    }
     if (options.select_cid) {
       this.setData({
         selectCid: options.select_cid
@@ -50,13 +56,6 @@ Page({
         selectUid: options.select_uid
       })
     }
-    this.setData({
-      wid: options.wid,
-      name: options.name,
-      image: options.image,
-      content: options.content,
-      forwardContent: options.forward_content
-    })
   },
 
   /**
@@ -90,49 +89,27 @@ Page({
         }
       }
     });
-    if (this.data.forwardContent != null && this.data.forwardContent != '') {
-      var value = e.detail.value;
-      const patt = /@[\w\u4e00-\u9fa5]{1,16}|#[\w\u4e00-\u9fa5]+#/;
-      var list = patt.exec(value);
-      var nodes = [];
-      while (list != null && list.length > 0) {
-        const item = list[0] + "";
-        const start = value.search(patt);
-        if (start != 0) {
-          nodes.push({
-            name: 'span',
-            children: [{
-              type: 'text',
-              text: value.substring(0, start)
-            }]
+    wx.request({
+      url: app.globalData.host + '/forward/baseInfo/' + this.data.wid,
+      header: {
+        'token': app.globalData.token
+      },
+      success(res) {
+        verifyToken(res);
+        if (res.statusCode == 200) {
+          that.setData({
+            weiboVO: res.data.data
           })
+        } else {
+          Dialog.alert({
+            title: '错误',
+            message: '原微博已被删除，无法转发',
+          }).then(() => {
+            wx.navigateBack({});
+          });
         }
-        nodes.push({
-          name: 'span',
-          attrs: {
-            class: 'blue_name'
-          },
-          children: [{
-            type: 'text',
-            text: item
-          }]
-        });
-        value = value.substring(start + item.length, value.length);
-        list = patt.exec(value);
       }
-      if (value.length > 0) {
-        nodes.push({
-          name: 'span',
-          children: [{
-            type: 'text',
-            text: value
-          }]
-        })
-      }
-      this.setData({
-        nodes: nodes
-      })
-    }
+    });
   },
 
   /**
@@ -178,20 +155,14 @@ Page({
     })
   },
 
-  textareaChange: function (e) {
-    this.setData({
-      forwardContent: e.detail.value
-    })
-  },
-
   addForward: function (e) {
-    if (this.data.name == 'null') {
-      Toast.fail("原微博已被删除，无法转发！");
-      return;
-    }
-    var content = this.data.forwardContent;
+    var content = this.data.content;
     if (content === '') {
       content = '转发微博'
+    }
+    if (content.length > 1024) {
+      Toast.fail('不能超过1000个字')
+      return;
     }
     wx.request({
       url: app.globalData.host + '/forward',
@@ -210,7 +181,6 @@ Page({
           setTimeout(function(){
             wx.navigateBack({});
           }, 2000);
-          wx.navigateBack({});
         } else {
           Toast.fail(res.data.msg);
         }
@@ -288,23 +258,11 @@ Page({
 
   select1: function (e) {
     const name = e.currentTarget.dataset.name;
-    var nodes = this.data.nodes;
-    nodes.push({
-      name: 'span',
-      attrs: {
-        class: 'blue_name'
-      },
-      children: [{
-        type: 'text',
-        text: '@' + name + ' '
-      }]
-    })
     this.setData({
       showPop1: false,
       searchValue1: '',
       showCancel: false,
-      content: this.data.content + '@' + name + ' ',
-      nodes: nodes
+      content: this.data.content + '@' + name + ' '
     })
   },
 
@@ -367,22 +325,10 @@ Page({
 
   select2: function (e) {
     const name = e.currentTarget.dataset.name;
-    var nodes = this.data.nodes;
-    nodes.push({
-      name: 'span',
-      attrs: {
-        class: 'blue_name'
-      },
-      children: [{
-        type: 'text',
-        text: name
-      }]
-    })
     this.setData({
       showPop2: false,
       searchValue2: '',
-      content: this.data.content + name,
-      nodes: nodes
+      content: this.data.content + name
     })
   },
 
@@ -393,47 +339,8 @@ Page({
   },
 
   onInput: function (e) {
-    var value = e.detail.value;
-    const patt = /@[\w\u4e00-\u9fa5]{1,16}|#.+?#/;
-    var list = patt.exec(value);
-    var nodes = [];
-    while (list != null && list.length > 0) {
-      const item = list[0] + "";
-      const start = value.search(patt);
-      if (start != 0) {
-        nodes.push({
-          name: 'span',
-          children: [{
-            type: 'text',
-            text: value.substring(0, start)
-          }]
-        })
-      }
-      nodes.push({
-        name: 'span',
-        attrs: {
-          class: 'blue_name'
-        },
-        children: [{
-          type: 'text',
-          text: item
-        }]
-      });
-      value = value.substring(start + item.length, value.length);
-      list = patt.exec(value);
-    }
-    if (value.length > 0) {
-      nodes.push({
-        name: 'span',
-        children: [{
-          type: 'text',
-          text: value
-        }]
-      })
-    }
     this.setData({
-      nodes: nodes,
-      forwardContent: e.detail.value
+      content: e.detail.value
     })
   }
 })

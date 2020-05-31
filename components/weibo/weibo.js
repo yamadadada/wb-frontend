@@ -104,21 +104,8 @@ Component({
     },
 
     toAddForward: function (e) {
-      var content = '';
-      const contentList = e.currentTarget.dataset.content;
-      for (var i in contentList) {
-        content = content + contentList[i].text
-      }
-      var forwardContent = '';
-      if (e.currentTarget.dataset.forward_content != null && e.currentTarget.dataset.forward_content != '') {
-        const list = e.currentTarget.dataset.forward_content;
-        for (var i in list) {
-          forwardContent = forwardContent + list[i].text;
-        }
-        forwardContent = '//@' + e.currentTarget.dataset.forward_name + ':' + forwardContent;
-      }
       wx.navigateTo({
-        url: '/pages/forward/forward?wid=' + e.currentTarget.dataset.wid + "&name=" + e.currentTarget.dataset.name + "&image=" + e.currentTarget.dataset.image + "&content=" + content + "&forward_content=" + forwardContent
+        url: '/pages/forward/forward?wid=' + e.currentTarget.dataset.wid + "&attach=" + e.currentTarget.dataset.attach
       })
     },
 

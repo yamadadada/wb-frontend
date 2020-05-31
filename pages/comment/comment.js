@@ -12,13 +12,10 @@ Page({
   data: {
     color: '#000',
     background: '#ffffff',
+    loading: false,
     avatarWidth: app.globalData.avatarWidth,
     cid: null,
     uid: null,
-    name: '',
-    image: '',
-    content: '',
-    forwardContent: '',
     sheetShow: false,
     sheetActions: [],
     description: '',
@@ -47,10 +44,7 @@ Page({
     this.setData({
       cid: options.cid,
       uid: app.globalData.uid,
-      name: options.name,
-      image: options.image,
-      content: options.content,
-      forwardContent: options.forward_content
+      attach: options.attach
     })
   },
 
@@ -67,6 +61,9 @@ Page({
   onShow: function () {
     const that = this;
     const cid = this.data.cid;
+    this.setData({
+      loading: true
+    })
     wx.request({
       url: app.globalData.host + '/comment/' + cid,
       header: {
@@ -84,6 +81,11 @@ Page({
             isAll: false
           })
         }
+      },
+      complete() {
+        that.setData({
+          loading: false
+        })
       }
     })
   },
@@ -113,7 +115,9 @@ Page({
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
-    this.getCommentVOList();
+    if (this.data.page != 0) {
+      this.getCommentVOList();
+    }
   },
 
   /**
@@ -141,8 +145,9 @@ Page({
     const cid = e.currentTarget.dataset.cid;
     const haveDelete = e.currentTarget.dataset.have_delete;
     const name = e.currentTarget.dataset.name;
-    const uid = e.currentTarget.dataset.uid;
     const content = e.currentTarget.dataset.content;
+    const uid = e.currentTarget.dataset.uid;
+    const commentName = e.currentTarget.dataset.comment_name;
     if (haveDelete) {
       this.setData({
         sheetActions: [
@@ -162,10 +167,10 @@ Page({
       })
     }
     var description = '';
-    if (e.currentTarget.dataset.comment_name == null) {
+    if (commentName == null) {
       description = name + ':' + content;
     } else {
-      description = name + ':' + '回复 @' + e.currentTarget.dataset.comment_name + ':' + content;
+      description = name + ':' + '回复 @' + commentName + ':' + content;
     }
     this.setData({
       selectCid: cid,
@@ -372,16 +377,18 @@ Page({
             }
           }
         })
-      })
+      }).catch(() => {
+        // on cancel
+      });
     } else if (event.detail.name === '转发') {
-      var forwardContent = this.data.forwardContent;
+      var attach = this.data.attach;
       if (this.data.selectCid === this.data.commentVO.cid) {
-        forwardContent = '//@' + this.data.description + forwardContent;
+        attach = '//@' + this.data.description + attach;
       } else {
-        forwardContent = '//@' + this.data.description + '//@' + this.data.commentVO.name + ':' + this.data.commentVO.content + forwardContent;
+        attach = '//@' + this.data.description + '//@' + this.data.commentVO.name + ':' + this.data.commentVO.content + attach;
       }
       wx.navigateTo({
-        url: '/pages/forward/forward?wid=' + this.data.commentVO.wid + "&name=" + this.data.name + "&image=" + this.data.image + "&content=" + this.data.content + "&forward_content=" + this.data.forwardContent + "&select_cid=" + this.data.commentVO.cid + "&select_name=" + this.data.selectName + "&select_uid=" + this.dtat.selectUid
+        url: '/pages/forward/forward?wid=' + this.data.commentVO.wid + '&attach=' + attach
       })
     } else if (event.detail.name === '投诉') {
       var selectCid = this.data.selectCid;
@@ -444,10 +451,7 @@ Page({
     })
     if (this.data.checked) {
       // 转发
-      var content = '//@' + this.data.commentVO.name + ':' + this.data.commentVO.content;
-      if (this.data.forwardContent != null && this.data.forwardContent != '') {
-        content = content + this.data.forwardContent;
-      }
+      var content = '//@' + this.data.commentVO.name + ':' + this.data.commentVO.content + this.data.attach;
       if (commentName.length > 0) {
         content = '回复@' + commentName + ':' + comment + content;
       } else {

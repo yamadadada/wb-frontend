@@ -9,7 +9,6 @@ page {
 }
 .content {
   color: #8F8F8F;
-  padding-top: 10rpx;
   padding-left: 10rpx;
   padding-right: 10rpx;
 }
@@ -54,5 +53,31 @@ page {
   text-align: center;
 }
 .commit {
-  color: #FD7E01;
+  color: #576B95;
+}
+.text-box{
+  width: 96%;
+  margin: auto;
+  position: relative;
+  min-height: 80rpx;
+  margin-top: 17rpx;
+}
+.text-box text{
+   display:block;
+   visibility:hidden;
+   word-break:break-all;
+   word-wrap:break-word;
+}
+.text-box .weui-textarea{
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow-y: hidden;
+  word-break: break-all;
+  word-wrap: break-word;
+}
+.ios_padding {
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
 }

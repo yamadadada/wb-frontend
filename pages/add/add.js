@@ -22,8 +22,7 @@ Page({
     alternative2: [],
     newTopic: null,
     userIndex: [],
-    indexList: [],
-    nodes: []
+    indexList: []
   },
 
   /**
@@ -115,19 +114,13 @@ Page({
     this.setData({ fileList });
   },
 
-  textareaChange: function (e) {
-    this.setData({
-      content: e.detail.value
-    })
-  },
-
   addWeibo: function (e) {
     if (this.data.content == null || this.data.content == '') {
       Toast.fail('微博内容不能为空');
       return;
     }
-    if (this.data.content.length > 2000) {
-      Toast.fail('微博正文不能超过2000字');
+    if (this.data.content.length > 1000) {
+      Toast.fail('微博正文不能超过1000字');
       return;
     }
     const that = this;
@@ -235,27 +228,15 @@ Page({
 
   select1: function (e) {
     const name = e.currentTarget.dataset.name;
-    var nodes = this.data.nodes;
-    nodes.push({
-      name: 'span',
-      attrs: {
-        class: 'blue_name'
-      },
-      children: [{
-        type: 'text',
-        text: '@' + name + ' '
-      }]
-    })
     this.setData({
       showPop1: false,
       searchValue1: '',
       showCancel: false,
-      content: this.data.content + '@' + name + ' ',
-      nodes: nodes
+      content: this.data.content + '@' + name + ' '
     })
   },
 
-  onPageScroll(event) {
+  onPageScroll: function (event) {
     this.setData({
       scrollTop: event.scrollTop
     });
@@ -314,66 +295,15 @@ Page({
 
   select2: function (e) {
     const name = e.currentTarget.dataset.name;
-    var nodes = this.data.nodes;
-    nodes.push({
-      name: 'span',
-      attrs: {
-        class: 'blue_name'
-      },
-      children: [{
-        type: 'text',
-        text: name
-      }]
-    })
     this.setData({
       showPop2: false,
       searchValue2: '',
-      content: this.data.content + name,
-      nodes: nodes
+      content: this.data.content + name
     })
   },
 
   onInput: function (e) {
-    var value = e.detail.value;
-    const patt = /@[\w\u4e00-\u9fa5]{1,16}|#.+?#/;
-    var list = patt.exec(value);
-    var nodes = [];
-    while(list != null && list.length > 0) {
-      const item = list[0] + "";
-      const start = value.search(patt);
-      if (start != 0) {
-        nodes.push({
-          name: 'span',
-          children: [{
-            type: 'text',
-            text: value.substring(0, start)
-          }]
-        })
-      }
-      nodes.push({
-        name: 'span',
-        attrs: {
-          class: 'blue_name'
-        },
-        children: [{
-          type: 'text',
-          text: item
-        }]
-      });
-      value = value.substring(start + item.length, value.length);
-      list = patt.exec(value);
-    }
-    if (value.length > 0) {
-      nodes.push({
-        name: 'span',
-        children: [{
-          type: 'text',
-          text: value
-        }]
-      })
-    }
     this.setData({
-      nodes: nodes,
       content: e.detail.value
     })
   }

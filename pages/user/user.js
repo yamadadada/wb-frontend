@@ -12,6 +12,8 @@ Page({
   data: {
     color: '#3A3A3A',
     background: '#FDFDFD',
+    title: '',
+    loading: false,
     avatarWidth: 0,
     smallAvatarWidth: 0,
     imageWidth: 0,
@@ -63,6 +65,9 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
+    this.setData({
+      loading: true
+    })
     const that = this;
     if (this.data.name) {
       const that = this;
@@ -81,8 +86,23 @@ Page({
               user: res.data.data,
               uid: res.data.data.uid
             });
+            var name = res.data.data.name
+            if (name.length > 5) {
+              that.setData({
+                title: name.substring(0, 5)
+              })
+            } else {
+              that.setData({
+                title: name
+              })
+            }
             that.getWeiboList();
           }
+        },
+        complete() {
+          that.setData({
+            loading: false
+          })
         }
       })
     } else {
@@ -97,8 +117,23 @@ Page({
             that.setData({
               user: res.data.data
             });
+            var name = res.data.data.name
+            if (name.length > 5) {
+              that.setData({
+                title: name.substring(0, 5)
+              })
+            } else {
+              that.setData({
+                title: name
+              })
+            }
             that.getWeiboList();
           }
+        },
+        complete() {
+          that.setData({
+            loading: false
+          })
         }
       })
     }
@@ -171,7 +206,9 @@ Page({
             verifyToken(res);
           }
         })
-      })
+      }).catch(() => {
+        // on cancel
+      });
     } else {
       that.setData({
         [isFollowIndex]: true

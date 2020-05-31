@@ -1,5 +1,6 @@
 import { verifyToken } from '../../utils/util'
 import Toast from '../../vant/toast/toast';
+import Dialog from '../../vant/dialog/dialog';
 
 const app = getApp()
 
@@ -11,12 +12,13 @@ Page({
   data: {
     color: '#3A3A3A',
     background: '#FDFDFD',
+    loading: false,
     showSearch: false,
     showPop: false,
-    hotList: [],
     hotWeiboList: [],
     realTimeList: [],
     schoolList: [],
+    cityList: [],
     searchValue: '',
     history: [],
     candidateList: [],
@@ -25,13 +27,16 @@ Page({
     type: '0',
     page1: 1,
     size1: 10,
-    isAll: false,
+    isAll1: false,
     page2: 1,
     size2: 10,
-    isAll: false,
+    isAll2: false,
     page3: 1,
     size3: 10,
-    isAll: false,
+    isAll3: false,
+    page4: 1,
+    size4: 10,
+    isAll4: false,
     totalCount: null
   },
 
@@ -54,6 +59,9 @@ Page({
    */
   onShow: function () {
     const that = this;
+    this.setData({
+      loading: true
+    })
     wx.request({
       url: app.globalData.host + '/search/hotSearch',
       header: {
@@ -75,24 +83,55 @@ Page({
         }
       }
     });
-    wx.request({
-      url: app.globalData.host + '/weibo/hot',
-      header: {
-        'token': app.globalData.token
-      },
-      success(res) {
-        verifyToken(res);
-        if (res.statusCode == 200) {
+    if (app.globalData.school != null) {
+      wx.request({
+        url: app.globalData.host + '/weibo/school',
+        header: {
+          'token': app.globalData.token
+        },
+        success(res) {
+          verifyToken(res);
+          if (res.statusCode == 200) {
+            const list = res.data.data;
+            if (list == null || list.length == 0) {
+              that.setData({
+                isAll3: true
+              })
+            } else {
+              that.setData({
+                schoolList: list,
+                page3: 1,
+                isAll3: false
+              })
+              if (list.length < that.data.size3) {
+                that.setData({
+                  isAll3: true
+                })
+              }
+            }
+          } else {
+            Toast.fail(res.data.msg);
+          }
+        },
+        complete() {
           that.setData({
-            hotWeiboList: res.data.data,
-            page1: 1,
-            isAll1: false
+            loading: false
           })
-        } else {
-          Toast.fail(red.data.msg);
         }
-      }
-    });
+      })
+    } else {
+      this.setData({
+        loading: false
+      })
+      Dialog.confirm({
+        title: '提示',
+        message: '你还没有填写学校信息，请前往个人中心补充完整'
+      }).then(() => {
+        wx.navigateTo({
+          url: '/pages/edit-user/edit-user',
+        })
+      })
+    }
     var totalCount = wx.getStorageSync('messageCount').totalCount;
     if (totalCount > 0) {
       this.setData({
@@ -130,10 +169,16 @@ Page({
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
+    this.setData({
+      loading: true
+    })
     const type = this.data.type;
     const that = this;
     if (type == '0') {
       if (this.data.isAll1) {
+        this.setData({
+          loading: false
+        })
         return;
       }
       wx.request({
@@ -167,10 +212,18 @@ Page({
           } else {
             Toast.fail(res.data.msg);
           }
+        },
+        complete() {
+          that.setData({
+            loading: false
+          })
         }
       })
     } else if (type == '1') {
       if (this.data.isAll2) {
+        this.setData({
+          loading: false
+        })
         return;
       }
       wx.request({
@@ -204,10 +257,18 @@ Page({
           } else {
             Toast.fail(res.data.msg);
           }
+        },
+        complete() {
+          that.setData({
+            loading: false
+          })
         }
       })
-    } else {
+    } else if (type == '2') {
       if (this.data.isAll3) {
+        this.setData({
+          loading: false
+        })
         return;
       }
       wx.request({
@@ -241,6 +302,56 @@ Page({
           } else {
             Toast.fail(res.data.msg);
           }
+        },
+        complete() {
+          that.setData({
+            loading: false
+          })
+        }
+      })
+    } else {
+      if (this.data.isAll4) {
+        this.setData({
+          loading: false
+        })
+        return;
+      }
+      wx.request({
+        url: app.globalData.host + '/weibo/city',
+        header: {
+          'token': app.globalData.token
+        },
+        data: {
+          page: this.data.page4 + 1,
+          size: this.data.size4
+        },
+        success(res) {
+          verifyToken(res);
+          if (res.statusCode == 200) {
+            const list = res.data.data;
+            if (list == null || list.length == 0) {
+              that.setData({
+                isAll4: true
+              })
+            } else {
+              that.setData({
+                cityList: that.data.cityList.concat(list),
+                page4: that.data.page4 + 1
+              })
+              if (list.length < that.data.size4) {
+                that.setData({
+                  isAll4: true
+                })
+              }
+            }
+          } else {
+            Toast.fail(res.data.msg);
+          }
+        },
+        complete() {
+          that.setData({
+            loading: false
+          })
         }
       })
     }
@@ -288,6 +399,7 @@ Page({
   },
 
   onSearch3: function (e) {
+    this.closePop();
     const content = e.currentTarget.dataset.content;
     if (content != '') {
       this.search(content);
@@ -371,10 +483,41 @@ Page({
   changeTab: function (event) {
     const type = event.detail.name;
     this.setData({
-      type: type
+      type: type,
+      loading: true
     })
     const that = this;
-    if (type === '1') {
+    if (type == '0') {
+      if (this.data.hotWeiboList.length === 0) {
+        wx.request({
+          url: app.globalData.host + '/weibo/hot',
+          header: {
+            'token': app.globalData.token
+          },
+          success(res) {
+            verifyToken(res);
+            if (res.statusCode == 200) {
+              that.setData({
+                hotWeiboList: res.data.data,
+                page1: 1,
+                isAll1: false
+              })
+            } else {
+              Toast.fail(red.data.msg);
+            }
+          },
+          complete() {
+            that.setData({
+              loading: false
+            })
+          }
+        });
+      } else {
+        this.setData({
+          loading: false
+        })
+      }
+    } else if (type == '1') {
       if (this.data.realTimeList.length === 0) {
         wx.request({
           url: app.globalData.host + '/weibo/realTime',
@@ -392,11 +535,34 @@ Page({
             } else {
               Toast.fail(res.data.msg);
             }
+          },
+          complete() {
+            that.setData({
+              loading: false
+            })
           }
+        })
+      } else {
+        this.setData({
+          loading: false
         })
       }
     } else if (type == '2') {
       if (this.data.schoolList.length === 0) {
+        if (app.globalData.school == null) {
+          this.setData({
+            loading: false
+          })
+          Dialog.confirm({
+            title: '提示',
+            message: '你还没有填写学校信息，请前往个人中心补充完整'
+          }).then(() => {
+            wx.navigateTo({
+              url: '/pages/edit-user/edit-user',
+            })
+          })
+          return;
+        }
         wx.request({
           url: app.globalData.host + '/weibo/school',
           header: {
@@ -413,7 +579,60 @@ Page({
             } else {
               Toast.fail(res.data.msg);
             }
+          },
+          complete() {
+            that.setData({
+              loading: false
+            })
           }
+        })
+      } else {
+        this.setData({
+          loading: false
+        })
+      }
+    } else {
+      if (this.data.cityList.length === 0) {
+        if (app.globalData.city == null) {
+          this.setData({
+            loading: false
+          })
+          Dialog.confirm({
+            title: '提示',
+            message: '你还没有填写学校信息，请前往个人中心补充完整'
+          }).then(() => {
+            wx.navigateTo({
+              url: '/pages/edit-user/edit-user',
+            })
+          })
+          return;
+        }
+        wx.request({
+          url: app.globalData.host + '/weibo/city',
+          header: {
+            'token': app.globalData.token
+          },
+          success(res) {
+            verifyToken(res);
+            if (res.statusCode == 200) {
+              that.setData({
+                cityList: res.data.data,
+                page4: 1,
+                isAll4: false
+              })
+            } else {
+              Toast.fail(res.data.msg);
+            }
+          },
+          complete() {
+            that.setData({
+              loading: false
+            })
+          }
+        })
+      } else {
+        this.setData({
+          loading: false
         })
       }
     }

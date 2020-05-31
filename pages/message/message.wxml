@@ -2,7 +2,7 @@
 
 <van-dialog id="van-dialog" />
 
-<mp-navigation-bar title="消息" color="{{color}}" background="{{background}}" back="{{false}}" mut-bind:tap="toTop"/>
+<mp-navigation-bar title="消息" color="{{color}}" background="{{background}}" back="{{false}}" loading="{{ loading }}" mut-bind:tap="toTop"/>
 
 <van-grid column-num="3">
   <view style="color: #59CBA7">
